@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "lint": "./node_modules/.bin/eslint *.js; exit 0",
+    "lint": "./node_modules/.bin/eslint index.android.js android.src/**.js; exit 0",
     "test": "jest"
   },
   "dependencies": {
