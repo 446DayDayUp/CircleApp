@@ -12,7 +12,7 @@ import {
   View
 } from 'react-native';
 
-export default class chat extends Component {
+export default class circle extends Component {
   render() {
     return (
       <View style={styles.container}>
@@ -50,4 +50,4 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('chat', () => chat);
+AppRegistry.registerComponent('circle', () => circle);
