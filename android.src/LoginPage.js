@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   icon: {
     width: 200,
     height: 200,
-    border: 10,
+
   },
   textInputStyle: {
     flex: 5,
