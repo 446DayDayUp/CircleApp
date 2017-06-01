@@ -8,6 +8,7 @@ import React, { Component } from 'react';
 
 import LoginPage from './android.src/LoginPage.js';
 import IconPicker from './android.src/IconPicker.js';
+import MainPage from './android.src/MainPage.js';
 
 import {
   AppRegistry,
