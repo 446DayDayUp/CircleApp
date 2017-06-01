@@ -7,111 +7,76 @@ import {
   Animated,
   ViewPropTypes,
   TouchableNativeFeedback,
+  TouchableOpacity,
   Button,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { styles } from '../css/MainPageCSS.js';
 
 
 const CustomTabBar = React.createClass({
-  propTypes: {
-    goToPage: React.PropTypes.func,
-    activeTab: React.PropTypes.number,
-    tabs: React.PropTypes.array,
-    backgroundColor: React.PropTypes.string,
-    activeTextColor: React.PropTypes.string,
-    inactiveTextColor: React.PropTypes.string,
-    textStyle: Text.propTypes.style,
-    tabStyle: ViewPropTypes.style,
-    renderTab: React.PropTypes.func,
-    underlineStyle: ViewPropTypes.style,
+  tabIcons: [],
+
+  componentDidMount() {
+    this._listener = this.props.scrollValue.addListener(this.setAnimationValue);
   },
 
-  getDefaultProps() {
-    return {
-      activeTextColor: 'navy',
-      inactiveTextColor: 'black',
-      activeBackgroundColor: 'black',
-      inactiveBackgroundColor: null,
-      backgroundColor: null,
-    };
+  setAnimationValue({ value }) {
+    this.tabIcons.forEach((icon, i) => {
+      const progress = Math.min(1, Math.abs(value - i));
+      icon.setNativeProps({
+        style: {
+          color: this.iconColor(progress),
+        },
+      });
+    });
   },
 
-  renderTabOption(name, page) {
-  },
-
-  renderTab(name, page, isTabActive, onPressHandler) {
-    const { activeTextColor, inactiveTextColor, textStyle, activeBackgroundColor, inactiveBackgroundColor } = this.props;
-    const textColor = isTabActive ? activeTextColor : inactiveTextColor;
-    const backgroundColor = isTabActive ? activeBackgroundColor : inactiveBackgroundColor;
-    const fontWeight = isTabActive ? 'bold' : 'normal';
-    return <TouchableNativeFeedback
-      style={[styles.flexOne, {background: 'black'}]}
-      key={name}
-      accessible={true}
-      accessibilityLabel={name}
-      accessibilityTraits='button'
-      onPress={() => onPressHandler(page)}
-    >
-      <View style={[styles.tab, this.props.tabStyle, ]}>
-        <Text style={[{color: textColor, fontWeight, }, textStyle, ]}>
-          {name}
-        </Text>
-      </View>
-    </TouchableNativeFeedback>;
+  // color between rgb(59,89,152) and rgb(204,204,204)
+  iconColor(progress) {
+    const red = 216 + (204 - 216) * progress;
+    const green = 19 + (204 - 19) * progress;
+    const blue = 19 + (204 - 19) * progress;
+    return `rgb(${red}, ${green}, ${blue})`;
   },
 
   renderBtn(label) {
     if (!label) return null;
-    return <Button style={styles.flexOne} title={label}
-      onPress={() => {}}/>
+    // TODO: handle onPress event
+    return (
+      <TouchableOpacity key={label}
+        style={[styles.flexOne, styles.button]}
+        onPress={() => {}}>
+        <Icon name={label} size={30}
+          color='skyblue'
+        />
+      </TouchableOpacity>
+    );
+  },
+
+  renderTab(tab, i) {
+    return (
+      <TouchableOpacity key={tab}
+      onPress={() => this.props.goToPage(i)} style={styles.tab}>
+        <Icon name={tab} size={30}
+          color={this.props.activeTab === i ?
+            'rgb(216, 19, 19)' : 'rgb(204,204,204)'}
+          ref={(icon) => {
+            this.tabIcons[i] = icon;
+          }}
+        />
+      </TouchableOpacity>
+    );
   },
 
   render() {
-    const containerWidth = this.props.containerWidth;
-    const numberOfTabs = this.props.tabs.length;
-    const tabUnderlineStyle = {
-      // position: 'absolute',
-      // width: containerWidth / (numberOfTabs + 2),
-      // height: 4,
-      // backgroundColor: 'navy',
-      // bottom: 0,
-    };
-
-    const left = this.props.scrollValue.interpolate({
-      inputRange: [0, 1, ], outputRange: [0,  containerWidth / numberOfTabs, ],
-    });
     return (
-      <View style={[styles.tabs, {backgroundColor: this.props.backgroundColor, }, this.props.style, ]}>
-        {this.renderBtn(this.props.leftBtnLabel)}
-        {this.props.tabs.map((name, page) => {
-          const isTabActive = this.props.activeTab === page;
-          const renderTab = this.props.renderTab || this.renderTab;
-          return renderTab(name, page, isTabActive, this.props.goToPage);
-        })}
-        {this.renderBtn(this.props.rightBtnLabel)}
+      <View style={[styles.tabs, this.props.style]}>
+          {this.renderBtn(this.props.leftBtnLabel)}
+        {this.props.tabs.map(this.renderTab)}
+          {this.renderBtn(this.props.rightBtnLabel)}
       </View>
     );
-  },
-});
-
-const styles = StyleSheet.create({
-  tab: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingBottom: 10,
-  },
-  flexOne: {
-    flex: 1,
-  },
-  tabs: {
-    height: 50,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    borderWidth: 1,
-    borderTopWidth: 0,
-    borderLeftWidth: 0,
-    borderRightWidth: 0,
-    borderColor: '#ccc',
   },
 });
 

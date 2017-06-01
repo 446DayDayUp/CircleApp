@@ -1,22 +1,40 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
-  Text,
-  View,
+    StyleSheet,
+    Text,
+    View,
+    TouchableOpacity,
+    ScrollView,
 } from 'react-native';
-
 import ScrollableTabView from 'react-native-scrollable-tab-view';
-import CustomTabBar from './component/CustomTabBar.js';
+import CustomTabBar from './component/CustomTabBar.js'
+import {styles} from './css/MainPageCSS.js';
 
-export default class MainPage extends Component {
+class MainPage extends Component {
   render() {
-    return <ScrollableTabView
-      initialPage={1}
-      renderTabBar={() => <CustomTabBar
-        leftBtnLabel='Menu'
-        rightBtnLabel='Search'/>}
-    >
-      <Text tabLabel='Tab #1'>tab content 1</Text>
-      <Text tabLabel='Tab #2'>tab content 2</Text>
-    </ScrollableTabView>;
+    let tabBar = <CustomTabBar
+      leftBtnLabel='md-person'
+      rightBtnLabel='md-search'/>;
+    return(
+      <ScrollableTabView
+        scrollWithoutAnimation = {true}
+        initialPage={1}
+        renderTabBar={() => tabBar}>
+        <ScrollView tabLabel='ios-chatbubbles' style={styles.tabView} >
+          <View style={styles.card}>
+            <Text>Friends</Text>
+          </View>
+        </ScrollView>
+        <ScrollView tabLabel='md-wifi' style={styles.tabView}>
+          <View style={styles.card}>
+            <Text>Other nav</Text>
+          </View>
+        </ScrollView>
+      </ScrollableTabView>
+    );
   }
-};
+}
+
+
+
+export default MainPage;
