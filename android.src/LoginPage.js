@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
+import { Actions } from 'react-native-router-flux';
 import {
-  AppRegistry,
   StyleSheet,
   Text,
   View,
   TextInput,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  Button,
 } from 'react-native';
 
 export default class LoginPage extends Component {
   constructor(props) {
     super(props);
-    this.state = {text: ''};
+    this.initialIcon = require('../img/jigglypuff.png');
   }
+
   render() {
     return (
       <View style={styles.container}>
@@ -26,19 +28,38 @@ export default class LoginPage extends Component {
 
         <View style={styles.bottom}>
           <View style={styles.iconView}>
-            <Image source={require('../img/jigglypuff.png')} style={styles.icon}/>
+            <TouchableOpacity onPress={Actions.pickicon}>
+              <Image
+                source={this.props.icon ? this.props.icon : this.initialIcon}
+              onPress={() => console.warn('pressed')}
+              style={styles.icon} />
+            </TouchableOpacity>
           </View>
-          <TextInput
-            style={styles.textInputStyle}
-            placeholder="Type here to translate!"
-            onChangeText={(text) => this.setState({text})}
+
+          <View
+            style={{flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'center'}}>
+            <View style={{flex: 1}}></View>
+            <TextInput
+              underlineColorAndroid='rgba(0,0,0,0)'
+              style={styles.inputStyle}
+              placeholder="Set Nickname!"
+              onChangeText={(text) => this.setState({text})}
+            />
+            <View style={{flex: 1}}></View>
+          </View>
+
+
+          <Button
+            onPress={() => {}}
+            title="Login"
+            // accessibilityLabel="Learn more about this purple button"
           />
-          <TouchableOpacity style={styles.btn}>
-            <Text style={styles.text}>login</Text>
-          </TouchableOpacity>
+
         </View>
       </View>
-    )
+    );
   }
 }
 
@@ -46,56 +67,51 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    //justifyContent: 'center',
-    //alignItems: 'center',
     backgroundColor: 'white',
   },
   bottom: {
     flex: 2,
     flexDirection: 'column',
-    //justifyContent: 'center',
-    //alignItems: 'center'
+    justifyContent: 'space-between',
   },
   circletitle: {
-    //flex: 1,
     fontSize: 50,
     fontWeight: 'bold',
-    // marginLeft: 110
-    paddingTop: 0,
-    paddingTop: 0,
-    paddingRight: 0,
-    paddingBottom: 0,
   },
   title: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   insideTitle: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
   },
-  logo:{
-    //flex: 1,
-    width: 80,
-    height: 80,
-    //resizeMode: 'stretch',
+  logo: {
+    width: 50,
+    height: 50,
   },
   icon: {
     width: 200,
     height: 200,
-
-  },
-  textInputStyle: {
-    flex: 5,
-    marginRight: 10,
-    fontSize: 18,
-    marginTop: 4
+    borderWidth: 2,
+    borderColor: 'black',
+    borderRadius: 10,
   },
   iconView: {
     flexDirection: 'column',
     alignItems: 'center',
+  },
+  inputStyle: {
+    flex: 2,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 5,
+    fontSize: 20,
+    borderWidth: 1,
+    borderColor: 'black',
   },
 });
