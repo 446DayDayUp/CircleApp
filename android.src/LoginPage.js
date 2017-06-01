@@ -12,7 +12,17 @@ import {
 export default class LoginPage extends Component {
   constructor(props) {
     super(props);
+    this.state = {userName: ''};
     this.initialIcon = require('../img/pikachu-2.png');
+    this.initialIconName = 'pikachu-2';
+    this._logIn = this._logIn.bind(this);
+  }
+
+  _logIn() {
+    Actions.mainPage({
+      userName: this.state.userName,
+      iconName: this.props.iconName ? this.props.iconName : this.initialIconName, 
+    });
   }
 
   render() {
@@ -45,13 +55,13 @@ export default class LoginPage extends Component {
                 underlineColorAndroid='deepskyblue'
                 style={styles.inputStyle}
                 placeholder="Nickname"
-                onChangeText={(text) => this.setState({text})}
+                onChangeText={(userName) => this.setState({userName})}
               />
               <View style={{flex: 1}}></View>
             </View>
 
 
-            <TouchableOpacity style={styles.loginBtn}>
+            <TouchableOpacity style={styles.loginBtn} onPress={this._logIn}>
                 <Text
                   style={{fontSize: 30, color: 'white', fontWeight: 'bold'}}>
                   Log in
