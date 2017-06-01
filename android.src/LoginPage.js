@@ -7,7 +7,6 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
-  Button,
 } from 'react-native';
 
 export default class LoginPage extends Component {
@@ -18,47 +17,51 @@ export default class LoginPage extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.title}>
-          <View style={styles.insideTitle}>
-            <Text style={styles.circletitle}>Circle</Text>
-            <Image source={require('../img/logo.png')} style={styles.logo}/>
+      <Image source={require('../img/background7.jpg')} style={styles.background}>
+        <View style={styles.container}>
+          <View style={styles.title}>
+            <View style={styles.insideTitle}>
+              <Text style={styles.circletitle}>Circle</Text>
+              <Image source={require('../img/logo2.png')} style={styles.logo}/>
+            </View>
           </View>
-        </View>
 
-        <View style={styles.bottom}>
-          <View style={styles.iconView}>
-            <TouchableOpacity onPress={Actions.pickicon}>
-              <Image
-                source={this.props.icon ? this.props.icon : this.initialIcon}
-              onPress={() => console.warn('pressed')}
-              style={styles.icon} />
+          <View style={styles.bottom}>
+            <View style={styles.iconView}>
+              <TouchableOpacity onPress={Actions.pickicon} >
+                <Image
+                  source={this.props.icon ? this.props.icon : this.initialIcon}
+                onPress={() => console.warn('pressed')}
+                style={styles.icon} />
+              </TouchableOpacity>
+            </View>
+
+            <View
+              style={{flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'center'}}>
+              <View style={{flex: 1}}></View>
+              <TextInput
+                // underlineColorAndroid='rgba(0,0,0,0)'
+                style={styles.inputStyle}
+                placeholder="Nickname"
+                onChangeText={(text) => this.setState({text})}
+              />
+              <View style={{flex: 1}}></View>
+            </View>
+
+
+            <TouchableOpacity style={styles.loginBtn}>
+                <Text
+                  style={{fontSize: 30, color: 'white', fontWeight: 'bold'}}>
+                  Log in
+                </Text>
             </TouchableOpacity>
+
+            <View></View>
           </View>
-
-          <View
-            style={{flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'center'}}>
-            <View style={{flex: 1}}></View>
-            <TextInput
-              underlineColorAndroid='rgba(0,0,0,0)'
-              style={styles.inputStyle}
-              placeholder="Nickname"
-              onChangeText={(text) => this.setState({text})}
-            />
-            <View style={{flex: 1}}></View>
-          </View>
-
-
-          <TouchableOpacity style={styles.loginBtn}>
-              <Text style={{fontSize: 30, color: 'white'}}>Log in</Text>
-          </TouchableOpacity>
-
-          <View></View>
-
         </View>
-      </View>
+      </Image>
     );
   }
 }
@@ -67,10 +70,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(240, 255, 250, 0.3)',
   },
   bottom: {
-    flex: 3,
+    flex: 2.9,
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -112,9 +115,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 5,
     fontSize: 20,
-    borderWidth: 1,
-    borderColor: 'black',
+    borderWidth: 0,
+    borderColor: 'rgba(00, 00, 00, 0.5)',
     textAlign: 'center',
+    color: 'white',
+    // backgroundColor: 'lightgrey',
   },
   loginBtn: {
     width: 150,
@@ -126,5 +131,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 15,
     borderColor: 'black',
+  },
+  background: {
+    flex: 1,
+    // remove width and height to override fixed static size
+    width: null,
+    height: null,
   },
 });

@@ -22,29 +22,29 @@ export default class IconPicker extends Component {
     let imageNames = Object.keys(this.imagelist);
     for (let i = 0; i < imageNames.length; i += 3) {
       imageGrid.push(
-        <View style={styles.insideview} key={i}>
-          <TouchableOpacity
-            onPress={
-              () => Actions.login({icon: this.imagelist[imageNames[i]],
-                iconName: imageNames[i]})}>
-            <Image source={this.imagelist[imageNames[i]]} style={styles.icon}/>
-          </TouchableOpacity>
+          <View style={styles.insideview} key={i}>
+            <TouchableOpacity
+              onPress={
+                () => Actions.login({icon: this.imagelist[imageNames[i]],
+                  iconName: imageNames[i]})}>
+              <Image source={this.imagelist[imageNames[i]]} style={styles.icon}/>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={
-              () => Actions.login({icon: this.imagelist[imageNames[i + 1]],
-              iconName: imageNames[i + 1]})}>
-            <Image
-              source={this.imagelist[imageNames[i + 1]]} style={styles.icon}/>
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={
+                () => Actions.login({icon: this.imagelist[imageNames[i + 1]],
+                iconName: imageNames[i + 1]})}>
+              <Image
+                source={this.imagelist[imageNames[i + 1]]} style={styles.icon}/>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={
-              () => Actions.login({icon: this.imagelist[imageNames[i + 2]],
-              iconName: imageNames[i + 2]})}>
-            <Image
-              source={this.imagelist[imageNames[i + 2]]} style={styles.icon}/>
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={
+                () => Actions.login({icon: this.imagelist[imageNames[i + 2]],
+                iconName: imageNames[i + 2]})}>
+              <Image
+                source={this.imagelist[imageNames[i + 2]]} style={styles.icon}/>
+            </TouchableOpacity>
         </View>
       );
     }
