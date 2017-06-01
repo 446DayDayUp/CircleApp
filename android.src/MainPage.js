@@ -22,12 +22,12 @@ class MainPage extends Component {
         renderTabBar={() => tabBar}>
         <ScrollView tabLabel='ios-chatbubbles' style={styles.tabView} >
           <View style={styles.card}>
-            <Text>Friends</Text>
+            <Text>{this.props.userName}</Text>
           </View>
         </ScrollView>
         <ScrollView tabLabel='md-wifi' style={styles.tabView}>
           <View style={styles.card}>
-            <Text>Other nav</Text>
+            <Text>{this.props.iconName}</Text>
           </View>
         </ScrollView>
       </ScrollableTabView>
