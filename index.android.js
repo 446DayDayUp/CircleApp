@@ -20,14 +20,13 @@ import ChatRoomList from './android.src/component/ChatRoomList.js';
 export default class circle extends Component {
   render() {
     return (
-      // <Router>
-      //   <Scene key="root">
-      //     <Scene key="login" component={LoginPage}
-      //     type={ActionConst.RESET} hideNavBar={true} initial={true} />
-      //     <Scene key="pickicon" component={IconPicker} />
-      //   </Scene>
-      // </Router>
-      <CreateChat />
+      <Router>
+        <Scene key="root">
+          <Scene key="login" component={LoginPage}
+          type={ActionConst.RESET} hideNavBar={true} initial={true} />
+          <Scene key="pickicon" component={IconPicker} />
+        </Scene>
+      </Router>
     );
   }
 }
