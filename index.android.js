@@ -9,12 +9,11 @@ import React, { Component } from 'react';
 import LoginPage from './android.src/LoginPage.js';
 import IconPicker from './android.src/IconPicker.js';
 import MainPage from './android.src/MainPage.js';
-
+import CreateChat from './android.src/CreateChat.js';
+import ChatRoomList from './android.src/component/ChatRoomList.js';
 import {
   AppRegistry,
 } from 'react-native';
-
-import ChatRoomList from './android.src/component/ChatRoomList.js';
 
 export default class circle extends Component {
   render() {
@@ -22,8 +21,10 @@ export default class circle extends Component {
       <Router>
         <Scene key="root">
           <Scene key="login" component={LoginPage}
-          type={ActionConst.RESET} hideNavBar={true} initial={true} />
+          type={ActionConst.RESET} hideNavBar={true} initial={false} />
           <Scene key="pickicon" component={IconPicker} />
+          <Scene key="createchat" component={CreateChat}
+                  hideNavBar={true} initial={true} />
         </Scene>
       </Router>
     );
