@@ -7,7 +7,7 @@ import {
   Text,
 } from 'react-native'
 import CheckBox from 'react-native-check-box'
-import tags from './AvailableTags.json'
+import tags from '../data/AvailableTags.json'
 
 export default class Tags extends Component {
   constructor(props) {
