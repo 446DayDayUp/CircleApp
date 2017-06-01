@@ -13,7 +13,7 @@ import {
 export default class LoginPage extends Component {
   constructor(props) {
     super(props);
-    this.initialIcon = require('../img/jigglypuff.png');
+    this.initialIcon = require('../img/pikachu-2.png');
   }
 
   render() {
@@ -44,18 +44,18 @@ export default class LoginPage extends Component {
             <TextInput
               underlineColorAndroid='rgba(0,0,0,0)'
               style={styles.inputStyle}
-              placeholder="Set Nickname!"
+              placeholder="Nickname"
               onChangeText={(text) => this.setState({text})}
             />
             <View style={{flex: 1}}></View>
           </View>
 
 
-          <Button
-            onPress={() => {}}
-            title="Login"
-            // accessibilityLabel="Learn more about this purple button"
-          />
+          <TouchableOpacity style={styles.loginBtn}>
+              <Text style={{fontSize: 30, color: 'white'}}>Log in</Text>
+          </TouchableOpacity>
+
+          <View></View>
 
         </View>
       </View>
@@ -70,9 +70,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   bottom: {
-    flex: 2,
+    flex: 3,
     flexDirection: 'column',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   circletitle: {
     fontSize: 50,
@@ -105,13 +106,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   inputStyle: {
-    flex: 2,
-    flexDirection: 'column',
+    flex: 10,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 5,
     fontSize: 20,
     borderWidth: 1,
+    borderColor: 'black',
+    textAlign: 'center',
+  },
+  loginBtn: {
+    width: 150,
+    height: 50,
+    marginTop: 10,
+    backgroundColor: 'deepskyblue',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 15,
     borderColor: 'black',
   },
 });

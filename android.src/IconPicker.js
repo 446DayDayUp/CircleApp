@@ -33,7 +33,7 @@ export default class IconPicker extends Component {
           <TouchableOpacity
             onPress={
               () => Actions.login({icon: this.imagelist[imageNames[i + 1]],
-              iconName: imageNames[i]})}>
+              iconName: imageNames[i + 1]})}>
             <Image
               source={this.imagelist[imageNames[i + 1]]} style={styles.icon}/>
           </TouchableOpacity>
@@ -41,7 +41,7 @@ export default class IconPicker extends Component {
           <TouchableOpacity
             onPress={
               () => Actions.login({icon: this.imagelist[imageNames[i + 2]],
-              iconName: imageNames[i]})}>
+              iconName: imageNames[i + 2]})}>
             <Image
               source={this.imagelist[imageNames[i + 2]]} style={styles.icon}/>
           </TouchableOpacity>
@@ -62,12 +62,11 @@ export default class IconPicker extends Component {
 
 const styles = StyleSheet.create({
   icon: {
-    width: 120,
-    height: 120,
+    flex: 1,
     borderWidth: 1,
     borderColor: 'black',
     borderRadius: 10,
-    margin: 10,
+    margin: 5,
   },
   insideview: {
     flexDirection: 'row',
