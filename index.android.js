@@ -12,20 +12,21 @@ import IconPicker from './android.src/IconPicker.js';
 import {
   AppRegistry,
 } from 'react-native';
-import CreateChat from './android.src/createChat.js';
+import CreateChat from './android.src/CreateChat.js';
 
 import ChatRoomList from './android.src/component/ChatRoomList.js';
 
 export default class circle extends Component {
   render() {
     return (
-      <Router>
-        <Scene key="root">
-          <Scene key="login" component={LoginPage}
-          type={ActionConst.RESET} hideNavBar={true} initial={true} />
-          <Scene key="pickicon" component={IconPicker} />
-        </Scene>
-      </Router>
+      // <Router>
+      //   <Scene key="root">
+      //     <Scene key="login" component={LoginPage}
+      //     type={ActionConst.RESET} hideNavBar={true} initial={true} />
+      //     <Scene key="pickicon" component={IconPicker} />
+      //   </Scene>
+      // </Router>
+      <CreateChat />
     );
   }
 }
