@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-    StyleSheet,
     Text,
     View,
     TouchableOpacity,
@@ -34,7 +33,5 @@ class MainPage extends Component {
     );
   }
 }
-
-
 
 export default MainPage;
