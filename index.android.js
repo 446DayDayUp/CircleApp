@@ -3,13 +3,14 @@
  * https://github.com/facebook/react-native
  * @flow
  */
-
+import {Scene, Router, ActionConst} from 'react-native-router-flux';
 import React, { Component } from 'react';
+
+import LoginPage from './android.src/LoginPage.js';
+import IconPicker from './android.src/IconPicker.js';
+
 import {
   AppRegistry,
-  StyleSheet,
-  Text,
-  View
 } from 'react-native';
 
 import ChatRoomList from './android.src/component/ChatRoomList.js';
@@ -17,28 +18,16 @@ import ChatRoomList from './android.src/component/ChatRoomList.js';
 export default class circle extends Component {
   render() {
     return (
-      <ChatRoomList></ChatRoomList>
+      <Router>
+        <Scene key="root">
+          <Scene key="login" component={LoginPage}
+          type={ActionConst.RESET} hideNavBar={true} initial={true} />
+          <Scene key="pickicon" component={IconPicker} />
+        </Scene>
+      </Router>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
 
 AppRegistry.registerComponent('circle', () => circle);
