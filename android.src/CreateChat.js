@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import {
   StyleSheet,
   Text,
@@ -9,6 +8,7 @@ import {
   Button,
   TouchableOpacity,
 } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Tags from './component/Tags.js';
 import * as http from './lib/http.js';
@@ -75,13 +75,15 @@ export default class CreateChat extends Component {
             lat: location.lat,
             lng: location.lng,
           }).then(function() {
-            this.state.name = 'Please enter your chat room name';
-            this.state.range = '1000';
-            tags = [];
-            selectedTags = 'Please select your tags';
-            // this.props.updateRooms();
+            this.setState({
+              name: 'Please enter your chat room name',
+              range: '1000',
+              tags: [],
+              selectedTags: 'Please select your tags',
+            });
+            Actions.pop();
           }.bind(this)).catch(function(error) {
-            console.log('error', error);
+            console.warn('error', error);
           });
       }.bind(this));
   }

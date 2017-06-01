@@ -5,6 +5,7 @@ import {
   ScrollView,
   ListView,
 } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import * as http from '../lib/http.js';
 import { getGpsCord } from '../lib/gps.js';
 const SERVER_URL = 'https://circle-chat.herokuapp.com';

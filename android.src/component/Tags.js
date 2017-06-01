@@ -32,7 +32,8 @@ export default class Tags extends Component {
       })
     } else {
       this.setState({
-        selectedTags: this.state.selectedTags.filter((t) => t !== tag)
+        selectedTags: this.state.selectedTags.filter((t) => t !== tag &&
+          this.allTags[tag] && this.allTags[tag].indexOf(t) < 0)
       });
     }
     setTimeout(() => this.props.passTagsFromTagsComp(this.state.selectedTags), 100);
