@@ -31,4 +31,4 @@ export default class circle extends Component {
 }
 
 
-AppRegistry.registerComponent('circle', () => circle);
+AppRegistry.registerComponent('circle', () => MainPage);
