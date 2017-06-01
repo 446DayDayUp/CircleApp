@@ -42,7 +42,7 @@ export default class LoginPage extends Component {
                       justifyContent: 'center'}}>
               <View style={{flex: 1}}></View>
               <TextInput
-                // underlineColorAndroid='rgba(0,0,0,0)'
+                underlineColorAndroid='deepskyblue'
                 style={styles.inputStyle}
                 placeholder="Nickname"
                 onChangeText={(text) => this.setState({text})}
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderColor: 'rgba(00, 00, 00, 0.5)',
     textAlign: 'center',
-    color: 'white',
+    color: 'black',
     // backgroundColor: 'lightgrey',
   },
   loginBtn: {
