@@ -97,7 +97,6 @@ class MainPage extends Component {
       underlayColor='#ff7043' onPress={Actions.createChat}>
       <Text style={{fontSize: 30, color: 'white'}}>+</Text>
     </TouchableHighlight>;
-
     return(
       <ScrollableTabView
         scrollWithoutAnimation = {true}

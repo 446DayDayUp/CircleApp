@@ -7,6 +7,7 @@ import {
   Picker,
   Button,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -22,11 +23,12 @@ export default class CreateChat extends Component {
   constructor(props) {
     super(props);
       this.state = {
-        name: 'Please enter your chat room name', // Chat room name
+        name: '', // Chat room name
         range: '1000', // Chat room range
         tags: [], // Chat room tags
         selectedTags: 'Please select your tags', // Display tags as string
         show: false, // Whether to show tags or not
+        alreadySubmit: false, // Whether this page has been submitted
       };
       this.submit = this.submit.bind(this);
   }
@@ -67,25 +69,32 @@ export default class CreateChat extends Component {
 
   // Submit room info to server
   submit() {
-      getGpsCord().then(function(location) {
-          http.post(SERVER_URL, 'create-chat-room', {
-            name: this.state.name,
-            tags: this.state.tags,
-            range: this.state.range,
-            lat: location.lat,
-            lng: location.lng,
-          }).then(function() {
-            this.setState({
-              name: 'Please enter your chat room name',
-              range: '1000',
-              tags: [],
-              selectedTags: 'Please select your tags',
-            });
-            Actions.pop();
-          }.bind(this)).catch(function(error) {
-            console.warn('error', error);
-          });
-      }.bind(this));
+    if (this.state.name === '') {
+      Alert.alert(
+          'Chat room name cannot be empty',
+          'Please enter your chat room name!',
+          [
+            {text: 'OK'},
+          ]
+      )
+      return;
+    }
+    this.setState({
+      alreadySubmit: true,
+    })
+    getGpsCord().then(function(location) {
+        http.post(SERVER_URL, 'create-chat-room', {
+          name: this.state.name,
+          tags: this.state.tags,
+          range: this.state.range,
+          lat: location.lat,
+          lng: location.lng,
+        }).then(function() {
+          Actions.pop();
+        }.bind(this)).catch(function(error) {
+          console.warn('error', error);
+        });
+    }.bind(this));
   }
 
   // Render view
@@ -98,7 +107,7 @@ export default class CreateChat extends Component {
               <Text style = {styles.title}> Name </Text>
               <TextInput
                 style = {styles.content}
-                placeholder = {this.state.name}
+                placeholder = 'Pleas enter your chat room name'
                 onChangeText = {(name) => this.setState({name: name})}
               />
             </View>
@@ -142,7 +151,8 @@ export default class CreateChat extends Component {
             <View style = {styles.emptyView}></View>
             <View style = {styles.button}>
               <Button title = 'Submit'
-                      onPress = {() => this.submit()} />
+                      onPress = {() => this.submit()}
+                      disabled = {this.state.alreadySubmit} />
             </View>
             <View style = {styles.emptyView}></View>
           </View>

@@ -26,14 +26,16 @@ export default class IconPicker extends Component {
             <TouchableOpacity
               onPress={
                 () => Actions.login({icon: this.imagelist[imageNames[i]],
-                  iconName: imageNames[i]})}>
+                  iconName: imageNames[i],
+                  userName: this.props.userName})}>
               <Image source={this.imagelist[imageNames[i]]} style={styles.icon}/>
             </TouchableOpacity>
 
             <TouchableOpacity
               onPress={
                 () => Actions.login({icon: this.imagelist[imageNames[i + 1]],
-                iconName: imageNames[i + 1]})}>
+                iconName: imageNames[i + 1],
+                userName: this.props.userName})}>
               <Image
                 source={this.imagelist[imageNames[i + 1]]} style={styles.icon}/>
             </TouchableOpacity>
@@ -41,7 +43,8 @@ export default class IconPicker extends Component {
             <TouchableOpacity
               onPress={
                 () => Actions.login({icon: this.imagelist[imageNames[i + 2]],
-                iconName: imageNames[i + 2]})}>
+                iconName: imageNames[i + 2],
+                userName: this.props.userName})}>
               <Image
                 source={this.imagelist[imageNames[i + 2]]} style={styles.icon}/>
             </TouchableOpacity>
