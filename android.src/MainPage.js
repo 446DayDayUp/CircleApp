@@ -24,25 +24,11 @@ class MainPage extends Component {
       allRooms: [],
       joinedRooms: [],
     };
-    // this.state.allRooms = [];
-    // this.state.joinedRooms = [];
-    getGpsCord().then(function(position) {
-      http.get(SERVER_URL, 'get-chat-rooms', {
-        lat: position.lat,
-        lng: position.lng,
-        range: 10000,
-      }).then((response) => {
-        return response.json();
-      }).then(function(chatRooms) {
-        this.state.allRooms = chatRooms;
-        this._allRooms.updateList(this.state.allRooms);
-      }.bind(this));
-    }.bind(this),
-      (error) => alert(JSON.stringify(error)),
-      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
-    );
+    this.refreshRoomList();
     this.joinRoom = this.joinRoom.bind(this);
     this.quitRoom = this.quitRoom.bind(this);
+    this.updateRoom = this.updateRoom.bind(this);
+    this.refreshRoomList = this.refreshRoomList.bind(this);
   }
 
   joinRoom(room) {
@@ -52,12 +38,7 @@ class MainPage extends Component {
       ...this.state.joinedRooms,
       room,
     ];
-    this.setState({
-      allRooms,
-      joinedRooms,
-    })
-    if(this._allRooms) this._allRooms.updateList(allRooms);
-    if(this._joinedRooms) this._joinedRooms.updateList(joinedRooms);
+    this.updateRoom(allRooms, joinedRooms);
   }
 
   quitRoom(room) {
@@ -67,6 +48,38 @@ class MainPage extends Component {
       ...this.state.allRooms,
       room,
     ];
+    this.updateRoom(allRooms, joinedRooms);
+  }
+
+  refreshRoomList() {
+    return getGpsCord().then(function(position) {
+      http.get(SERVER_URL, 'get-chat-rooms', {
+        lat: position.lat,
+        lng: position.lng,
+        range: 10000,
+      }).then((response) => {
+        return response.json();
+      }).then(function(chatRooms) {
+        // Remove out-range joined room.
+        // TODO: disconnect socket.
+        let joinedRooms = this.state.joinedRooms.filter((r) =>
+          chatRooms.filter((room) => room._id === r._id).length > 0
+        );
+        let allRooms = chatRooms.filter((r) =>
+          joinedRooms.filter((room) => room._id === r._id).length === 0
+        );
+        this.updateRoom(allRooms, joinedRooms);
+        return;
+      }.bind(this));
+    }.bind(this),
+      (error) => {
+        throw error;
+      },
+      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+    );
+  }
+
+  updateRoom(allRooms, joinedRooms) {
     this.setState({
       allRooms,
       joinedRooms,
@@ -102,7 +115,8 @@ class MainPage extends Component {
           <View style={styles.card}>
             <ChatRoomList roomActionHandler={this.joinRoom} btnText='Join'
               ref={el=>this._allRooms=el}
-              roomList={this.state.allRooms}/>
+              roomList={this.state.allRooms}
+              refreshList={this.refreshRoomList}/>
           </View>
         </ScrollView>
       </ScrollableTabView>
