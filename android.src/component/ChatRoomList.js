@@ -7,6 +7,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import ChatRoomPanel from '../component/ChatRoomPanel.js';
+import {styles} from '../css/MainPageCSS.js';
 
 export default class ChatRoomList extends Component {
   constructor(props) {
@@ -32,6 +33,7 @@ export default class ChatRoomList extends Component {
   render() {
     return (
       <ScrollView
+          style={{backgroundColor: '#F8F8F8'}}
         refreshControl={
           <RefreshControl
             refreshing={this.state.refreshing}
@@ -42,7 +44,7 @@ export default class ChatRoomList extends Component {
           <ChatRoomPanel room={r} key={r._id}
             btnText={this.props.btnText}
             btnHandler={function(r) {
-              this.props.roomActionHandler(r)
+              this.props.roomActionHandler(r);
             }.bind(this, r)}/>)}
       </ScrollView>
     );

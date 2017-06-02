@@ -22,21 +22,18 @@ export const styles = StyleSheet.create({
     },
     tabView: {
         flex: 1,
-        //padding: 10,
-        backgroundColor: 'rgba(0,0,0,0.01)',
+        // padding: 10,
+        backgroundColor: '#a00325',
     },
     card: {
         flex: 1,
         // borderWidth: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#a00325',
         borderColor: 'rgba(0,0,0,0.1)',
-        margin: 5,
-        height: Dimensions.get("window").height - 100,
-        padding: 15,
+        margin: 0,
+        height: Dimensions.get('window').height - 80,
+        padding: 5,
         shadowColor: '#ccc',
-        shadowOffset: { width: 2, height: 2 },
-        shadowOpacity: 0.5,
-        shadowRadius: 3,
     },
     flexOne: {
         flex: 1,
@@ -56,13 +53,13 @@ export const styles = StyleSheet.create({
       justifyContent: 'center',
       position: 'absolute',
       bottom: 0,
-      right:20,
-      shadowColor: "#000000",
+      right: 20,
+      shadowColor: '#000000',
       shadowOpacity: 0.8,
       shadowRadius: 2,
       shadowOffset: {
         height: 1,
         width: 0,
-      }
-    }
+      },
+    },
 });

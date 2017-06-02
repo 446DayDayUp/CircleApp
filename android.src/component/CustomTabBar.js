@@ -31,12 +31,12 @@ const CustomTabBar = React.createClass({
   },
 
   // color between rgb(59,89,152) and rgb(204,204,204)
-  iconColor(progress) {
-    const red = 216 + (204 - 216) * progress;
-    const green = 19 + (204 - 19) * progress;
-    const blue = 19 + (204 - 19) * progress;
-    return `rgb(${red}, ${green}, ${blue})`;
-  },
+    iconColor(progress) {
+        const red = 160 + (204 - 160) * progress;
+        const green = 3 + (204 - 3) * progress;
+        const blue = 37 + (204 - 37) * progress;
+        return `rgb(${red}, ${green}, ${blue})`;
+    },
 
   renderBtn(label) {
     if (!label) return null;
@@ -46,7 +46,7 @@ const CustomTabBar = React.createClass({
         style={[styles.flexOne, styles.button]}
         onPress={() => {}}>
         <Icon name={label} size={30}
-          color='skyblue'
+          color='rgb(204,204,204)'
         />
       </TouchableOpacity>
     );
