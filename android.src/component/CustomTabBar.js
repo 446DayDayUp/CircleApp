@@ -46,7 +46,7 @@ const CustomTabBar = React.createClass({
         style={[styles.flexOne, styles.button]}
         onPress={() => {}}>
         <Icon name={label} size={30}
-          color='rgb(204,204,204)'
+          color='white'
         />
       </TouchableOpacity>
     );
