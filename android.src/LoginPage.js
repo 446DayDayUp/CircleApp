@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Actions } from 'react-native-router-flux';
+import dismissKeyboard from 'dismissKeyboard';
 import {
   StyleSheet,
   Text,
@@ -20,9 +21,15 @@ export default class LoginPage extends Component {
 
   _logIn() {
     Actions.mainPage({
-      userName: this.state.userName,
-      iconName: this.props.iconName ? this.props.iconName : this.initialIconName, 
+      userName: this.state.userName ? this.state.userName : this.props.userName,
+      iconName: this.props.iconName ? this.props.iconName : this.initialIconName,
     });
+  }
+
+  _goToIconPage() {
+    dismissKeyboard();
+    let n = this.state.userName ? this.state.userName : this.props.userName;
+    Actions.pickicon({userName: n});
   }
 
   render() {
@@ -38,7 +45,7 @@ export default class LoginPage extends Component {
 
           <View style={styles.bottom}>
             <View style={styles.iconView}>
-              <TouchableOpacity onPress={Actions.pickicon} >
+              <TouchableOpacity onPress={() => this._goToIconPage()} >
                 <Image
                   source={this.props.icon ? this.props.icon : this.initialIcon}
                 onPress={() => console.warn('pressed')}
@@ -54,7 +61,7 @@ export default class LoginPage extends Component {
               <TextInput
                 underlineColorAndroid='deepskyblue'
                 style={styles.inputStyle}
-                placeholder="Nickname"
+                placeholder={this.props.userName ? this.props.userName : 'Nickname'}
                 onChangeText={(userName) => this.setState({userName})}
               />
               <View style={{flex: 1}}></View>
