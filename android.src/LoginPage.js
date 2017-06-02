@@ -48,7 +48,6 @@ export default class LoginPage extends Component {
               <TouchableOpacity onPress={() => this._goToIconPage()} >
                 <Image
                   source={this.props.icon ? this.props.icon : this.initialIcon}
-                onPress={() => console.warn('pressed')}
                 style={styles.icon} />
               </TouchableOpacity>
             </View>
