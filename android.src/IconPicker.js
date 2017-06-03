@@ -25,26 +25,29 @@ export default class IconPicker extends Component {
           <View style={styles.insideview} key={i}>
             <TouchableOpacity
               onPress={
-                () => Actions.login({icon: this.imagelist[imageNames[i]],
-                  iconName: imageNames[i],
-                  userName: this.props.userName})}>
+                () => {Actions.pop();
+                setTimeout(() =>
+                Actions.refresh({icon: this.imagelist[imageNames[i]],
+                                 iconName: imageNames[i]}), 100)}}>
               <Image source={this.imagelist[imageNames[i]]} style={styles.icon}/>
             </TouchableOpacity>
 
             <TouchableOpacity
               onPress={
-                () => Actions.login({icon: this.imagelist[imageNames[i + 1]],
-                iconName: imageNames[i + 1],
-                userName: this.props.userName})}>
+                () => {Actions.pop();
+                setTimeout(() =>
+                Actions.refresh({icon: this.imagelist[imageNames[i + 1]],
+                                 iconName: imageNames[i + 1]}), 100)}}>
               <Image
                 source={this.imagelist[imageNames[i + 1]]} style={styles.icon}/>
             </TouchableOpacity>
 
             <TouchableOpacity
               onPress={
-                () => Actions.login({icon: this.imagelist[imageNames[i + 2]],
-                iconName: imageNames[i + 2],
-                userName: this.props.userName})}>
+                () => {Actions.pop();
+                setTimeout(() =>
+                Actions.refresh({icon: this.imagelist[imageNames[i + 1]],
+                                 iconName: imageNames[i + 1]}), 100)}}>
               <Image
                 source={this.imagelist[imageNames[i + 2]]} style={styles.icon}/>
             </TouchableOpacity>
