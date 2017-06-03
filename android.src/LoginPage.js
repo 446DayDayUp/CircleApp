@@ -8,18 +8,24 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
+  AsyncStorage,
 } from 'react-native';
+import { profilePicture } from './lib/profilePicture.js';
 
 export default class LoginPage extends Component {
   constructor(props) {
     super(props);
-    this.state = {userName: ''};
-    this.initialIcon = require('../img/pikachu-2.png');
-    this.initialIconName = 'pikachu-2';
+    this.state = {
+      userName: '',
+      initialIcon: null,
+    };
+    this.initialIconName = null;
     this._logIn = this._logIn.bind(this);
+    this._save = this._save.bind(this);
   }
 
   _logIn() {
+    this._save();
     Actions.mainPage({
       userName: this.state.userName ? this.state.userName : this.props.userName,
       iconName: this.props.iconName ? this.props.iconName : this.initialIconName,
@@ -29,6 +35,38 @@ export default class LoginPage extends Component {
   _goToIconPage() {
     dismissKeyboard();
     Actions.pickicon();
+  }
+
+
+  componentDidMount(){
+    let promises = [];
+    promises.push(AsyncStorage.getItem('userName'));
+    promises.push(AsyncStorage.getItem('iconName'));
+    Promise.all(promises).then(function(result) {
+      let userName = result[0];
+      let iconName = result[1];
+      if (userName === null || iconName === null) {
+        this.setState({
+          initialIconName: 'pikachu-2',
+          initialIcon: require('../img/pikachu-2.png'),
+        });
+        return;
+      }
+      this.setState({
+        userName,
+        initialIconName: iconName,
+        initialIcon: profilePicture[iconName],
+      });
+    }.bind(this)).catch((error) => {
+      console.log('error:' + error.message);
+    });
+  }
+
+  _save() {
+    let userName = this.state.userName;
+    let iconName = this.props.iconName ? this.props.iconName : this.state.initialIconName;
+    AsyncStorage.setItem('userName', userName);
+    AsyncStorage.setItem('iconName', iconName);
   }
 
   render() {
@@ -46,7 +84,7 @@ export default class LoginPage extends Component {
             <View style={styles.iconView}>
               <TouchableOpacity onPress={() => this._goToIconPage()} >
                 <Image
-                  source={this.props.icon ? this.props.icon : this.initialIcon}
+                  source={this.props.icon ? this.props.icon : this.state.initialIcon}
                 style={styles.icon} />
               </TouchableOpacity>
             </View>
@@ -59,7 +97,8 @@ export default class LoginPage extends Component {
               <TextInput
                 underlineColorAndroid='deepskyblue'
                 style={styles.inputStyle}
-                placeholder={this.props.userName ? this.props.userName : 'Nickname'}
+                value={this.props.userName ? this.props.userName : this.state.userName}
+                placeholder= 'Nickname'
                 onChangeText={(userName) => this.setState({userName})}
               />
               <View style={{flex: 1}}></View>
