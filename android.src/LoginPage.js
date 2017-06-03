@@ -28,8 +28,7 @@ export default class LoginPage extends Component {
 
   _goToIconPage() {
     dismissKeyboard();
-    let n = this.state.userName ? this.state.userName : this.props.userName;
-    Actions.pickicon({userName: n});
+    Actions.pickicon();
   }
 
   render() {
