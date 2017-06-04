@@ -6,6 +6,8 @@ import {
     TouchableOpacity,
     ScrollView,
     TouchableHighlight,
+    BackHandler,
+    ToastAndroid,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -30,6 +32,22 @@ class MainPage extends Component {
     this.updateRoom = this.updateRoom.bind(this);
     this.refreshRoomList = this.refreshRoomList.bind(this);
   }
+
+  //add double back to exit app
+  componentWillMount(){
+    BackHandler.addEventListener('hardwareBackPress', this.onBackHandler);
+  }
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.onBackHandler);
+  }
+  onBackHandler = () => {
+    if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
+      return false;
+    }
+    this.lastBackPressed = Date.now();
+    ToastAndroid.show('Press back again to exit Circle', ToastAndroid.SHORT);
+    return true;
+  };
 
   joinRoom(room) {
     let allRooms = this.state.allRooms.filter((r) =>
