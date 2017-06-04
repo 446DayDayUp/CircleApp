@@ -15,7 +15,7 @@ import {
   AppRegistry,
 } from 'react-native';
 
-export default class circle extends Component {
+export default class Circle extends Component {
   render() {
     return (
       <Router>
@@ -34,4 +34,4 @@ export default class circle extends Component {
 }
 
 
-AppRegistry.registerComponent('circle', () => circle);
+AppRegistry.registerComponent('Circle', () => Circle);
