@@ -9,6 +9,8 @@ import {
   Image,
   TouchableOpacity,
   AsyncStorage,
+  BackHandler,
+  ToastAndroid,
 } from 'react-native';
 import { profilePicture } from './lib/profilePicture.js';
 
@@ -68,6 +70,22 @@ export default class LoginPage extends Component {
     AsyncStorage.setItem('userName', userName);
     AsyncStorage.setItem('iconName', iconName);
   }
+
+  //add double back to exit app
+  componentWillMount(){
+    BackHandler.addEventListener('hardwareBackPress', this.onBackHandler);
+  }
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.onBackHandler);
+  }
+  onBackHandler = () => {
+    if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
+      return false;
+    }
+    this.lastBackPressed = Date.now();
+    ToastAndroid.show('Press back again to exit Circle', ToastAndroid.SHORT);
+    return true;
+  };
 
   render() {
     return (
