@@ -13,6 +13,7 @@ import {
   ToastAndroid,
 } from 'react-native';
 import { profilePicture } from './lib/profilePicture.js';
+import SplashScreen from 'react-native-splash-screen'
 
 export default class LoginPage extends Component {
   constructor(props) {
@@ -62,6 +63,7 @@ export default class LoginPage extends Component {
     }.bind(this)).catch((error) => {
       console.log('error:' + error.message);
     });
+    setTimeout(SplashScreen.hide, 1000);
   }
 
   _save() {
