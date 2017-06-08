@@ -17,6 +17,9 @@ import * as http from './lib/http.js';
 import { getGpsCord } from './lib/gps.js';
 import {styles} from './css/MainPageCSS.js';
 
+window.navigator.userAgent = 'ReactNative';
+const io = require('socket.io-client');
+
 const SERVER_URL = 'https://circle-chat.herokuapp.com';
 
 class MainPage extends Component {
