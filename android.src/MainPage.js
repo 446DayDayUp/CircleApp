@@ -59,6 +59,14 @@ class MainPage extends Component {
       ...this.state.joinedRooms,
       room,
     ];
+    // Join the chat room;
+    let socket = io(SERVER_URL);
+    socket.emit('room', room._id); // Join room by roomId.
+    Actions.chatRoom({
+      socket: socket,
+      name: room.name,
+      roomId: room._id
+    });
     this.updateRoom(allRooms, joinedRooms);
   }
 
