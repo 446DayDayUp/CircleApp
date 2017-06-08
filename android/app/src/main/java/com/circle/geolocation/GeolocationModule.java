@@ -11,8 +11,6 @@ import android.util.Log;
 import com.circle.MainActivity;
 import android.os.Bundle;
 import android.content.Context;
-import org.json.JSONObject;
-import org.json.JSONException;
 import android.location.Location;
 import android.location.Criteria;
 import android.location.LocationListener;
