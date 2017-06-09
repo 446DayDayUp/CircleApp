@@ -15,6 +15,11 @@ class ChatRoomList extends Component {
       text: '',
     }
     this.sendMsg = this.sendMsg.bind(this);
+    this.props.socket.on('chat', function(sid, msg){
+      this.setState({
+        messages: [...this.state.messages, msg],
+      });
+    }.bind(this));
   }
 
   sendMsg() {
