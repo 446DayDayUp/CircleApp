@@ -17,34 +17,28 @@ export default class IconPicker extends Component {
     this.imagelist = profilePicture;
   }
 
+  _saveIcon(i, imageNames) {
+    return(
+    <TouchableOpacity
+      onPress={
+        () => {Actions.pop();
+        setTimeout(() =>
+        Actions.refresh({icon: this.imagelist[imageNames[i]],
+                         iconName: imageNames[i]}), 100)}}>
+      <Image source={this.imagelist[imageNames[i]]} style={styles.icon}/>
+    </TouchableOpacity>
+    )
+  }
+
   renderImages() {
     let imageGrid = [];
     let imageNames = Object.keys(this.imagelist);
     for (let i = 0; i < imageNames.length; i += 3) {
       imageGrid.push(
-          <View style={styles.insideview} key={i}>
-            <TouchableOpacity
-              onPress={
-                () => Actions.login({icon: this.imagelist[imageNames[i]],
-                  iconName: imageNames[i]})}>
-              <Image source={this.imagelist[imageNames[i]]} style={styles.icon}/>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={
-                () => Actions.login({icon: this.imagelist[imageNames[i + 1]],
-                iconName: imageNames[i + 1]})}>
-              <Image
-                source={this.imagelist[imageNames[i + 1]]} style={styles.icon}/>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={
-                () => Actions.login({icon: this.imagelist[imageNames[i + 2]],
-                iconName: imageNames[i + 2]})}>
-              <Image
-                source={this.imagelist[imageNames[i + 2]]} style={styles.icon}/>
-            </TouchableOpacity>
+        <View style={styles.insideview} key={i}>
+          {this._saveIcon(i, imageNames)}
+          {this._saveIcon(i + 1, imageNames)}
+          {this._saveIcon(i + 2, imageNames)}
         </View>
       );
     }

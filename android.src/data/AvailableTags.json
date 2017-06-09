@@ -1,14 +1,14 @@
 {
-  "#Game": [
-    "#LOL",
-    "#DOTA"
+  "Game": [
+    "LOL",
+    "DOTA"
   ],
-  "#Sports": [
-    "#Soccer",
-    "#Basketball"
+  "Sports": [
+    "Soccer",
+    "Basketball"
   ],
-  "#Study": [
-    "#CS",
-    "#MATH"
+  "Study": [
+    "CS",
+    "MATH"
   ]
 }

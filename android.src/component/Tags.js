@@ -13,7 +13,7 @@ export default class Tags extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedTags: this.props.passTagsToTagsComp
+      selectedTags: this.props.passTagsToTagsComp,
     }
     this.allTags = tags;
     this.renderTags = this.renderTags.bind(this);
@@ -31,8 +31,13 @@ export default class Tags extends Component {
         ],
       })
     } else {
+      // for all t in selectedTags, 1. t != tag;
+      // 2. if tag is one of the major tag, t is not in tag;
+      //    otherwise, no need to check
       this.setState({
-        selectedTags: this.state.selectedTags.filter((t) => t !== tag)
+        selectedTags: this.state.selectedTags.filter((t) => t !== tag &&
+          ((this.allTags[tag] && this.allTags[tag].indexOf(t) < 0)
+            || !this.allTags[tag]))
       });
     }
     setTimeout(() => this.props.passTagsFromTagsComp(this.state.selectedTags), 100);

@@ -4,53 +4,48 @@ import {
   View,
   ScrollView,
   ListView,
+  RefreshControl,
 } from 'react-native';
-import * as http from '../lib/http.js';
-import { getGpsCord } from '../lib/gps.js';
-const SERVER_URL = 'https://circle-chat.herokuapp.com';
+import ChatRoomPanel from '../component/ChatRoomPanel.js';
+import {styles} from '../css/MainPageCSS.js';
 
 export default class ChatRoomList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      chatRooms: []
+      chatRooms: this.props.roomList || [],
+      refreshing: false,
     };
-    getGpsCord().then(function(position) {
-      http.get(SERVER_URL, 'get-chat-rooms', {
-        lat: position.lat,
-        lng: position.lng,
-        range: 10000,
-      }).then((response) => {
-        return response.json();
-      }).then(function(chatRooms) {
-        this.setState({
-          chatRooms,
-        });
-      }.bind(this));
-    }.bind(this),
-      (error) => alert(JSON.stringify(error)),
-      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
-    );
-    this.renderRoomView = this.renderRoomView.bind(this);
   }
 
+  _onRefresh() {
+    if (!this.props.refreshList) return;
+    this.setState({refreshing: true});
+    this.props.refreshList().then(() => {
+      this.setState({refreshing: false});
+    });
+  }
 
-  renderRoomView(room, index) {
-    return (
-      <View key={room._id} style={{borderWidth: 0.5, borderRadius: 5, padding: 5, margin: 2}}>
-        <Text>{room.name} ({room.numUser})</Text>
-        <Text>{room.distance}m</Text>
-        <Text style={{fontStyle: 'italic'}}>
-          {room.tags.map((tag) => '#'+tag+' ')}
-        </Text>
-      </View>
-    );
+  updateList(chatRooms) {
+    this.setState({chatRooms});
   }
 
   render() {
     return (
-      <ScrollView>
-        {this.state.chatRooms.map(this.renderRoomView)}
+      <ScrollView
+          style={{backgroundColor: '#F8F8F8'}}
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this._onRefresh.bind(this)}
+          />
+        }>
+        {this.state.chatRooms.map((r) =>
+          <ChatRoomPanel room={r} key={r._id}
+            btnText={this.props.btnText}
+            btnHandler={function(r) {
+              this.props.roomActionHandler(r);
+            }.bind(this, r)}/>)}
       </ScrollView>
     );
   }
