@@ -10,6 +10,7 @@ import com.facebook.react.bridge.WritableMap;
 import android.util.Log;
 import com.circle.MainActivity;
 import android.os.Bundle;
+import android.os.HandlerThread;
 import android.content.Context;
 import android.location.Location;
 import android.location.Criteria;
@@ -56,8 +57,12 @@ public class GeolocationModule extends ReactContextBaseJavaModule {
     super(reactContext);
     locationListener = new GeoLocationListener();
     locationManager = (LocationManager) reactContext.getSystemService(Context.LOCATION_SERVICE);
-    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 50, locationListener);
-    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 50, locationListener);
+    HandlerThread t = new HandlerThread("GpsProvider");
+    t.start();
+    HandlerThread t2 = new HandlerThread("NetworkProvider");
+    t2.start();
+    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 30000, 50, locationListener, t.getLooper());
+    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 30000, 50, locationListener, t2.getLooper());
   }
 
    @Override
