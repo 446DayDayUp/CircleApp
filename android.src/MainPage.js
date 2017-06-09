@@ -8,6 +8,7 @@ import {
     TouchableHighlight,
     BackHandler,
     ToastAndroid,
+    Alert,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
@@ -92,12 +93,8 @@ class MainPage extends Component {
         this.updateRoom(allRooms, joinedRooms);
         return;
       }.bind(this));
-    }.bind(this),
-      (error) => {
-        throw error;
-      },
-      {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
-    );
+    }.bind(this))
+    .catch((e) => {}); // Error should be handled in lib/gps.js.
   }
 
   updateRoom(allRooms, joinedRooms) {
