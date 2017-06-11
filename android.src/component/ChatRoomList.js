@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import {
-  Text,
-  View,
   ScrollView,
-  ListView,
   RefreshControl,
 } from 'react-native';
 import ChatRoomPanel from '../component/ChatRoomPanel.js';
-import {styles} from '../css/MainPageCSS.js';
+import { styles } from '../css/MainPageCSS.js';
 
 export default class ChatRoomList extends Component {
   constructor(props) {

@@ -41,17 +41,19 @@ class MainPage extends Component {
   componentWillMount(){
     BackHandler.addEventListener('MainPage', this.onBackHandler);
   }
+
   componentWillUnmount() {
     BackHandler.removeEventListener('MainPage', this.onBackHandler);
   }
-  onBackHandler = () => {
+
+  onBackHandler() {
     if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
       return false;
     }
     this.lastBackPressed = Date.now();
     ToastAndroid.show('Press back again to leave', ToastAndroid.SHORT);
     return true;
-  };
+  }
 
   joinRoom(room) {
     let allRooms = this.state.allRooms.filter((r) =>

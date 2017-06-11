@@ -10,7 +10,6 @@ import LoginPage from './android.src/LoginPage.js';
 import IconPicker from './android.src/IconPicker.js';
 import MainPage from './android.src/MainPage.js';
 import CreateChat from './android.src/CreateChat.js';
-import ChatRoomList from './android.src/component/ChatRoomList.js';
 import ChatRoom from './android.src/component/ChatRoom.js';
 import {
   AppRegistry,
