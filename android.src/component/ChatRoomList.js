@@ -40,6 +40,7 @@ export default class ChatRoomList extends Component {
         {this.state.chatRooms.map((r) =>
           <ChatRoomPanel room={r} key={r._id}
             btnText={this.props.btnText}
+            roomOnClick={() => this.props.onRoomClick(r)}
             btnHandler={function(r) {
               this.props.roomActionHandler(r);
             }.bind(this, r)}/>)}

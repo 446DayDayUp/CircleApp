@@ -35,6 +35,8 @@ class MainPage extends Component {
     this.quitRoom = this.quitRoom.bind(this);
     this.updateRoom = this.updateRoom.bind(this);
     this.refreshRoomList = this.refreshRoomList.bind(this);
+    this.joinChatRoom = this.joinChatRoom.bind(this);
+    this.roomInfo = {};
   }
 
   //add double back to exit app
@@ -65,10 +67,18 @@ class MainPage extends Component {
     // Join the chat room;
     let socket = io(SERVER_URL);
     socket.emit('room', room._id); // Join room by roomId.
+    if (!this.roomInfo[room._id]) this.roomInfo[room._id] = {
+      messages: [],
+      socket,
+    };
+    socket.on('chat', function(sid, msg){
+      this.roomInfo[room._id].messages.push(msg);
+    }.bind(this));
     Actions.chatRoom({
-      socket: socket,
+      socket: this.roomInfo[room._id].socket,
       name: room.name,
-      roomId: room._id
+      roomId: room._id,
+      messages: this.roomInfo[room._id].messages,
     });
     this.updateRoom(allRooms, joinedRooms);
   }
@@ -81,6 +91,15 @@ class MainPage extends Component {
       room,
     ];
     this.updateRoom(allRooms, joinedRooms);
+  }
+
+  joinChatRoom(room) {
+    Actions.chatRoom({
+      socket: this.roomInfo[room._id].socket,
+      name: room.name,
+      roomId: room._id,
+      messages: this.roomInfo[room._id].messages,
+    });
   }
 
   refreshRoomList() {
@@ -134,14 +153,17 @@ class MainPage extends Component {
         renderTabBar={() => tabBar}>
         <ScrollView tabLabel='ios-chatbubbles' style={styles.tabView} >
           <View style={styles.card}>
+            {/* Joined Rooms */}
             <ChatRoomList roomActionHandler={this.quitRoom} btnText='Quit'
               ref={el=>{this._joinedRooms=el}}
-              roomList={this.state.joinedRooms}/>
+              roomList={this.state.joinedRooms}
+              onRoomClick={this.joinChatRoom}/>
           </View>
           {floatBtn}
         </ScrollView>
         <ScrollView tabLabel='md-wifi' style={styles.tabView}>
           <View style={styles.card}>
+            {/* All rooms */}
             <ChatRoomList roomActionHandler={this.joinRoom} btnText='Join'
               ref={el=>this._allRooms=el}
               roomList={this.state.allRooms}

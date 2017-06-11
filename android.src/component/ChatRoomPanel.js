@@ -14,7 +14,7 @@ export default class ChatRoomPanel extends Component {
     let room = this.props.room;
     return(
       <View key={room._id} style={{backgroundColor: '#F8F8F8'}}>
-        <TouchableOpacity activeOpacity={0.8}>
+        <TouchableOpacity activeOpacity={0.8} onPress={this.props.roomOnClick}>
           <View style={styles.container}>
             <View style={styles.left}>
               {this._chooseTag()}
@@ -36,10 +36,6 @@ export default class ChatRoomPanel extends Component {
         </TouchableOpacity>
       </View>
     );
-  }
-
-  onClick() {
-
   }
 
   _showTag() {
@@ -64,10 +60,10 @@ export default class ChatRoomPanel extends Component {
     }else{
       return (
         <MarqueeLabel
-        duration={8000}
-        text={tagStr}
-        bgViewStyle = {{flex: 1, marginBottom: 5, flexDirection: 'row'}}
-        textStyle={{fontStyle: 'italic', fontSize: 12, color: '#546979'}}
+          duration={8000}
+          text={tagStr}
+          bgViewStyle = {{flex: 1, marginBottom: 5, flexDirection: 'row'}}
+          textStyle={{fontStyle: 'italic', fontSize: 12, color: '#546979'}}
         />
       );
     }

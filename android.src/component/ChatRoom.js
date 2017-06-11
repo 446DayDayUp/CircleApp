@@ -15,7 +15,7 @@ class ChatRoomList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      messages: [],
+      messages: this.props.messages || [],
       text: '',
     };
     this.sendMsg = this.sendMsg.bind(this);
@@ -74,6 +74,7 @@ class ChatRoomList extends Component {
             style={{flex: 5}}
             value={this.state.text}
             onChangeText={(text) => this.setState({text})}
+            onSubmitEditing={this.sendMsg}
           />
           <TouchableOpacity style={{flex: 1}} onPress={this.sendMsg}>
             <Text>Send</Text>

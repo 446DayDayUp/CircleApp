@@ -22,12 +22,10 @@ export default class IconPicker extends Component {
     <TouchableOpacity
       onPress={
         () => {
-          Actions.pop();
-          setTimeout(() =>
-          Actions.refresh({
+          Actions.pop({refresh: {
             icon: this.imagelist[imageNames[i]],
             iconName: imageNames[i],
-          }), 100);
+          }});
         }}>
       <Image source={this.imagelist[imageNames[i]]} style={styles.icon}/>
     </TouchableOpacity>
