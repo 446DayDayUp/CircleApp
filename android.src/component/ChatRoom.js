@@ -5,7 +5,11 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
+  StyleSheet,
+  BackHandler,
 } from 'react-native';
+import { Actions } from 'react-native-router-flux';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 class ChatRoomList extends Component {
   constructor(props) {
@@ -22,6 +26,19 @@ class ChatRoomList extends Component {
     }.bind(this));
   }
 
+  componentWillMount(){
+    BackHandler.addEventListener('createChat', this.onBackHandler);
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('createChat', this.onBackHandler);
+  }
+
+  onBackHandler() {
+    Actions.pop();
+    return true;
+  };
+
   sendMsg() {
     this.props.socket.emit('chat', this.props.roomId, this.state.text);
     this.setState({
@@ -31,8 +48,24 @@ class ChatRoomList extends Component {
 
   render() {
     return (
-      <View style={{flex: 1}}>
-        <Text>{this.props.name}</Text>
+      <View style={styles.ChatRoomView}>
+        <View style={styles.headerView}>
+          <TouchableOpacity onPress={Actions.pop}
+            style={styles.backKey}>
+            <Icon name='ios-arrow-back'
+              size={40}
+              color='white'
+            />
+          </TouchableOpacity>
+          <Text style={styles.titleText}>{this.props.name}</Text>
+          <TouchableOpacity onPress={() => {}}
+            style={styles.menuKey}>
+            <Icon name='ios-menu'
+              size={40}
+              color='white'
+            />
+          </TouchableOpacity>
+        </View>
         <ScrollView>
           {this.state.messages.map((msg, i) => <Text key={i}>{msg}</Text>)}
         </ScrollView>
@@ -50,5 +83,29 @@ class ChatRoomList extends Component {
     );
   }
 }
+
+
+export const styles = StyleSheet.create({
+  ChatRoomView: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  headerView: {
+    height: 40,
+    backgroundColor: 'skyblue',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  titleText: {
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
+  backKey: {
+    paddingLeft: 10,
+  },
+  menuKey: {
+    paddingRight: 10,
+  },
+});
 
 export default ChatRoomList;
