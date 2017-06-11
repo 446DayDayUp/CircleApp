@@ -117,7 +117,9 @@ class MainPage extends Component {
   render() {
     let tabBar = <CustomTabBar
       leftBtnLabel='md-person'
-      rightBtnLabel='md-search'/>;
+      rightBtnLabel='md-search'
+      userName={this.props.userName}
+      iconName={this.props.iconName}/>;
 
     let floatBtn = <TouchableHighlight style={styles.addButton}
       underlayColor='#ff7043' onPress={Actions.createChat}>
