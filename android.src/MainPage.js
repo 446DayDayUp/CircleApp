@@ -39,17 +39,17 @@ class MainPage extends Component {
 
   //add double back to exit app
   componentWillMount(){
-    BackHandler.addEventListener('hardwareBackPress', this.onBackHandler);
+    BackHandler.addEventListener('MainPage', this.onBackHandler);
   }
   componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.onBackHandler);
+    BackHandler.removeEventListener('MainPage', this.onBackHandler);
   }
   onBackHandler = () => {
     if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
       return false;
     }
     this.lastBackPressed = Date.now();
-    ToastAndroid.show('Press back again to exit Circle', ToastAndroid.SHORT);
+    ToastAndroid.show('Press back again to leave', ToastAndroid.SHORT);
     return true;
   };
 

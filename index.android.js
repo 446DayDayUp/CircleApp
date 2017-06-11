@@ -24,11 +24,11 @@ export default class circle extends Component {
           <Scene key="login" component={LoginPage}
             type={ActionConst.RESET} hideNavBar={true} initial={true} />
           <Scene key="pickicon" component={IconPicker} />
-          <Scene key="createChat" component={CreateChat}
-                  hideNavBar={true} initial={false} />
+
           <Scene key="mainPage" hideNavBar={true} component={MainPage}
             type={ActionConst.RESET}/>
           <Scene key="chatRoom" component={ChatRoom} hideNavBar={true} />
+          <Scene key="createChat" component={CreateChat} />
         </Scene>
       </Router>
     );

@@ -11,6 +11,7 @@ import {
   AsyncStorage,
   BackHandler,
   ToastAndroid,
+  Alert,
 } from 'react-native';
 import { profilePicture } from './lib/profilePicture.js';
 import SplashScreen from 'react-native-splash-screen'
@@ -28,10 +29,20 @@ export default class LoginPage extends Component {
   }
 
   _logIn() {
+    if (this.state.userName === '') {
+      Alert.alert(
+          'Nickname cannot be empty',
+          'Please enter your Nickname!',
+          [
+            {text: 'OK'},
+          ]
+      )
+      return;
+    }
     this._save();
     Actions.mainPage({
       userName: this.state.userName ? this.state.userName : this.props.userName,
-      iconName: this.props.iconName ? this.props.iconName : this.initialIconName,
+      iconName: this.props.iconName ? this.props.iconName : this.state.initialIconName,
     });
   }
 
