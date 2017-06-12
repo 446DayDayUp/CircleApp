@@ -26,6 +26,7 @@ export default class LoginPage extends Component {
     this.initialIconName = null;
     this._logIn = this._logIn.bind(this);
     this._save = this._save.bind(this);
+    this.onBackHandler = this.onBackHandler.bind(this);
   }
 
   _logIn() {

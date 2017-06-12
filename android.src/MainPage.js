@@ -36,6 +36,7 @@ class MainPage extends Component {
     this.updateRoom = this.updateRoom.bind(this);
     this.refreshRoomList = this.refreshRoomList.bind(this);
     this.joinChatRoom = this.joinChatRoom.bind(this);
+    this.onBackHandler = this.onBackHandler.bind(this);
     this.roomInfo = {};
   }
 
