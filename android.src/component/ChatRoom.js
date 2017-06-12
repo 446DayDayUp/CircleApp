@@ -19,7 +19,7 @@ class ChatRoomList extends Component {
       text: '',
     };
     this.sendMsg = this.sendMsg.bind(this);
-    this.props.socket.on('chat', function(sid, msg){
+    this.props.socket.on('chat', function(){
       this.forceUpdate();
     }.bind(this));
   }
@@ -38,7 +38,8 @@ class ChatRoomList extends Component {
   };
 
   sendMsg() {
-    this.props.socket.emit('chat', this.props.roomId, this.state.text);
+    this.props.socket.emit('chat', this.props.roomId, this.props.userName,
+        this.props.iconName, this.state.text);
     this.setState({
       text: '',
     });
@@ -65,7 +66,7 @@ class ChatRoomList extends Component {
           </TouchableOpacity>
         </View>
         <ScrollView>
-          {this.state.messages.map((msg, i) => <Text key={i}>{msg}</Text>)}
+          {this.state.messages.map((msg, i) => <Text key={i}>{msg.iconName}-{msg.userName}: {msg.text}</Text>)}
         </ScrollView>
         <View style={{flexDirection: 'row', position: 'absolute', bottom: 0}}>
           <TextInput

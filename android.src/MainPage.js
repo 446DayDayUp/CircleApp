@@ -72,14 +72,21 @@ class MainPage extends Component {
       messages: [],
       socket,
     };
-    socket.on('chat', function(sid, msg){
-      this.roomInfo[room._id].messages.push(msg);
+    socket.on('chat', function(sid, userName, iconName, msg){
+      this.roomInfo[room._id].messages.push({
+        sid,
+        userName,
+        iconName,
+        text: msg,
+      });
     }.bind(this));
     Actions.chatRoom({
       socket: this.roomInfo[room._id].socket,
       name: room.name,
       roomId: room._id,
       messages: this.roomInfo[room._id].messages,
+      userName: this.props.userName,
+      iconName: this.props.iconName,
     });
     this.updateRoom(allRooms, joinedRooms);
   }
@@ -100,6 +107,8 @@ class MainPage extends Component {
       name: room.name,
       roomId: room._id,
       messages: this.roomInfo[room._id].messages,
+      userName: this.props.userName,
+      iconName: this.props.iconName,
     });
   }
 
