@@ -20,9 +20,7 @@ class ChatRoomList extends Component {
     };
     this.sendMsg = this.sendMsg.bind(this);
     this.props.socket.on('chat', function(sid, msg){
-      this.setState({
-        messages: [...this.state.messages, msg],
-      });
+      this.forceUpdate();
     }.bind(this));
   }
 
