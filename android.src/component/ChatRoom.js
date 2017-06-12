@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Message from './Message.js';
 
 class ChatRoomList extends Component {
   constructor(props) {
@@ -66,7 +67,7 @@ class ChatRoomList extends Component {
           </TouchableOpacity>
         </View>
         <ScrollView>
-          {this.state.messages.map((msg, i) => <Text key={i}>{msg.iconName}-{msg.userName}: {msg.text}</Text>)}
+          {this.state.messages.map((msg, i) => <Message msg={msg} key={i} selfId={this.props.socket.id}/>)}
         </ScrollView>
         <View style={{flexDirection: 'row', position: 'absolute', bottom: 0}}>
           <TextInput
