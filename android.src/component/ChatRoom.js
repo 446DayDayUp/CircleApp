@@ -20,18 +20,22 @@ class ChatRoomList extends Component {
       text: '',
     };
     this.sendMsg = this.sendMsg.bind(this);
-    this.props.socket.on('chat', function(){
-      this.forceUpdate();
-    }.bind(this));
+    this.socketListener = this.socketListener.bind(this);
+    this.props.socket.on('chat', this.socketListener);
   }
 
-  componentWillMount(){
-    BackHandler.addEventListener('createChat', this.onBackHandler);
+  componentWillMount() {
+    BackHandler.addEventListener('chatRoom', this.onBackHandler);
   }
 
   componentWillUnmount() {
-    BackHandler.removeEventListener('createChat', this.onBackHandler);
+    BackHandler.removeEventListener('chatRoom', this.onBackHandler);
+    this.props.socket.removeListener('chat', this.socketListener);
   }
+
+  socketListener() {
+    this.forceUpdate();
+  };
 
   onBackHandler() {
     Actions.pop();

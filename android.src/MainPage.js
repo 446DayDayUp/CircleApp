@@ -37,7 +37,9 @@ class MainPage extends Component {
     this.refreshRoomList = this.refreshRoomList.bind(this);
     this.joinChatRoom = this.joinChatRoom.bind(this);
     this.onBackHandler = this.onBackHandler.bind(this);
+    this.getChatRoom = this.getChatRoom.bind(this);
     this.roomInfo = {};
+    this.chatRoomSwitch = true;
   }
 
   //add double back to exit app
@@ -49,6 +51,12 @@ class MainPage extends Component {
     BackHandler.removeEventListener('MainPage', this.onBackHandler);
   }
 
+  getChatRoom() {
+    this.chatRoomSwitch = !this.chatRoomSwitch;
+    if(this.chatRoomSwitch) return 'chatRoom1';
+    else return 'chatRoom2';
+  }
+
   onBackHandler() {
     if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
       return false;
@@ -58,6 +66,7 @@ class MainPage extends Component {
     return true;
   }
 
+  // Join a nearby chat room which has not joined and jump to chat room scene.
   joinRoom(room) {
     let allRooms = this.state.allRooms.filter((r) =>
         r._id !== room._id);
@@ -72,7 +81,7 @@ class MainPage extends Component {
       messages: [],
       socket,
     };
-    socket.on('chat', function(sid, userName, iconName, msg){
+    socket.on('chat', function(sid, userName, iconName, msg) {
       this.roomInfo[room._id].messages.push({
         sid,
         userName,
@@ -80,7 +89,7 @@ class MainPage extends Component {
         text: msg,
       });
     }.bind(this));
-    Actions.chatRoom({
+    Actions[this.getChatRoom()]({
       socket: this.roomInfo[room._id].socket,
       name: room.name,
       roomId: room._id,
@@ -91,6 +100,7 @@ class MainPage extends Component {
     this.updateRoom(allRooms, joinedRooms);
   }
 
+  // Quit a chat room.
   quitRoom(room) {
     let joinedRooms = this.state.joinedRooms.filter((r) =>
         r._id !== room._id);
@@ -101,8 +111,9 @@ class MainPage extends Component {
     this.updateRoom(allRooms, joinedRooms);
   }
 
+  // Jump a chat room scene which is already joined.
   joinChatRoom(room) {
-    Actions.chatRoom({
+    Actions[this.getChatRoom()]({
       socket: this.roomInfo[room._id].socket,
       name: room.name,
       roomId: room._id,
