@@ -4,17 +4,16 @@ import {
   StyleSheet,
   ScrollView,
   View,
-  Text,
-} from 'react-native'
-import CheckBox from 'react-native-check-box'
-import tags from '../data/AvailableTags.json'
+} from 'react-native';
+import CheckBox from 'react-native-check-box';
+import tags from '../data/AvailableTags.json';
 
 export default class Tags extends Component {
   constructor(props) {
     super(props);
     this.state = {
       selectedTags: this.props.passTagsToTagsComp,
-    }
+    };
     this.allTags = tags;
     this.renderTags = this.renderTags.bind(this);
     this.renderCheckBox = this.renderCheckBox.bind(this);
@@ -22,22 +21,23 @@ export default class Tags extends Component {
 
   selectTag(tag) {
     let tagIndex = this.state.selectedTags.indexOf(tag);
-    if  (tagIndex < 0) {
+    if (tagIndex < 0) {
       // Tag was not selected.
       this.setState({
         selectedTags: [
           ...this.state.selectedTags,
           tag,
         ],
-      })
+      });
     } else {
-      // for all t in selectedTags, 1. t != tag;
-      // 2. if tag is one of the major tag, t is not in tag;
-      //    otherwise, no need to check
+      // for all t in selectedTags,
+      //   1. t != tag;
+      //   2. if tag is one of the major tag, t is not in tag;
+      //      otherwise, no need to check
       this.setState({
         selectedTags: this.state.selectedTags.filter((t) => t !== tag &&
           ((this.allTags[tag] && this.allTags[tag].indexOf(t) < 0)
-            || !this.allTags[tag]))
+            || !this.allTags[tag])),
       });
     }
     setTimeout(() => this.props.passTagsFromTagsComp(this.state.selectedTags), 100);
@@ -79,9 +79,8 @@ export default class Tags extends Component {
           {Object.keys(this.allTags).map(this.renderTags)}
         </ScrollView>
     </View>
-    )
+    );
   }
-
 }
 
 const styles = StyleSheet.create({
@@ -94,4 +93,4 @@ const styles = StyleSheet.create({
     marginLeft: 50,
     flex: 1,
   },
-})
+});

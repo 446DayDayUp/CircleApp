@@ -10,7 +10,8 @@ import LoginPage from './android.src/LoginPage.js';
 import IconPicker from './android.src/IconPicker.js';
 import MainPage from './android.src/MainPage.js';
 import CreateChat from './android.src/CreateChat.js';
-import ChatRoomList from './android.src/component/ChatRoomList.js';
+import ChatRoom from './android.src/component/ChatRoom.js';
+import ChatRoom2 from './android.src/component/ChatRoom.js';
 import {
   AppRegistry,
 } from 'react-native';
@@ -26,6 +27,8 @@ export default class circle extends Component {
 
           <Scene key="mainPage" hideNavBar={true} component={MainPage}
             type={ActionConst.RESET}/>
+          <Scene key="chatRoom1" component={ChatRoom} hideNavBar={true}/>
+          <Scene key="chatRoom2" component={ChatRoom} hideNavBar={true}/>
           <Scene key="createChat" component={CreateChat} />
         </Scene>
       </Router>
