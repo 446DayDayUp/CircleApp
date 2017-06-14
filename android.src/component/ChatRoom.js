@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
   Text,
   View,
-  ScrollView,
   TextInput,
   TouchableOpacity,
   StyleSheet,
@@ -24,6 +23,7 @@ class ChatRoomList extends Component {
     this.props.socket.on('chat', this.socketListener);
   }
 
+
   componentWillMount() {
     BackHandler.addEventListener('chatRoom', this.onBackHandler);
   }
@@ -44,7 +44,7 @@ class ChatRoomList extends Component {
 
   sendMsg() {
     this.props.socket.emit('chat', this.props.roomId, this.props.userName,
-        this.props.iconName, this.state.text);
+      this.props.iconName, this.state.text);
     this.setState({
       text: '',
     });
@@ -54,46 +54,51 @@ class ChatRoomList extends Component {
     return (
       <View style={styles.ChatRoomView}>
         <View style={styles.headerView}>
-          <TouchableOpacity onPress={Actions.pop}
+        <TouchableOpacity onPress={Actions.pop}
             style={styles.backKey}>
-            <Icon name='ios-arrow-back'
-              size={40}
-              color='white'
-            />
-          </TouchableOpacity>
-          <Text style={styles.titleText}>{this.props.name}</Text>
-          <TouchableOpacity onPress={() => {}}
-            style={styles.menuKey}>
-            <Icon name='ios-menu'
-              size={40}
-              color='white'
-            />
-          </TouchableOpacity>
-        </View>
-        <ScrollView>
-          {this.state.messages.map((msg, i) => <Message msg={msg} key={i} selfId={this.props.socket.id}/>)}
-        </ScrollView>
-        <View style={{flexDirection: 'row', position: 'absolute', bottom: 0}}>
-          <TextInput
-            style={{flex: 5}}
-            value={this.state.text}
-            onChangeText={(text) => this.setState({text})}
-            onSubmitEditing={this.sendMsg}
+          <Icon name='ios-arrow-back'
+            size={40}
+            color='white'
           />
-          <TouchableOpacity style={{flex: 1}} onPress={this.sendMsg}>
-            <Text>Send</Text>
-          </TouchableOpacity>
+        </TouchableOpacity>
+        <Text style={styles.titleText}>{this.props.name}</Text>
+        <TouchableOpacity onPress={() => {}}
+            style={styles.menuKey}>
+          <Icon name='ios-menu'
+            size={40}
+            color='white'
+          />
+        </TouchableOpacity>
+        </View>
+        <View style={styles.content}>
+            <Message messages={this.state.messages} socket={this.props.socket}/>
+        </View>
+        <View style={{flexDirection: 'row', position: 'absolute', bottom: 0}}>
+        <TextInput
+          style={{flex: 5}}
+          value={this.state.text}
+          onChangeText={(text) => this.setState({text})}
+          onSubmitEditing={this.sendMsg}
+        />
+        <TouchableOpacity style={{flex: 1}} onPress={this.sendMsg}>
+          <Text>Send</Text>
+        </TouchableOpacity>
         </View>
       </View>
     );
   }
 }
 
-
 export const styles = StyleSheet.create({
   ChatRoomView: {
     flex: 1,
     flexDirection: 'column',
+  },
+  content: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    backgroundColor: '#EBEBEB'
   },
   headerView: {
     height: 40,

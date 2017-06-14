@@ -2,62 +2,129 @@ import React, { Component } from 'react';
 import {
   Text,
   View,
-  Image,
   StyleSheet,
+  Dimensions,
+  Image,
+  FlatList,
 } from 'react-native';
 import { profilePicture } from '../lib/profilePicture.js';
 
-class Message extends Component {
+export default class Message extends Component {
   constructor(props) {
     super(props);
   }
 
-  render() {
-    let msg = this.props.msg;
-    return (
-      <View style={styles.container}>
-        { // Align left if message is sent by user.
-          this.props.selfId === msg.sid ? <View style={styles.flexOne}/> : null}
-        <View style={styles.message}>
-          <View style={[styles.userInfoLine,
-            {justifyContent: this.props.selfId === msg.sid ? 'flex-end' : 'flex-start'}]}>
-            <Image source={profilePicture[msg.iconName]}
-              resizeMode='contain' style={styles.iconImage}/>
-            <Text style={[styles.userName]}>{msg.userName}</Text>
+  spliceStr(str) {
+    let len = str.length;
+    if (len > 25) {
+      let pageSize = parseInt(len / 25) + 1;
+      let result = '';
+      let start, end;
+      for (let i = 0; i < pageSize; i++) {
+        start = i * 25;
+        end = start + 25;
+        if (end > len) {
+          end = len;
+        }
+        result += str.substring(start, end);
+        result += '\n';
+      }
+      return result;
+    } else {
+      return str;
+    }
+  }
+
+  renderMessage = (item) => {
+    var _msg = this.spliceStr(item.item.msg);
+    if (!item.item.isSend) {
+      return (
+        <View style={listItemStyle.container} key={item.item.key}>
+          <Image style={listItemStyle.iconView} source={item.item.iconName} />
+          <View>
+            <Text> {item.item.userName} </Text>
+            <View style={listItemStyle.msgContainer}>
+              <Text style={listItemStyle.msgText}>{_msg}</Text>
+            </View>
           </View>
-          <Text>{msg.text}</Text>
         </View>
-        { // Align right if message is sent by user.
-          this.props.selfId !== msg.sid ? <View style={styles.flexOne}/> : null}
-      </View>
-    );
+      );
+    } else {
+      return (
+        <View style={listItemStyle.containerSend} key={item.item.key}>
+          <View>
+            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end'}}>
+              <Text> {item.item.userName} </Text>
+            </View>
+            <View style={listItemStyle.msgContainerSend}>
+              <Text style={listItemStyle.msgText}>{_msg}</Text>
+            </View>
+          </View>
+          <Image style={listItemStyle.iconView} source={item.item.iconName} />
+        </View>
+      );
+    }
+  }
+
+  render() {
+    let msgs = this.props.messages;
+    let listData = [];
+    for(i = 0; i < msgs.length; i++){
+      listData.push({
+        key: i,
+        msg: msgs[i].text,
+        userName: msgs[i].userName,
+        iconName: profilePicture[msgs[i].iconName],
+        isSend: msgs[i].sid == this.props.socket.id ? true : false
+      });
+    }
+    return(
+      <FlatList
+        data={listData}
+        renderItem={this.renderMessage}
+      />);
   }
 }
 
-
-export const styles = StyleSheet.create({
+const listItemStyle = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-  },
-  message: {
-    backgroundColor: 'skyblue',
-    flex: 2,
-  },
-  userInfoLine: {
-    flexDirection: 'row',
-    height: 30,
-  },
-  userName: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  flexOne: {
     flex: 1,
+    width: Dimensions.get('window').width,
+    flexDirection: 'row',
+    padding: 15,
   },
-  iconImage: {
-    width: 25,
-    height: 25,
+  iconView: {
+    width: 40,
+    height: 40,
+  },
+  msgContainer: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 3,
+    paddingLeft: 8,
+    paddingRight: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 5,
+  },
+  msgContainerSend: {
+    backgroundColor: '#9FE658',
+    borderRadius: 3,
+    paddingLeft: 8,
+    paddingRight: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 5,
+  },
+  msgText: {
+    color: 'black',
+    fontSize: 15,
+    lineHeight: 24,
+  },
+  containerSend: {
+    flex: 1,
+    width: Dimensions.get('window').width,
+    flexDirection: 'row',
+    padding: 5,
+    justifyContent: 'flex-end',
   },
 });
-
-export default Message;
