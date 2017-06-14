@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
+import MarqueeLabel from 'react-native-lahk-marquee-label';
+import Icon from 'react-native-vector-icons/Ionicons';
 import CustomTabBar from './component/CustomTabBar.js';
 import ChatRoomList from './component/ChatRoomList';
 import * as http from './lib/http.js';
@@ -30,8 +32,10 @@ class MainPage extends Component {
     this.state = {
       allRooms: [],
       joinedRooms: [],
-      displayedRooms: [],
+      displayedAllRooms: [],
+      displayedJoinedRooms: [],
       showSearch: false,
+      searchCondition: '',
     };
     this.refreshRoomList();
     this.joinRoom = this.joinRoom.bind(this);
@@ -40,12 +44,12 @@ class MainPage extends Component {
     this.refreshRoomList = this.refreshRoomList.bind(this);
     this.showSearch = this.showSearch.bind(this);
     this.showSearchComp = this.showSearchComp.bind(this);
-    this.roomFilter = this.roomFilter.bind(this);
     this.joinChatRoom = this.joinChatRoom.bind(this);
     this.onBackHandler = this.onBackHandler.bind(this);
     this.getChatRoom = this.getChatRoom.bind(this);
     this.roomInfo = {};
     this.chatRoomSwitch = true;
+    this.showSearchCondition = this.showSearchCondition.bind(this);
   }
 
   //add double back to exit app
@@ -74,12 +78,15 @@ class MainPage extends Component {
 
   // Join a nearby chat room which has not joined and jump to chat room scene.
   joinRoom(room) {
-    let displayedRooms = this.state.displayedRooms.filter((r) =>
+    let displayedAllRooms = this.state.displayedAllRooms.filter((r) =>
         r._id !== room._id);
-    let joinedRooms = [
+    let displayedJoinedRooms = [
       ...this.state.joinedRooms,
       room,
     ];
+    this.setState({
+      joinedRooms: displayedJoinedRooms,
+    });
     // Join the chat room;
     let socket = io(SERVER_URL);
     socket.emit('room', room._id); // Join room by roomId.
@@ -103,18 +110,21 @@ class MainPage extends Component {
       userName: this.props.userName,
       iconName: this.props.iconName,
     });
-    this.updateRoom(displayedRooms, joinedRooms);
+    this.updateRoom(displayedAllRooms, displayedJoinedRooms);
   }
 
   // Quit a chat room.
   quitRoom(room) {
-    let joinedRooms = this.state.joinedRooms.filter((r) =>
+    let displayedJoinedRooms = this.state.displayedJoinedRooms.filter((r) =>
         r._id !== room._id);
-    let displayedRooms = [
-      ...this.state.displayedRooms,
+    let displayedAllRooms = [
+      ...this.state.allRooms,
       room,
     ];
-    this.updateRoom(displayedRooms, joinedRooms);
+    this.setState({
+      allRooms: displayedAllRooms,
+    });
+    this.updateRoom(displayedAllRooms, displayedJoinedRooms);
   }
 
   // Jump a chat room scene which is already joined.
@@ -148,7 +158,8 @@ class MainPage extends Component {
         );
         this.setState({
           allRooms,
-        })
+          joinedRooms,
+        });
         this.updateRoom(allRooms, joinedRooms);
         return;
       }.bind(this));
@@ -156,13 +167,13 @@ class MainPage extends Component {
     .catch((e) => {}); // Error should be handled in lib/gps.js.
   }
 
-  updateRoom(displayedRooms, joinedRooms) {
+  updateRoom(displayedAllRooms, displayedJoinedRooms) {
     this.setState({
-      joinedRooms,
-      displayedRooms,
+      displayedJoinedRooms,
+      displayedAllRooms,
     })
-    if(this._displayedRooms) this._displayedRooms.updateList(displayedRooms);
-    if(this._joinedRooms) this._joinedRooms.updateList(joinedRooms);
+    if(this._displayedAllRooms) this._displayedAllRooms.updateList(displayedAllRooms);
+    if(this._displayedJoinedRooms) this._displayedJoinedRooms.updateList(displayedJoinedRooms);
   }
 
   showSearch() {
@@ -191,7 +202,7 @@ class MainPage extends Component {
     }
     getGpsCord().then(function(position) {
       filterResult = filterFrom.filter((r) =>
-        (!name || r.name === name) &&
+        (!name || r.name.indexOf(name) !== -1) &&
           (tags.length === 0 || tags.every(elem => r.tags.indexOf(elem) > -1)) &&
             mBetweenCoords(position.lat, position.lng, r.lat, r.lng) <= range);
     });
@@ -200,18 +211,49 @@ class MainPage extends Component {
     } else if (tab === 'allRooms') {
       setTimeout(() => this.updateRoom(filterResult, this.state.joinedRooms), 500);
     }
+    let searchCondition = '';
+    if (name) {
+      searchCondition = 'Name: ' + name + '   ';
+    }
+    if (range / 1000 === 0) {
+      searchCondition = searchCondition + 'Range: ' + range + 'm   ';
+    } else {
+      searchCondition = searchCondition + 'Range: ' + range / 1000 + 'km   ';
+    }
+    if (tags.length !== 0) {
+      searchCondition = searchCondition + 'Tags: ';
+      for (let i = 0; i < tags.length; i += 1) {
+        searchCondition = searchCondition + '#' + tags[i] + ', ';
+      }
+    }
+    this.setState({
+      searchCondition,
+      showSearch: false,
+    });
   }
 
-  roomFilter(filterFrom, name, range, tags) {
-    let displayedRooms = [];
-    getGpsCord().then(function(position) {
-      displayedRooms = filterFrom.filter((r) =>
-        (!name || r.name === name) &&
-          (tags.length === 0 || tags.every(elem => r.tags.indexOf(elem) > -1)) &&
-            mBetweenCoords(position.lat, position.lng, r.lat, r.lng) <= range);
+  showSearchCondition() {
+    return (
+      <View style = {{flex: 0.05, flexDirection: 'row', backgroundColor: '#c6e2ff'}}>
+        <MarqueeLabel
+          duration = {8000}
+          text = {this.state.searchCondition}
+          bgViewStyle = {{flex: 4}}
+          textStyle = {{fontStyle: 'italic', fontSize: 14, color: '#8b3626'}}
+        />
+        <TouchableOpacity style = {{flex: 0.5, alignItems: 'center', justifyContent: 'center'}}
+          onPress = {() => this.clearSearchCondition()}>
+          <Icon name = 'ios-close-outline' size = {35} color = '#8b3626'/>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  clearSearchCondition() {
+    this.setState({
+      searchCondition: '',
     });
-    console.warn(displayedRooms.length);
-    return displayedRooms;
+    this.updateRoom(this.state.allRooms, this.state.joinedRooms);
   }
 
   render() {
@@ -233,22 +275,25 @@ class MainPage extends Component {
         renderTabBar={() => tabBar}>
         <ScrollView tabLabel='ios-chatbubbles' style={styles.tabView} >
           <View style={styles.card}>
-            {this.state.showSearch? this.showSearchComp('joinedRooms') : null}
+            {this.state.showSearch ? this.showSearchComp('joinedRooms') : null}
+            {!this.state.showSearch && this.state.searchCondition ? this.showSearchCondition() : null}
             {/* Joined Rooms */}
             <ChatRoomList roomActionHandler={this.quitRoom} btnText='Quit'
-              ref={el=>{this._joinedRooms=el}}
-              roomList={this.state.joinedRooms}
-              onRoomClick={this.joinChatRoom}/>
+              ref={el=>{this._displayedJoinedRooms=el}}
+              roomList={this.state.displayedJoinedRooms}
+              onRoomClick={this.joinChatRoom}
+              refreshList={this.refreshRoomList}/>
           </View>
           {floatBtn}
         </ScrollView>
         <ScrollView tabLabel='md-wifi' style={styles.tabView}>
           <View style={styles.card}>
             {this.state.showSearch? this.showSearchComp('allRooms') : null}
+            {!this.state.showSearch && this.state.searchCondition ? this.showSearchCondition() : null}
             {/* All rooms */}
             <ChatRoomList roomActionHandler={this.joinRoom} btnText='Join'
-              ref={el=>this._displayedRooms=el}
-              roomList={this.state.displayedRooms}
+              ref={el=>this._displayedAllRooms=el}
+              roomList={this.state.displayedAllRooms}
               refreshList={this.refreshRoomList}/>
           </View>
         </ScrollView>
