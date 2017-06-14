@@ -11,6 +11,7 @@ import IconPicker from './android.src/IconPicker.js';
 import MainPage from './android.src/MainPage.js';
 import CreateChat from './android.src/CreateChat.js';
 import ChatRoomList from './android.src/component/ChatRoomList.js';
+import ChangeInfo from './android.src/ChangeInfo.js';
 import {
   AppRegistry,
 } from 'react-native';
@@ -22,10 +23,11 @@ export default class circle extends Component {
         <Scene key="root">
           <Scene key="login" component={LoginPage}
             type={ActionConst.RESET} hideNavBar={true} initial={true} />
-          <Scene key="pickicon" component={IconPicker} />
+          <Scene key="pickicon" component={IconPicker} hideNavBar={true}/>
 
           <Scene key="mainPage" hideNavBar={true} component={MainPage}
             type={ActionConst.RESET}/>
+          <Scene key="ChangeInfo" component={ChangeInfo} hideNavBar={false} title='Profile'/>
           <Scene key="createChat" component={CreateChat} />
         </Scene>
       </Router>

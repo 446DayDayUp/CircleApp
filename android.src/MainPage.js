@@ -60,6 +60,14 @@ class MainPage extends Component {
       ...this.state.joinedRooms,
       room,
     ];
+    // Join the chat room;
+    let socket = io(SERVER_URL);
+    socket.emit('room', room._id); // Join room by roomId.
+    Actions.chatRoom({
+      socket: socket,
+      name: room.name,
+      roomId: room._id
+    });
     this.updateRoom(allRooms, joinedRooms);
   }
 
@@ -109,7 +117,9 @@ class MainPage extends Component {
   render() {
     let tabBar = <CustomTabBar
       leftBtnLabel='md-person'
-      rightBtnLabel='md-search'/>;
+      rightBtnLabel='md-search'
+      userName={this.props.userName}
+      iconName={this.props.iconName}/>;
 
     let floatBtn = <TouchableHighlight style={styles.addButton}
       underlayColor='#ff7043' onPress={Actions.createChat}>

@@ -7,10 +7,12 @@ import {
   TouchableNativeFeedback,
   TouchableOpacity,
   Button,
+  Image,
 } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from '../css/MainPageCSS.js';
-
+import { profilePicture } from '../lib/profilePicture.js';
 
 const CustomTabBar = React.createClass({
   tabIcons: [],
@@ -52,6 +54,19 @@ const CustomTabBar = React.createClass({
     );
   },
 
+  renderIconBtn(iconName) {
+    if (!iconName) return null;
+    return (
+      <View key={iconName}
+        style={[styles.flexOne, styles.button]}>
+        <TouchableOpacity onPress={() => Actions.ChangeInfo('iconName': iconName, 'userName': userName)}>
+        <Image source={profilePicture[iconName]}
+          resizeMode='contain' style={styles.flexOne}/>
+        </TouchableOpacity>
+      </View>
+      )
+  },
+
   renderTab(tab, i) {
     return (
       <TouchableOpacity key={tab}
@@ -70,7 +85,7 @@ const CustomTabBar = React.createClass({
   render() {
     return (
       <View style={[styles.tabs, this.props.style]}>
-          {this.renderBtn(this.props.leftBtnLabel)}
+          {this.renderIconBtn(this.props.iconName)}
         {this.props.tabs.map(this.renderTab)}
           {this.renderBtn(this.props.rightBtnLabel)}
       </View>
