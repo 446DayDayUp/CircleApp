@@ -35,24 +35,38 @@ class MainPage extends Component {
     this.quitRoom = this.quitRoom.bind(this);
     this.updateRoom = this.updateRoom.bind(this);
     this.refreshRoomList = this.refreshRoomList.bind(this);
+    this.joinChatRoom = this.joinChatRoom.bind(this);
+    this.onBackHandler = this.onBackHandler.bind(this);
+    this.getChatRoom = this.getChatRoom.bind(this);
+    this.roomInfo = {};
+    this.chatRoomSwitch = true;
   }
 
   //add double back to exit app
   componentWillMount(){
     BackHandler.addEventListener('MainPage', this.onBackHandler);
   }
+
   componentWillUnmount() {
     BackHandler.removeEventListener('MainPage', this.onBackHandler);
   }
-  onBackHandler = () => {
+
+  getChatRoom() {
+    this.chatRoomSwitch = !this.chatRoomSwitch;
+    if(this.chatRoomSwitch) return 'chatRoom1';
+    else return 'chatRoom2';
+  }
+
+  onBackHandler() {
     if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
       return false;
     }
     this.lastBackPressed = Date.now();
     ToastAndroid.show('Press back again to leave', ToastAndroid.SHORT);
     return true;
-  };
+  }
 
+  // Join a nearby chat room which has not joined and jump to chat room scene.
   joinRoom(room) {
     let allRooms = this.state.allRooms.filter((r) =>
         r._id !== room._id);
@@ -63,14 +77,30 @@ class MainPage extends Component {
     // Join the chat room;
     let socket = io(SERVER_URL);
     socket.emit('room', room._id); // Join room by roomId.
-    Actions.chatRoom({
-      socket: socket,
+    if (!this.roomInfo[room._id]) this.roomInfo[room._id] = {
+      messages: [],
+      socket,
+    };
+    socket.on('chat', function(sid, userName, iconName, msg) {
+      this.roomInfo[room._id].messages.push({
+        sid,
+        userName,
+        iconName,
+        text: msg,
+      });
+    }.bind(this));
+    Actions[this.getChatRoom()]({
+      socket: this.roomInfo[room._id].socket,
       name: room.name,
-      roomId: room._id
+      roomId: room._id,
+      messages: this.roomInfo[room._id].messages,
+      userName: this.props.userName,
+      iconName: this.props.iconName,
     });
     this.updateRoom(allRooms, joinedRooms);
   }
 
+  // Quit a chat room.
   quitRoom(room) {
     let joinedRooms = this.state.joinedRooms.filter((r) =>
         r._id !== room._id);
@@ -79,6 +109,18 @@ class MainPage extends Component {
       room,
     ];
     this.updateRoom(allRooms, joinedRooms);
+  }
+
+  // Jump a chat room scene which is already joined.
+  joinChatRoom(room) {
+    Actions[this.getChatRoom()]({
+      socket: this.roomInfo[room._id].socket,
+      name: room.name,
+      roomId: room._id,
+      messages: this.roomInfo[room._id].messages,
+      userName: this.props.userName,
+      iconName: this.props.iconName,
+    });
   }
 
   refreshRoomList() {
@@ -132,14 +174,17 @@ class MainPage extends Component {
         renderTabBar={() => tabBar}>
         <ScrollView tabLabel='ios-chatbubbles' style={styles.tabView} >
           <View style={styles.card}>
+            {/* Joined Rooms */}
             <ChatRoomList roomActionHandler={this.quitRoom} btnText='Quit'
               ref={el=>{this._joinedRooms=el}}
-              roomList={this.state.joinedRooms}/>
+              roomList={this.state.joinedRooms}
+              onRoomClick={this.joinChatRoom}/>
           </View>
           {floatBtn}
         </ScrollView>
         <ScrollView tabLabel='md-wifi' style={styles.tabView}>
           <View style={styles.card}>
+            {/* All rooms */}
             <ChatRoomList roomActionHandler={this.joinRoom} btnText='Join'
               ref={el=>this._allRooms=el}
               roomList={this.state.allRooms}

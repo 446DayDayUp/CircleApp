@@ -10,9 +10,9 @@ exports.post = (host, path, params) => {
   return fetch(host + '/' + path, {
     headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
     method: 'POST',
-    body: JSON.stringify(params)
+    body: JSON.stringify(params),
   });
-}
+};

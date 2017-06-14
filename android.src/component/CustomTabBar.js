@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
 import {
   Text,
-  View,
-  Animated,
-  ViewPropTypes,
-  TouchableNativeFeedback,
   TouchableOpacity,
   Button,
   Image,
+  View,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -33,12 +30,12 @@ const CustomTabBar = React.createClass({
   },
 
   // color between rgb(59,89,152) and rgb(204,204,204)
-    iconColor(progress) {
-        const red = 160 + (204 - 160) * progress;
-        const green = 3 + (204 - 3) * progress;
-        const blue = 37 + (204 - 37) * progress;
-        return `rgb(${red}, ${green}, ${blue})`;
-    },
+  iconColor(progress) {
+    const red = 160 + (204 - 160) * progress;
+    const green = 3 + (204 - 3) * progress;
+    const blue = 37 + (204 - 37) * progress;
+    return `rgb(${red}, ${green}, ${blue})`;
+  },
 
   renderBtn(label) {
     if (!label) return null;
@@ -64,7 +61,7 @@ const CustomTabBar = React.createClass({
           resizeMode='contain' style={styles.flexOne}/>
         </TouchableOpacity>
       </View>
-      )
+      );
   },
 
   renderTab(tab, i) {

@@ -2,7 +2,7 @@ import {
   NativeModules,
   Alert,
 } from 'react-native';
-var Geolocation  = NativeModules.Geolocation;
+const Geolocation = NativeModules.Geolocation;
 
 exports.getGpsCord = () => {
   return Geolocation.getCurrentLocation()
@@ -15,4 +15,4 @@ exports.getGpsCord = () => {
       );
       throw e;
     });
-}
+};
