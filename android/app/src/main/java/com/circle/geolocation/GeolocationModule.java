@@ -72,19 +72,23 @@ public class GeolocationModule extends ReactContextBaseJavaModule {
 
    @ReactMethod
     public void getCurrentLocation(Promise promise) {
-        if (locationListener.updated) {
-            WritableMap map = Arguments.createMap();
-            map.putDouble("lat", locationListener.lat);
-            map.putDouble("lng", locationListener.lng);
-            promise.resolve(map);
-        } else {
-            Criteria criteria = new Criteria();
-            String bestProvider = locationManager.getBestProvider(criteria, false);
-            android.location.Location location = locationManager.getLastKnownLocation(bestProvider);
-            WritableMap map = Arguments.createMap();
-            map.putDouble("lat", location.getLatitude());
-            map.putDouble("lng", location.getLongitude());
-            promise.resolve(map);
+        try {
+            if (locationListener.updated) {
+                WritableMap map = Arguments.createMap();
+                map.putDouble("lat", locationListener.lat);
+                map.putDouble("lng", locationListener.lng);
+                promise.resolve(map);
+            } else {
+                Criteria criteria = new Criteria();
+                String bestProvider = locationManager.getBestProvider(criteria, false);
+                android.location.Location location = locationManager.getLastKnownLocation(bestProvider);
+                WritableMap map = Arguments.createMap();
+                map.putDouble("lat", location.getLatitude());
+                map.putDouble("lng", location.getLongitude());
+                promise.resolve(map);
+            }
+        } catch(Exception e) {
+            promise.reject(e);
         }
     }
 }

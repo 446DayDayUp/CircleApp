@@ -11,9 +11,10 @@ import {
   AsyncStorage,
   BackHandler,
   ToastAndroid,
+  Alert,
 } from 'react-native';
 import { profilePicture } from './lib/profilePicture.js';
-import SplashScreen from 'react-native-splash-screen'
+import SplashScreen from 'react-native-splash-screen';
 
 export default class LoginPage extends Component {
   constructor(props) {
@@ -25,13 +26,24 @@ export default class LoginPage extends Component {
     this.initialIconName = null;
     this._logIn = this._logIn.bind(this);
     this._save = this._save.bind(this);
+    this.onBackHandler = this.onBackHandler.bind(this);
   }
 
   _logIn() {
+    if (this.state.userName === '') {
+      Alert.alert(
+          'Nickname cannot be empty',
+          'Please enter your Nickname!',
+          [
+            {text: 'OK'},
+          ]
+      );
+      return;
+    }
     this._save();
     Actions.mainPage({
       userName: this.state.userName ? this.state.userName : this.props.userName,
-      iconName: this.props.iconName ? this.props.iconName : this.initialIconName,
+      iconName: this.props.iconName ? this.props.iconName : this.state.initialIconName,
     });
   }
 
@@ -40,8 +52,7 @@ export default class LoginPage extends Component {
     Actions.pickicon();
   }
 
-
-  componentDidMount(){
+  componentDidMount() {
     let promises = [];
     promises.push(AsyncStorage.getItem('userName'));
     promises.push(AsyncStorage.getItem('iconName'));
@@ -73,21 +84,23 @@ export default class LoginPage extends Component {
     AsyncStorage.setItem('iconName', iconName);
   }
 
-  //add double back to exit app
-  componentWillMount(){
+  // Add double back to exit app。
+  componentWillMount() {
     BackHandler.addEventListener('hardwareBackPress', this.onBackHandler);
   }
+
   componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this.onBackHandler);
   }
-  onBackHandler = () => {
+
+  onBackHandler() {
     if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
       return false;
     }
     this.lastBackPressed = Date.now();
     ToastAndroid.show('Press back again to exit Circle', ToastAndroid.SHORT);
     return true;
-  };
+  }
 
   render() {
     return (

@@ -8,6 +8,7 @@ import {
   Button,
   TouchableOpacity,
   Alert,
+  BackHandler,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -32,6 +33,19 @@ export default class CreateChat extends Component {
       };
       this.submit = this.submit.bind(this);
   }
+
+  componentWillMount(){
+    BackHandler.addEventListener('createChat', this.onBackHandler);
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('createChat', this.onBackHandler);
+  }
+
+  onBackHandler() {
+    Actions.pop();
+    return true;
+  };
 
   // Show or hide tags
   showOrHide() {
@@ -76,12 +90,12 @@ export default class CreateChat extends Component {
           [
             {text: 'OK'},
           ]
-      )
+      );
       return;
     }
     this.setState({
       alreadySubmit: true,
-    })
+    });
     getGpsCord().then(function(location) {
         http.post(SERVER_URL, 'create-chat-room', {
           name: this.state.name,
