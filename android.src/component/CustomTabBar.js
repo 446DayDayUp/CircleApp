@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import {
   Text,
   TouchableOpacity,
+  Button,
   Image,
   View,
 } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { styles } from '../css/MainPageCSS.js';
 import { profilePicture } from '../lib/profilePicture.js';
@@ -49,12 +51,12 @@ const CustomTabBar = React.createClass({
     );
   },
 
-  renderIconBtn(iconName) {
+  renderIconBtn(iconName, userName) {
     if (!iconName) return null;
     return (
       <View key={iconName}
         style={[styles.flexOne, styles.button]}>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => Actions.ChangeInfo()}>
         <Image source={profilePicture[iconName]}
           resizeMode='contain' style={styles.flexOne}/>
         </TouchableOpacity>
@@ -80,7 +82,6 @@ const CustomTabBar = React.createClass({
   render() {
     return (
       <View style={[styles.tabs, this.props.style]}>
-        {this.renderBtn(this.props.leftBtnLabel, this.props.leftBtnOnPress)}
         {this.renderIconBtn(this.props.iconName)}
         {this.props.tabs.map(this.renderTab)}
         {this.renderBtn(this.props.rightBtnLabel, this.props.rightBtnOnPress)}
