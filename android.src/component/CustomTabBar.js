@@ -82,7 +82,6 @@ const CustomTabBar = React.createClass({
   render() {
     return (
       <View style={[styles.tabs, this.props.style]}>
-        {this.renderBtn(this.props.leftBtnLabel, this.props.leftBtnOnPress)}
         {this.renderIconBtn(this.props.iconName)}
         {this.props.tabs.map(this.renderTab)}
         {this.renderBtn(this.props.rightBtnLabel, this.props.rightBtnOnPress)}
