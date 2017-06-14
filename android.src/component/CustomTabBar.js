@@ -51,12 +51,12 @@ const CustomTabBar = React.createClass({
     );
   },
 
-  renderIconBtn(iconName) {
+  renderIconBtn(iconName, userName) {
     if (!iconName) return null;
     return (
       <View key={iconName}
         style={[styles.flexOne, styles.button]}>
-        <TouchableOpacity onPress={() => Actions.ChangeInfo('iconName': iconName, 'userName': userName)}>
+        <TouchableOpacity onPress={() => Actions.ChangeInfo()}>
         <Image source={profilePicture[iconName]}
           resizeMode='contain' style={styles.flexOne}/>
         </TouchableOpacity>

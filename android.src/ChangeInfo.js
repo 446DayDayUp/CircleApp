@@ -10,9 +10,7 @@ import {
   TouchableOpacity,
   AsyncStorage,
   BackHandler,
-  ToastAndroid,
   Alert,
-  Dimensions,
 } from 'react-native';
 import { profilePicture } from './lib/profilePicture.js';
 import SplashScreen from 'react-native-splash-screen'
@@ -42,7 +40,7 @@ export default class ChangeInfo extends Component {
     }
     this._save();
     Actions.mainPage({
-      userName: this.state.userName ? this.state.userName : this.props.userName,
+      userName: this.state.userName,
       iconName: this.props.iconName ? this.props.iconName : this.state.initialIconName,
     });
   }
@@ -110,7 +108,7 @@ export default class ChangeInfo extends Component {
           <TextInput
             underlineColorAndroid='deepskyblue'
             style={styles.inputStyle}
-            value={this.props.userName ? this.props.userName : this.state.userName}
+            value={this.state.userName}
             placeholder= 'Nickname'
             onChangeText={(userName) => this.setState({userName})}
           />
