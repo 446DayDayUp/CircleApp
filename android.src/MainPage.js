@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-    StyleSheet,
     Text,
     View,
     TouchableOpacity,
@@ -16,7 +15,9 @@ import CustomTabBar from './component/CustomTabBar.js';
 import ChatRoomList from './component/ChatRoomList';
 import * as http from './lib/http.js';
 import { getGpsCord } from './lib/gps.js';
+import { mBetweenCoords } from './lib/location.js'
 import {styles} from './css/MainPageCSS.js';
+import Search from './component/Search.js';
 
 window.navigator.userAgent = 'ReactNative';
 const io = require('socket.io-client');
@@ -29,12 +30,17 @@ class MainPage extends Component {
     this.state = {
       allRooms: [],
       joinedRooms: [],
+      displayedRooms: [],
+      showSearch: false,
     };
     this.refreshRoomList();
     this.joinRoom = this.joinRoom.bind(this);
     this.quitRoom = this.quitRoom.bind(this);
     this.updateRoom = this.updateRoom.bind(this);
     this.refreshRoomList = this.refreshRoomList.bind(this);
+    this.showSearch = this.showSearch.bind(this);
+    this.showSearchComp = this.showSearchComp.bind(this);
+    this.roomFilter = this.roomFilter.bind(this);
     this.joinChatRoom = this.joinChatRoom.bind(this);
     this.onBackHandler = this.onBackHandler.bind(this);
     this.getChatRoom = this.getChatRoom.bind(this);
@@ -68,7 +74,7 @@ class MainPage extends Component {
 
   // Join a nearby chat room which has not joined and jump to chat room scene.
   joinRoom(room) {
-    let allRooms = this.state.allRooms.filter((r) =>
+    let displayedRooms = this.state.displayedRooms.filter((r) =>
         r._id !== room._id);
     let joinedRooms = [
       ...this.state.joinedRooms,
@@ -97,18 +103,18 @@ class MainPage extends Component {
       userName: this.props.userName,
       iconName: this.props.iconName,
     });
-    this.updateRoom(allRooms, joinedRooms);
+    this.updateRoom(displayedRooms, joinedRooms);
   }
 
   // Quit a chat room.
   quitRoom(room) {
     let joinedRooms = this.state.joinedRooms.filter((r) =>
         r._id !== room._id);
-    let allRooms = [
-      ...this.state.allRooms,
+    let displayedRooms = [
+      ...this.state.displayedRooms,
       room,
     ];
-    this.updateRoom(allRooms, joinedRooms);
+    this.updateRoom(displayedRooms, joinedRooms);
   }
 
   // Jump a chat room scene which is already joined.
@@ -140,6 +146,9 @@ class MainPage extends Component {
         let allRooms = chatRooms.filter((r) =>
           joinedRooms.filter((room) => room._id === r._id).length === 0
         );
+        this.setState({
+          allRooms,
+        })
         this.updateRoom(allRooms, joinedRooms);
         return;
       }.bind(this));
@@ -147,19 +156,69 @@ class MainPage extends Component {
     .catch((e) => {}); // Error should be handled in lib/gps.js.
   }
 
-  updateRoom(allRooms, joinedRooms) {
+  updateRoom(displayedRooms, joinedRooms) {
     this.setState({
-      allRooms,
       joinedRooms,
+      displayedRooms,
     })
-    if(this._allRooms) this._allRooms.updateList(allRooms);
+    if(this._displayedRooms) this._displayedRooms.updateList(displayedRooms);
     if(this._joinedRooms) this._joinedRooms.updateList(joinedRooms);
+  }
+
+  showSearch() {
+    this.setState({
+      showSearch: !this.state.showSearch,
+    });
+  }
+
+  showSearchComp(tab) {
+    return <Search style = {styles.searchComp}
+      passTagsFromSearchComp = {this.getSearchCondition.bind(this)}
+      passCurTabToSearchComp = {tab}/>;
+  }
+
+  getSearchCondition(sc) {
+    let tab = sc.pop();
+    let tags = sc.pop();
+    let range = sc.pop();
+    let name = sc.pop();
+    let filterResult = [];
+    let filterFrom = [];
+    if (tab === 'joinedRooms') {
+      filterFrom = this.state.joinedRooms;
+    } else if (tab === 'allRooms') {
+      filterFrom = this.state.allRooms;
+    }
+    getGpsCord().then(function(position) {
+      filterResult = filterFrom.filter((r) =>
+        (!name || r.name === name) &&
+          (tags.length === 0 || tags.every(elem => r.tags.indexOf(elem) > -1)) &&
+            mBetweenCoords(position.lat, position.lng, r.lat, r.lng) <= range);
+    });
+    if (tab === 'joinedRooms') {
+      setTimeout(() => this.updateRoom(this.state.allRooms, filterResult), 500);
+    } else if (tab === 'allRooms') {
+      setTimeout(() => this.updateRoom(filterResult, this.state.joinedRooms), 500);
+    }
+  }
+
+  roomFilter(filterFrom, name, range, tags) {
+    let displayedRooms = [];
+    getGpsCord().then(function(position) {
+      displayedRooms = filterFrom.filter((r) =>
+        (!name || r.name === name) &&
+          (tags.length === 0 || tags.every(elem => r.tags.indexOf(elem) > -1)) &&
+            mBetweenCoords(position.lat, position.lng, r.lat, r.lng) <= range);
+    });
+    console.warn(displayedRooms.length);
+    return displayedRooms;
   }
 
   render() {
     let tabBar = <CustomTabBar
       leftBtnLabel='md-person'
       rightBtnLabel='md-search'
+      rightBtnOnPress = {() => this.showSearch()}
       userName={this.props.userName}
       iconName={this.props.iconName}/>;
 
@@ -174,6 +233,7 @@ class MainPage extends Component {
         renderTabBar={() => tabBar}>
         <ScrollView tabLabel='ios-chatbubbles' style={styles.tabView} >
           <View style={styles.card}>
+            {this.state.showSearch? this.showSearchComp('joinedRooms') : null}
             {/* Joined Rooms */}
             <ChatRoomList roomActionHandler={this.quitRoom} btnText='Quit'
               ref={el=>{this._joinedRooms=el}}
@@ -184,10 +244,11 @@ class MainPage extends Component {
         </ScrollView>
         <ScrollView tabLabel='md-wifi' style={styles.tabView}>
           <View style={styles.card}>
+            {this.state.showSearch? this.showSearchComp('allRooms') : null}
             {/* All rooms */}
             <ChatRoomList roomActionHandler={this.joinRoom} btnText='Join'
-              ref={el=>this._allRooms=el}
-              roomList={this.state.allRooms}
+              ref={el=>this._displayedRooms=el}
+              roomList={this.state.displayedRooms}
               refreshList={this.refreshRoomList}/>
           </View>
         </ScrollView>

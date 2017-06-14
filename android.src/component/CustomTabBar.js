@@ -35,13 +35,13 @@ const CustomTabBar = React.createClass({
     return `rgb(${red}, ${green}, ${blue})`;
   },
 
-  renderBtn(label) {
+  renderBtn(label, onPress) {
     if (!label) return null;
     // TODO: handle onPress event
     return (
       <TouchableOpacity key={label}
         style={[styles.flexOne, styles.button]}
-        onPress={() => {}}>
+        onPress={onPress}>
         <Icon name={label} size={30}
           color='white'
         />
@@ -80,9 +80,10 @@ const CustomTabBar = React.createClass({
   render() {
     return (
       <View style={[styles.tabs, this.props.style]}>
-          {this.renderIconBtn(this.props.iconName)}
+        {this.renderBtn(this.props.leftBtnLabel, this.props.leftBtnOnPress)}
+        {this.renderIconBtn(this.props.iconName)}
         {this.props.tabs.map(this.renderTab)}
-          {this.renderBtn(this.props.rightBtnLabel)}
+        {this.renderBtn(this.props.rightBtnLabel, this.props.rightBtnOnPress)}
       </View>
     );
   },
