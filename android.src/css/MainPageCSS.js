@@ -66,4 +66,7 @@ export const styles = StyleSheet.create({
       width: 0,
     },
   },
+  searchComp: {
+    flex: 2,
+  },
 });
