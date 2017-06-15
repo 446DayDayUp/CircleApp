@@ -167,8 +167,9 @@ class MainPage extends Component {
       }).then(function(chatRooms) {
         // Remove out-range joined room.
         // TODO: disconnect socket.
-        let joinedRooms = this.state.joinedRooms.filter((r) =>
-          chatRooms.filter((room) => room._id === r._id).length > 0
+        let joinedRooms = chatRooms.filter((r) =>
+          this.state.joinedRooms
+            .filter((room) => room._id === r._id).length > 0
         );
         let allRooms = chatRooms.filter((r) =>
           joinedRooms.filter((room) => room._id === r._id).length === 0
