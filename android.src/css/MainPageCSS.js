@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
     paddingTop: 0,
     borderWidth: 0,
     borderTopWidth: 5,
-    borderColor: MyColor,
+    borderColor: '#4f8ef7',
     borderLeftWidth: 0,
     borderRightWidth: 0,
     borderBottomColor: 'rgba(0,0,0,0.01)',
@@ -26,12 +26,12 @@ export const styles = StyleSheet.create({
   tabView: {
     flex: 1,
     // padding: 10,
-    backgroundColor: MyColor,
+    backgroundColor: '#4f8ef7',
   },
   card: {
     flex: 1,
     // borderWidth: 1,
-    backgroundColor: MyColor,
+    backgroundColor: '#4f8ef7',
     borderColor: 'rgba(0,0,0,0.1)',
     margin: 0,
     height: Dimensions.get('window').height - 75,
@@ -44,11 +44,11 @@ export const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: MyColor,
+    backgroundColor: '#4f8ef7',
   },
   addButton: {
-    backgroundColor: '#ff5722',
-    borderColor: '#ff5722',
+    backgroundColor: '#dc143c',
+    borderColor: '#dc143c',
     borderWidth: 1,
     height: 70,
     width: 70,

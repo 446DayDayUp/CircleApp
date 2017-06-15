@@ -17,29 +17,9 @@ export default class Message extends Component {
   scrollToBottom() {
     this.flatList.scrollToEnd({animated: true});
   }
-  spliceStr(str) {
-    let len = str.length;
-    if (len > 25) {
-      let pageSize = parseInt(len / 25) + 1;
-      let result = '';
-      let start, end;
-      for (let i = 0; i < pageSize; i++) {
-        start = i * 25;
-        end = start + 25;
-        if (end > len) {
-          end = len;
-        }
-        result += str.substring(start, end);
-        result += '\n';
-      }
-      return result;
-    } else {
-      return str;
-    }
-  }
 
   renderMessage = (item) => {
-    var _msg = this.spliceStr(item.item.msg);
+    var _msg = item.item.msg;
     if (!item.item.isSend) {
       return (
         <View style={listItemStyle.container} key={item.item.key}>
@@ -120,6 +100,8 @@ const listItemStyle = StyleSheet.create({
     marginRight: 5,
   },
   msgText: {
+    maxWidth: Dimensions.get('window').width - 150,
+    flexWrap: 'wrap',
     color: 'black',
     fontSize: 15,
     lineHeight: 24,
