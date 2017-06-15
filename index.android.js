@@ -15,7 +15,9 @@ import ChatRoom from './android.src/component/ChatRoom.js';
 import {
   AppRegistry,
 } from 'react-native';
-console.ignoredYellowBox = ['Setting a timer for a long']
+
+console.ignoredYellowBox = ['Setting a timer for a long'];
+
 export default class circle extends Component {
   render() {
     return (
