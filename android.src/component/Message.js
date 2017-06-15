@@ -14,6 +14,9 @@ export default class Message extends Component {
     super(props);
   }
 
+  scrollToBottom() {
+    this.flatList.scrollToEnd({animated: true});
+  }
   spliceStr(str) {
     let len = str.length;
     if (len > 25) {
@@ -80,6 +83,7 @@ export default class Message extends Component {
     }
     return(
       <FlatList
+        ref = {(r) => this.flatList = r}
         data={listData}
         renderItem={this.renderMessage}
       />);
