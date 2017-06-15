@@ -32,8 +32,7 @@ class MainPage extends Component {
     this.state = {
       allRooms: [],
       joinedRooms: [],
-      displayedAllRooms: [],
-      displayedJoinedRooms: [],
+      filterFunc: null,
       showSearch: false,
       searchCondition: '',
     };
@@ -78,15 +77,12 @@ class MainPage extends Component {
 
   // Join a nearby chat room which has not joined and jump to chat room scene.
   joinRoom(room) {
-    let displayedAllRooms = this.state.displayedAllRooms.filter((r) =>
+    let allRooms = this.state.allRooms.filter((r) =>
         r._id !== room._id);
-    let displayedJoinedRooms = [
+    let joinedRooms = [
       ...this.state.joinedRooms,
       room,
     ];
-    this.setState({
-      joinedRooms: displayedJoinedRooms,
-    });
     // Join the chat room;
     let socket = io(SERVER_URL);
     socket.emit('room', room._id); // Join room by roomId.
@@ -102,6 +98,24 @@ class MainPage extends Component {
         text: msg,
       });
     }.bind(this));
+    socket.on('enterRoom', function(numUsers, sid, userName) {
+      if (sid === socket.id) return;
+      this.setState({
+        joinedRooms: this.state.joinedRooms.map((r) => {
+          if (r._id === room._id) room.numUsers = numUsers;
+          return room;
+        }),
+      })
+    }.bind(this));
+    socket.on('leaveRoom', function(numUsers, sid) {
+      if (sid === socket.id) return;
+      this.setState({
+        joinedRooms: this.state.joinedRooms.map((room) => {
+          if (room === room._id) room.numUsers = numUsers;
+          return room;
+        }),
+      })
+    }.bind(this));
     Actions[this.getChatRoom()]({
       socket: this.roomInfo[room._id].socket,
       name: room.name,
@@ -110,21 +124,24 @@ class MainPage extends Component {
       userName: this.props.userName,
       iconName: this.props.iconName,
     });
-    this.updateRoom(displayedAllRooms, displayedJoinedRooms);
+    this.updateRoom(allRooms, joinedRooms);
   }
 
   // Quit a chat room.
   quitRoom(room) {
-    let displayedJoinedRooms = this.state.displayedJoinedRooms.filter((r) =>
+    let joinedRooms = this.state.joinedRooms.filter((r) =>
         r._id !== room._id);
-    let displayedAllRooms = [
+    let allRooms = [
       ...this.state.allRooms,
       room,
     ];
+    this.roomInfo[room._id].socket.close();
+    delete this.roomInfo[room._id];
     this.setState({
-      allRooms: displayedAllRooms,
+      allRooms,
+      joinedRooms,
     });
-    this.updateRoom(displayedAllRooms, displayedJoinedRooms);
+    this.updateRoom(allRooms, joinedRooms);
   }
 
   // Jump a chat room scene which is already joined.
@@ -160,6 +177,7 @@ class MainPage extends Component {
           allRooms,
           joinedRooms,
         });
+        this.clearSearchCondition();
         this.updateRoom(allRooms, joinedRooms);
         return;
       }.bind(this));
@@ -167,13 +185,13 @@ class MainPage extends Component {
     .catch((e) => {}); // Error should be handled in lib/gps.js.
   }
 
-  updateRoom(displayedAllRooms, displayedJoinedRooms) {
+  updateRoom(allRooms, joinedRooms) {
     this.setState({
-      displayedJoinedRooms,
-      displayedAllRooms,
+      allRooms,
+      joinedRooms,
     })
-    if(this._displayedAllRooms) this._displayedAllRooms.updateList(displayedAllRooms);
-    if(this._displayedJoinedRooms) this._displayedJoinedRooms.updateList(displayedJoinedRooms);
+    if(this._displayedAllRooms) this._displayedAllRooms.updateList(allRooms);
+    if(this._displayedJoinedRooms) this._displayedJoinedRooms.updateList(joinedRooms);
   }
 
   showSearch() {
@@ -195,22 +213,13 @@ class MainPage extends Component {
     let name = sc.pop();
     let filterResult = [];
     let filterFrom = [];
-    if (tab === 'joinedRooms') {
-      filterFrom = this.state.joinedRooms;
-    } else if (tab === 'allRooms') {
-      filterFrom = this.state.allRooms;
-    }
     getGpsCord().then(function(position) {
-      filterResult = filterFrom.filter((r) =>
-        (!name || r.name.indexOf(name) !== -1) &&
-          (tags.length === 0 || tags.every(elem => r.tags.indexOf(elem) > -1)) &&
-            mBetweenCoords(position.lat, position.lng, r.lat, r.lng) <= range);
-    });
-    if (tab === 'joinedRooms') {
-      setTimeout(() => this.updateRoom(this.state.allRooms, filterResult), 500);
-    } else if (tab === 'allRooms') {
-      setTimeout(() => this.updateRoom(filterResult, this.state.joinedRooms), 500);
-    }
+      this.setState({
+        filterFunc: (r) => ((!name || r.name.indexOf(name) !== -1) &&
+            (tags.length === 0 || tags.every(tag => r.tags.indexOf(tag) > -1)) &&
+            mBetweenCoords(position.lat, position.lng, r.lat, r.lng) <= range),
+      });
+    }.bind(this));
     let searchCondition = '';
     if (name) {
       searchCondition = 'Name: ' + name + '   ';
@@ -252,6 +261,7 @@ class MainPage extends Component {
   clearSearchCondition() {
     this.setState({
       searchCondition: '',
+      filterFunc: null,
     });
     this.updateRoom(this.state.allRooms, this.state.joinedRooms);
   }
@@ -280,9 +290,10 @@ class MainPage extends Component {
             {/* Joined Rooms */}
             <ChatRoomList roomActionHandler={this.quitRoom} btnText='Quit'
               ref={el=>{this._displayedJoinedRooms=el}}
-              roomList={this.state.displayedJoinedRooms}
+              roomList={this.state.joinedRooms}
               onRoomClick={this.joinChatRoom}
-              refreshList={this.refreshRoomList}/>
+              refreshList={this.refreshRoomList}
+              filterFunc={this.state.filterFunc}/>
           </View>
           {floatBtn}
         </ScrollView>
@@ -293,8 +304,9 @@ class MainPage extends Component {
             {/* All rooms */}
             <ChatRoomList roomActionHandler={this.joinRoom} btnText='Join'
               ref={el=>this._displayedAllRooms=el}
-              roomList={this.state.displayedAllRooms}
-              refreshList={this.refreshRoomList}/>
+              roomList={this.state.allRooms}
+              refreshList={this.refreshRoomList}
+              filterFunc={this.state.filterFunc}/>
           </View>
         </ScrollView>
       </ScrollableTabView>

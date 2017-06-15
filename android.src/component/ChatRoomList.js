@@ -37,15 +37,21 @@ export default class ChatRoomList extends Component {
             onRefresh={this._onRefresh.bind(this)}
           />
         }>
-        {this.state.chatRooms.map((r) =>
-          <ChatRoomPanel room={r} key={r._id}
-            btnText={this.props.btnText}
-            roomOnClick={() => {
-              if (this.props.onRoomClick) this.props.onRoomClick(r);
-            }}
-            btnHandler={function(r) {
-              this.props.roomActionHandler(r);
-            }.bind(this, r)}/>)}
+        {
+          this.state.chatRooms.map((r) => {
+            if (this.props.filterFunc && !this.props.filterFunc(r)) return null;
+            return (
+              <ChatRoomPanel room={r} key={r._id}
+                btnText={this.props.btnText}
+                roomOnClick={() => {
+                  if (this.props.onRoomClick) this.props.onRoomClick(r);
+                }}
+                btnHandler={function(r) {
+                  this.props.roomActionHandler(r);
+                }.bind(this, r)}/>
+            );
+          })
+        }
       </ScrollView>
     );
   }

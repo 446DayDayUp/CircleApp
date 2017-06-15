@@ -21,7 +21,7 @@ export default class ChatRoomPanel extends Component {
             </View>
             <View style={styles.center}>
               <Text style={{fontSize: 20, color: '#546979', flex: 2, marginTop: 10}}>
-                {room.name} ({room.numUser})
+                {room.name} ({room.numUsers})
               </Text>
               {this._showTag()}
             </View>
