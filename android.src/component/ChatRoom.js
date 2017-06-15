@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   BackHandler,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -21,6 +23,7 @@ class ChatRoomList extends Component {
     this.sendMsg = this.sendMsg.bind(this);
     this.socketListener = this.socketListener.bind(this);
     this.props.socket.on('chat', this.socketListener);
+    this.scroll = this.scroll.bind(this);
   }
 
 
@@ -34,7 +37,9 @@ class ChatRoomList extends Component {
   }
 
   socketListener() {
+    this.msgComp.scrollToBottom();
     this.forceUpdate();
+    setTimeout(() => this.msgComp.scrollToBottom(), 50);
   };
 
   onBackHandler() {
@@ -44,46 +49,63 @@ class ChatRoomList extends Component {
 
   sendMsg() {
     this.props.socket.emit('chat', this.props.roomId, this.props.userName,
-      this.props.iconName, this.state.text);
+    this.props.iconName, this.state.text);
     this.setState({
       text: '',
     });
+    setTimeout(() => this.msgComp.scrollToBottom(), 500);
+  }
+
+  scroll(t) {
+    this.setState({text: t});
+    this.msgComp.scrollToBottom();
   }
 
   render() {
     return (
       <View style={styles.ChatRoomView}>
+
         <View style={styles.headerView}>
-        <TouchableOpacity onPress={Actions.pop}
+          <TouchableOpacity
+            onPress={Actions.pop}
             style={styles.backKey}>
-          <Icon name='ios-arrow-back'
-            size={40}
-            color='white'
-          />
-        </TouchableOpacity>
-        <Text style={styles.titleText}>{this.props.name}</Text>
-        <TouchableOpacity onPress={() => {}}
-            style={styles.menuKey}>
-          <Icon name='ios-menu'
-            size={40}
-            color='white'
-          />
-        </TouchableOpacity>
+            <Icon name='ios-arrow-back'
+              size={40}
+              color='white'
+            />
+          </TouchableOpacity>
+          <Text style={styles.titleText}>{this.props.name}</Text>
+          <TouchableOpacity onPress={() => {}}
+              style={styles.menuKey}>
+            <Icon name='ios-menu'
+              size={40}
+              color='white'
+            />
+          </TouchableOpacity>
         </View>
+
         <View style={styles.content}>
-            <Message messages={this.state.messages} socket={this.props.socket}/>
+            <Message messages={this.state.messages}
+              socket={this.props.socket}
+              ref={(r)=>this.msgComp = r}
+            />
         </View>
-        <View style={{flexDirection: 'row', position: 'absolute', bottom: 0}}>
-        <TextInput
-          style={{flex: 5}}
-          value={this.state.text}
-          onChangeText={(text) => this.setState({text})}
-          onSubmitEditing={this.sendMsg}
-        />
-        <TouchableOpacity style={{flex: 1}} onPress={this.sendMsg}>
-          <Text>Send</Text>
-        </TouchableOpacity>
-        </View>
+
+        <KeyboardAvoidingView behavior='height' style={styles.bottom}>
+          <TextInput
+            style={{flex: 10}}
+            value={this.state.text}
+            onChangeText={(text) => this.scroll(text)}
+            onSubmitEditing={this.sendMsg}
+          />
+          <TouchableOpacity style={{flex: 1}} onPress={this.sendMsg}>
+            <Icon
+              name = 'ios-send-outline'
+              size = {50}
+              color = 'skyblue'
+            />
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
       </View>
     );
   }
@@ -95,7 +117,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   content: {
-    flex: 1,
+    flex: 10,
     flexDirection: 'column',
     alignItems: 'flex-start',
     backgroundColor: '#EBEBEB'
@@ -107,7 +129,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   titleText: {
-    fontSize: 30,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   backKey: {
@@ -116,6 +138,12 @@ export const styles = StyleSheet.create({
   menuKey: {
     paddingRight: 10,
   },
+  bottom: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });
 
 export default ChatRoomList;
