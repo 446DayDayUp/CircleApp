@@ -93,6 +93,7 @@ class ChatRoomList extends Component {
 
         <KeyboardAvoidingView behavior='height' style={styles.bottom}>
           <TextInput
+            multiline={true}
             style={{flex: 10}}
             value={this.state.text}
             onChangeText={(text) => this.scroll(text)}

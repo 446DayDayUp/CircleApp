@@ -90,6 +90,7 @@ export default class ChangeInfo extends Component {
   render() {
     return (
       <View style={styles.container}>
+
         <View style={{flex : 1}}></View>
         <View style={styles.iconView}>
           <TouchableOpacity onPress={() => this._goToIconPage()} >
@@ -98,6 +99,8 @@ export default class ChangeInfo extends Component {
             style={styles.icon} />
           </TouchableOpacity>
         </View>
+
+        <View style={{flex: 1}}></View>
 
         <View
           style={{flex: 1,
@@ -116,11 +119,12 @@ export default class ChangeInfo extends Component {
         </View>
 
         <TouchableOpacity style={styles.loginBtn} onPress={this._logIn}>
-            <Text
-              style={{fontSize: 30, color: 'white', fontWeight: 'bold'}}>
-              Submit
-            </Text>
+          <Text
+            style={{fontSize: 30, color: 'white', fontWeight: 'bold'}}>
+            Submit
+          </Text>
         </TouchableOpacity>
+
         <View style={{flex: 1}}></View>
       </View>
     );
@@ -132,6 +136,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: 'rgba(240, 255, 250, 0.3)',
   },
   logo: {
