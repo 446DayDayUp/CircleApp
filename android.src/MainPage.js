@@ -175,10 +175,9 @@ class MainPage extends Component {
           joinedRooms.filter((room) => room._id === r._id).length === 0
         );
         this.setState({
-          allRooms,
-          joinedRooms,
+          searchCondition: '',
+          filterFunc: null,
         });
-        this.clearSearchCondition();
         this.updateRoom(allRooms, joinedRooms);
         return;
       }.bind(this));
