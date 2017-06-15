@@ -28,7 +28,7 @@ export default class ChatRoomPanel extends Component {
             <View style={styles.right}>
               <Text style={{fontSize: 17, color: '#B07267'}}>{room.distance}m</Text>
               <Button style={{flex: 1}}
-                color='darkturquoise'
+                color='#4f8ef7'
                 title={this.props.btnText}
                 onPress={this.props.btnHandler}/>
             </View>

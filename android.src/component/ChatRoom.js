@@ -48,12 +48,14 @@ class ChatRoomList extends Component {
   };
 
   sendMsg() {
-    this.props.socket.emit('chat', this.props.roomId, this.props.userName,
-    this.props.iconName, this.state.text);
-    this.setState({
-      text: '',
-    });
-    setTimeout(() => this.msgComp.scrollToBottom(), 500);
+    if (this.state.text !== ''){
+      this.props.socket.emit('chat', this.props.roomId, this.props.userName,
+      this.props.iconName, this.state.text);
+      this.setState({
+        text: '',
+      });
+      setTimeout(() => this.msgComp.scrollToBottom(), 500);
+    }
   }
 
   scroll(t) {
