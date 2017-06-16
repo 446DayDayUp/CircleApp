@@ -9,35 +9,21 @@ import {
 } from 'react-native';
 import { profilePicture } from '../lib/profilePicture.js';
 
-export default class Message extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      messages: this.props.messages,
-    }
+export default class Msg extends Component {
+  shouldComponentUpdate(nextProps, nextState) {
+    return false;
   }
 
-  scrollToBottom() {
-    this.flatList.scrollToEnd({animated: true});
-  }
-
-  updateMessage = (msgs) => {
-    this.setState({
-      messages: msgs,
-    })
-  }
-
-  renderMessage = (item) => {
-    var _msg = item.item.text;
-    let isSend = item.item.sid == this.props.socket.id ? true : false
-    if (!isSend) {
+  render() {
+    let msg = this.props.msg;
+    if (!this.props.isSend) {
       return (
         <View style={listItemStyle.container}>
-          <Image style={listItemStyle.iconView} source={profilePicture[item.item.iconName]} />
+          <Image style={listItemStyle.iconView} source={profilePicture[msg.iconName]} />
           <View>
-            <Text> {item.item.userName} </Text>
+            <Text> {msg.userName} </Text>
             <View style={listItemStyle.msgContainer}>
-              <Text style={listItemStyle.msgText}>{_msg}</Text>
+              <Text style={listItemStyle.msgText}>{msg.text}</Text>
             </View>
           </View>
         </View>
@@ -47,28 +33,16 @@ export default class Message extends Component {
         <View style={listItemStyle.containerSend}>
           <View>
             <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end'}}>
-              <Text> {item.item.userName} </Text>
+              <Text> {msg.userName} </Text>
             </View>
             <View style={listItemStyle.msgContainerSend}>
-              <Text style={listItemStyle.msgText}>{_msg}</Text>
+              <Text style={listItemStyle.msgText}>{msg.text}</Text>
             </View>
           </View>
-          <Image style={listItemStyle.iconView} source={profilePicture[item.item.iconName]} />
+          <Image style={listItemStyle.iconView} source={profilePicture[msg.iconName]} />
         </View>
       );
     }
-  }
-
-  render() {
-    return(
-      <FlatList
-        ref = {(r) => this.flatList = r}
-        data={this.state.messages}
-        extraData={this.state}
-        renderItem={this.renderMessage}
-        keyExtractor={(msg, i) => i}
-        removeClippedSubviews={false}
-      />);
   }
 }
 

@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
-import Message from './Message.js';
+import Messages from './Messages.js';
 
 class ChatRoomList extends Component {
   constructor(props) {
@@ -38,7 +38,7 @@ class ChatRoomList extends Component {
 
   socketListener() {
     this.msgComp.scrollToBottom();
-    this.msgComp.updateMessage(this.state.messages)
+    this.msgComp.updateMessage(this.state.messages);
     setTimeout(() => this.msgComp.scrollToBottom(), 50);
   };
 
@@ -87,7 +87,7 @@ class ChatRoomList extends Component {
         </View>
 
         <View style={styles.content}>
-            <Message messages={this.state.messages}
+            <Messages messages={this.state.messages}
               socket={this.props.socket}
               ref={(r)=>this.msgComp = r}
             />
