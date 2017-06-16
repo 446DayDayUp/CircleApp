@@ -28,7 +28,6 @@ export default class Message extends Component {
   }
 
   renderMessage = (item) => {
-    console.warn('render: ', item.item.text);
     var _msg = item.item.text;
     let isSend = item.item.sid == this.props.socket.id ? true : false
     if (!isSend) {
