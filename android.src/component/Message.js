@@ -13,7 +13,7 @@ export default class Message extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected: 0,
+      messages: this.props.messages,
     }
   }
 
@@ -21,18 +21,19 @@ export default class Message extends Component {
     this.flatList.scrollToEnd({animated: true});
   }
 
-  updateMessage = (i) => {
+  updateMessage = (msgs) => {
     this.setState({
-      selected: i,
+      messages: msgs,
     })
   }
 
-  renderMessage = (item, i) => {
+  renderMessage = (item) => {
+    console.warn('render: ', item.item.text);
     var _msg = item.item.text;
     let isSend = item.item.sid == this.props.socket.id ? true : false
     if (!isSend) {
       return (
-        <View style={listItemStyle.container} key={i}>
+        <View style={listItemStyle.container}>
           <Image style={listItemStyle.iconView} source={profilePicture[item.item.iconName]} />
           <View>
             <Text> {item.item.userName} </Text>
@@ -44,7 +45,7 @@ export default class Message extends Component {
       );
     } else {
       return (
-        <View style={listItemStyle.containerSend} key={i}>
+        <View style={listItemStyle.containerSend}>
           <View>
             <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end'}}>
               <Text> {item.item.userName} </Text>
@@ -63,10 +64,11 @@ export default class Message extends Component {
     return(
       <FlatList
         ref = {(r) => this.flatList = r}
-        data={this.props.messages}
+        data={this.state.messages}
         extraData={this.state}
         renderItem={this.renderMessage}
         keyExtractor={(msg, i) => i}
+        removeClippedSubviews={false}
       />);
   }
 }

@@ -99,22 +99,10 @@ class MainPage extends Component {
       });
     }.bind(this));
     socket.on('enterRoom', function(numUsers, sid, userName) {
-      if (sid === socket.id) return;
-      this.setState({
-        joinedRooms: this.state.joinedRooms.map((r) => {
-          if (r._id === room._id) room.numUsers = numUsers;
-          return room;
-        }),
-      })
+      // Add enter Room message.
     }.bind(this));
     socket.on('leaveRoom', function(numUsers, sid) {
-      if (sid === socket.id) return;
-      this.setState({
-        joinedRooms: this.state.joinedRooms.map((room) => {
-          if (room === room._id) room.numUsers = numUsers;
-          return room;
-        }),
-      })
+      // Add leave room message.
     }.bind(this));
     Actions[this.getChatRoom()]({
       socket: this.roomInfo[room._id].socket,
