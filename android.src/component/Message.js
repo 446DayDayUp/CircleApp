@@ -12,18 +12,28 @@ import { profilePicture } from '../lib/profilePicture.js';
 export default class Message extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      selected: 0,
+    }
   }
 
   scrollToBottom() {
     this.flatList.scrollToEnd({animated: true});
   }
 
-  renderMessage = (item) => {
-    var _msg = item.item.msg;
-    if (!item.item.isSend) {
+  updateMessage = (i) => {
+    this.setState({
+      selected: i,
+    })
+  }
+
+  renderMessage = (item, i) => {
+    var _msg = item.item.text;
+    let isSend = item.item.sid == this.props.socket.id ? true : false
+    if (!isSend) {
       return (
-        <View style={listItemStyle.container} key={item.item.key}>
-          <Image style={listItemStyle.iconView} source={item.item.iconName} />
+        <View style={listItemStyle.container} key={i}>
+          <Image style={listItemStyle.iconView} source={profilePicture[item.item.iconName]} />
           <View>
             <Text> {item.item.userName} </Text>
             <View style={listItemStyle.msgContainer}>
@@ -34,7 +44,7 @@ export default class Message extends Component {
       );
     } else {
       return (
-        <View style={listItemStyle.containerSend} key={item.item.key}>
+        <View style={listItemStyle.containerSend} key={i}>
           <View>
             <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end'}}>
               <Text> {item.item.userName} </Text>
@@ -43,29 +53,20 @@ export default class Message extends Component {
               <Text style={listItemStyle.msgText}>{_msg}</Text>
             </View>
           </View>
-          <Image style={listItemStyle.iconView} source={item.item.iconName} />
+          <Image style={listItemStyle.iconView} source={profilePicture[item.item.iconName]} />
         </View>
       );
     }
   }
 
   render() {
-    let msgs = this.props.messages;
-    let listData = [];
-    for(i = 0; i < msgs.length; i++){
-      listData.push({
-        key: i,
-        msg: msgs[i].text,
-        userName: msgs[i].userName,
-        iconName: profilePicture[msgs[i].iconName],
-        isSend: msgs[i].sid == this.props.socket.id ? true : false
-      });
-    }
     return(
       <FlatList
         ref = {(r) => this.flatList = r}
-        data={listData}
+        data={this.props.messages}
+        extraData={this.state}
         renderItem={this.renderMessage}
+        keyExtractor={(msg, i) => i}
       />);
   }
 }

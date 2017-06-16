@@ -38,7 +38,7 @@ class ChatRoomList extends Component {
 
   socketListener() {
     this.msgComp.scrollToBottom();
-    this.forceUpdate();
+    this.msgComp.updateMessage(this.state.messages.length)
     setTimeout(() => this.msgComp.scrollToBottom(), 50);
   };
 
