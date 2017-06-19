@@ -19,14 +19,18 @@ class ChatRoomList extends Component {
     this.state = {
       messages: this.props.messages || [],
       text: '',
+      showMenu: false,
     };
     this.sendMsg = this.sendMsg.bind(this);
     this.socketListener = this.socketListener.bind(this);
     this.props.socket.on('chat', this.socketListener);
     this.props.socket.on('enterRoom', this.socketListener);
     this.scroll = this.scroll.bind(this);
+    this.showMenus = this.showMenus.bind(this);
+    this.onTouchOutside = this.onTouchOutside.bind(this);
+    this.renderMenuItem = this.renderMenuItem.bind(this);
+    this.clearHistory = this.clearHistory.bind(this);
   }
-
 
   componentWillMount() {
     BackHandler.addEventListener('chatRoom', this.onBackHandler);
@@ -39,7 +43,6 @@ class ChatRoomList extends Component {
   }
 
   socketListener() {
-    this.msgComp.scrollToBottom();
     this.msgComp.updateMessage(this.state.messages);
     setTimeout(() => this.msgComp.scrollToBottom(), 50);
   };
@@ -65,10 +68,51 @@ class ChatRoomList extends Component {
     this.msgComp.scrollToBottom();
   }
 
+  showMenus() {
+    this.setState({
+      showMenu: true,
+    });
+  }
+
+  onTouchOutside() {
+    this.setState({
+      showMenu: false,
+    });
+  }
+
+  clearHistory() {
+    this.state.messages.length = 0;
+    this.setState({
+      showMenu: false,
+    });
+  }
+
+  renderMenuItem() {
+     if (this.state.showMenu) {
+      return (
+      <View style={styles.menu}>
+        <TouchableOpacity onPress={this.clearHistory}>
+          <View style={styles.menuItem}>
+            <Icon name='md-trash'
+              size={20}
+              color='#4f8ef7'
+              style={styles.menuIcon}
+            />
+            <Text style={styles.menuText}>clear</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+      );
+     }
+    return null;
+  }
+
   render() {
     return (
-      <View style={styles.ChatRoomView}>
-
+      <TouchableOpacity style={styles.ChatRoomView}
+        onPress={this.onTouchOutside}
+        activeOpacity={1}>
+        {/*Header contains back button, menu button and chat room name*/}
         <View style={styles.headerView}>
           <TouchableOpacity
             onPress={Actions.pop}
@@ -79,8 +123,9 @@ class ChatRoomList extends Component {
             />
           </TouchableOpacity>
           <Text style={styles.titleText}>{this.props.name}</Text>
-          <TouchableOpacity onPress={() => {}}
-              style={styles.menuKey}>
+          <TouchableOpacity
+            onPress={this.showMenus}
+            style={styles.menuKey}>
             <Icon name='ios-menu'
               size={40}
               color='white'
@@ -89,10 +134,11 @@ class ChatRoomList extends Component {
         </View>
 
         <View style={styles.content}>
-            <Messages messages={this.state.messages}
-              socket={this.props.socket}
-              ref={(r)=>this.msgComp = r}
-            />
+          <Messages messages={this.state.messages}
+            socket={this.props.socket}
+            ref={(r)=>this.msgComp = r}
+          />
+          {this.renderMenuItem()}
         </View>
 
         <KeyboardAvoidingView behavior='height' style={styles.bottom}>
@@ -111,7 +157,7 @@ class ChatRoomList extends Component {
             />
           </TouchableOpacity>
         </KeyboardAvoidingView>
-      </View>
+      </TouchableOpacity>
     );
   }
 }
@@ -125,17 +171,18 @@ export const styles = StyleSheet.create({
     flex: 10,
     flexDirection: 'column',
     alignItems: 'flex-start',
-    backgroundColor: '#EBEBEB'
+    backgroundColor: '#EBEBEB',
   },
   headerView: {
     height: 40,
-    backgroundColor: 'skyblue',
+    backgroundColor: '#4f8ef7',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   titleText: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: '#ffffff',
   },
   backKey: {
     paddingLeft: 10,
@@ -148,6 +195,27 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  menu: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    backgroundColor: '#ffffff',
+  },
+  menuText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#4f8ef7'
+  },
+  menuItem: {
+    flexDirection: 'row',
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 5,
+    paddingRight: 5,
+  },
+  menuIcon: {
+    paddingTop: 5,
   }
 });
 
