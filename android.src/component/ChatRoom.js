@@ -24,6 +24,7 @@ class ChatRoomList extends Component {
     this.sendMsg = this.sendMsg.bind(this);
     this.socketListener = this.socketListener.bind(this);
     this.props.socket.on('chat', this.socketListener);
+    this.props.socket.on('enterRoom', this.socketListener);
     this.scroll = this.scroll.bind(this);
     this.showMenus = this.showMenus.bind(this);
     this.onTouchOutside = this.onTouchOutside.bind(this);
@@ -38,6 +39,7 @@ class ChatRoomList extends Component {
   componentWillUnmount() {
     BackHandler.removeEventListener('chatRoom', this.onBackHandler);
     this.props.socket.removeListener('chat', this.socketListener);
+    this.props.socket.removeListener('enterRoom', this.socketListener);
   }
 
   socketListener() {

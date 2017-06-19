@@ -24,7 +24,7 @@ export default class Messages extends Component {
   }
 
   renderMessage = (item) => {
-    let isSend = item.item.sid == this.props.socket.id ? true : false
+    let isSend = item.item.sid == this.props.socket.id ? true : false;
     return <Msg isSend={isSend} msg={item.item} />
   }
 
