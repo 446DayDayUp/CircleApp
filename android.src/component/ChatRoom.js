@@ -148,6 +148,7 @@ class ChatRoomList extends Component {
             value={this.state.text}
             onChangeText={(text) => this.scroll(text)}
             onSubmitEditing={this.sendMsg}
+            removeClippedSubviews={false}
           />
           <TouchableOpacity style={{flex: 1}} onPress={this.sendMsg}>
             <Icon
