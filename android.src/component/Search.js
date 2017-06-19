@@ -43,7 +43,7 @@ export default class Search extends Component {
   // Show tags from Tags component
   showTags() {
     return <Tags passTagsFromTagsComp = {this.getTags.bind(this)}
-                  passTagsToTagsComp = {this.state.tags} />;
+                  passTagsToTagsComp = {this.state.tags}/>;
   }
 
   // Return selected tags as string
@@ -146,7 +146,7 @@ export default class Search extends Component {
 
 const styles = StyleSheet.create({
   all: {
-    flex: 1,
+    flex: 4,
     backgroundColor: 'white',
   },
   container: {
