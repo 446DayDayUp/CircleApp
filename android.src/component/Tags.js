@@ -73,11 +73,9 @@ export default class Tags extends Component {
 
   render() {
     return (
-      <View style = {styles.container}>
-        <ScrollView>
-          {Object.keys(this.allTags).map(this.renderTags)}
-        </ScrollView>
-    </View>
+      <ScrollView style = {styles.container}>
+        {Object.keys(this.allTags).map(this.renderTags)}
+      </ScrollView>
     );
   }
 }

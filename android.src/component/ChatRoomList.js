@@ -30,7 +30,7 @@ export default class ChatRoomList extends Component {
   render() {
     return (
       <ScrollView
-          style={{backgroundColor: '#F8F8F8'}}
+          style={{flex: 1, backgroundColor: '#F8F8F8'}}
         refreshControl={
           <RefreshControl
             refreshing={this.state.refreshing}
