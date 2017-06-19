@@ -16,32 +16,38 @@ export default class Msg extends Component {
 
   render() {
     let msg = this.props.msg;
-    if (!this.props.isSend) {
-      return (
-        <View style={listItemStyle.container}>
-          <Image style={listItemStyle.iconView} source={profilePicture[msg.iconName]} />
-          <View>
-            <Text> {msg.userName} </Text>
-            <View style={listItemStyle.msgContainer}>
-              <Text style={listItemStyle.msgText}>{msg.text}</Text>
-            </View>
-          </View>
-        </View>
-      );
-    } else {
-      return (
-        <View style={listItemStyle.containerSend}>
-          <View>
-            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end'}}>
+    if (msg.type === 'chat') {
+      if (!this.props.isSend) {
+        return (
+          <View style={listItemStyle.container}>
+            <Image style={listItemStyle.iconView} source={profilePicture[msg.iconName]} />
+            <View>
               <Text> {msg.userName} </Text>
-            </View>
-            <View style={listItemStyle.msgContainerSend}>
-              <Text style={listItemStyle.msgText}>{msg.text}</Text>
+              <View style={listItemStyle.msgContainer}>
+                <Text style={listItemStyle.msgText}>{msg.text}</Text>
+              </View>
             </View>
           </View>
-          <Image style={listItemStyle.iconView} source={profilePicture[msg.iconName]} />
-        </View>
-      );
+        );
+      } else {
+        return (
+          <View style={listItemStyle.containerSend}>
+            <View>
+              <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end'}}>
+                <Text> {msg.userName} </Text>
+              </View>
+              <View style={listItemStyle.msgContainerSend}>
+                <Text style={listItemStyle.msgText}>{msg.text}</Text>
+              </View>
+            </View>
+            <Image style={listItemStyle.iconView} source={profilePicture[msg.iconName]} />
+          </View>
+        );
+      }
+    } else if (msg.type === 'notice') {
+      return (
+        <Text style = {listItemStyle.noticeText}> {msg.text} </Text>
+      )
     }
   }
 }
@@ -89,4 +95,10 @@ const listItemStyle = StyleSheet.create({
     padding: 5,
     justifyContent: 'flex-end',
   },
+  noticeText: {
+    fontSize: 15,
+    color: '#A4A4A4',
+    textAlign: 'left',
+    fontWeight: 'bold',
+  }
 });

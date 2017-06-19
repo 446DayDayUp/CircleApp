@@ -85,7 +85,7 @@ class MainPage extends Component {
     ];
     // Join the chat room;
     let socket = io(SERVER_URL);
-    socket.emit('room', room._id); // Join room by roomId.
+    socket.emit('room', room._id, this.props.userName); // Join room by roomId.
     if (!this.roomInfo[room._id]) this.roomInfo[room._id] = {
       messages: [],
       socket,
@@ -96,13 +96,18 @@ class MainPage extends Component {
         userName,
         iconName,
         text: msg,
+        type: 'chat',
       });
     }.bind(this));
     socket.on('enterRoom', function(numUsers, sid, userName) {
-      // Add enter Room message.
+      this.roomInfo[room._id].messages.push({
+        sid,
+        text: userName + ' has entered the room.',
+        type: 'notice',
+      });
     }.bind(this));
-    socket.on('leaveRoom', function(numUsers, sid) {
-      // Add leave room message.
+    socket.on('leaveRoom', function(numUsers, sid, userName) {
+      // leave room
     }.bind(this));
     Actions[this.getChatRoom()]({
       socket: this.roomInfo[room._id].socket,
