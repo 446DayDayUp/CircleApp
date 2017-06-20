@@ -2,26 +2,27 @@ import React, { Component } from 'react';
 import {
   Text,
   View,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   BackHandler,
-  KeyboardAvoidingView,
-  TouchableWithoutFeedback,
+  Dimensions,
+  PixelRatio,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Messages from './Messages.js';
+import BottomBar from './BottomBar';
+import MoreView from './MoreView.js';
 
+var { width, height } = Dimensions.get('window');
 class ChatRoomList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       messages: this.props.messages || [],
-      text: '',
       showMenu: false,
+      showMoreView: false,
     };
-    this.sendMsg = this.sendMsg.bind(this);
     this.socketListener = this.socketListener.bind(this);
     this.props.socket.on('chat', this.socketListener);
     this.props.socket.on('enterRoom', this.socketListener);
@@ -52,16 +53,6 @@ class ChatRoomList extends Component {
     return true;
   };
 
-  sendMsg() {
-    if (this.state.text !== ''){
-      this.props.socket.emit('chat', this.props.roomId, this.props.userName,
-      this.props.iconName, this.state.text);
-      this.setState({
-        text: '',
-      });
-      setTimeout(() => this.msgComp.scrollToBottom(), 500);
-    }
-  }
 
   scroll(t) {
     this.setState({text: t});
@@ -78,6 +69,12 @@ class ChatRoomList extends Component {
     this.setState({
       showMenu: false,
     });
+  }
+
+  updateView = ( more) => {
+    this.setState({
+      showMoreView: more,
+    })
   }
 
   clearHistory() {
@@ -108,6 +105,17 @@ class ChatRoomList extends Component {
   }
 
   render() {
+    let moreView = [];
+    if (this.state.showMoreView) {
+      moreView.push(
+        <View key={'more-view-key'}>
+          <View style={{width: width, height: 1 / PixelRatio.get(), backgroundColor: global.dividerColor}} />
+          <View style={{height: 100}}>
+            <MoreView />
+          </View>
+        </View>
+      );
+    }
     return (
       <TouchableOpacity style={styles.ChatRoomView}
         onPress={this.onTouchOutside}
@@ -141,23 +149,16 @@ class ChatRoomList extends Component {
           {this.renderMenuItem()}
         </View>
 
-        <KeyboardAvoidingView behavior='height' style={styles.bottom}>
-          <TextInput
-            multiline={true}
-            style={{flex: 10}}
-            value={this.state.text}
-            onChangeText={(text) => this.scroll(text)}
-            onSubmitEditing={this.sendMsg}
-            removeClippedSubviews={false}
+        <View style={styles.bottomBar}>
+          <BottomBar
+            updateView={this.updateView}
+            socket={this.props.socket}
+            roomId = {this.props.roomId}
+            userName = {this.props.userName}
+            iconName = {this.props.iconName}
           />
-          <TouchableOpacity style={{flex: 1}} onPress={this.sendMsg}>
-            <Icon
-              name = 'ios-send-outline'
-              size = {50}
-              color = 'skyblue'
-            />
-          </TouchableOpacity>
-        </KeyboardAvoidingView>
+        </View>
+        {moreView}
       </TouchableOpacity>
     );
   }
@@ -217,7 +218,10 @@ export const styles = StyleSheet.create({
   },
   menuIcon: {
     paddingTop: 5,
-  }
+  },
+  bottomBar: {
+    height: 50,
+  },
 });
 
 export default ChatRoomList;
