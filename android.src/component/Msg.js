@@ -26,7 +26,7 @@ export default class Msg extends Component {
             <Image style={listItemStyle.iconView} source={profilePicture[msg.iconName]} />
             <View>
               <Text> {msg.userName} </Text>
-              <View style={listItemStyle.msgContainer}>
+              <View style={listItemStyle.msgContainerRecv}>
                 <Text style={listItemStyle.msgText}>{msg.text}</Text>
               </View>
             </View>
@@ -66,13 +66,14 @@ const listItemStyle = StyleSheet.create({
     width: 40,
     height: 40,
   },
-  msgContainer: {
+  msgContainerRecv: {
     backgroundColor: '#FFFFFF',
     borderRadius: 3,
     paddingLeft: 8,
     paddingRight: 8,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingBottom: 3,
     marginLeft: 5,
   },
   msgContainerSend: {
@@ -80,6 +81,7 @@ const listItemStyle = StyleSheet.create({
     borderRadius: 3,
     paddingLeft: 8,
     paddingRight: 8,
+    paddingBottom: 3,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 5,
