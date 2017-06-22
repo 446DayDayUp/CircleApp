@@ -61,7 +61,7 @@ class ChatRoomList extends Component {
 
   showMenus() {
     this.setState({
-      showMenu: true,
+      showMenu: !this.state.showMenu,
     });
   }
 
@@ -79,6 +79,7 @@ class ChatRoomList extends Component {
 
   clearHistory() {
     this.state.messages.length = 0;
+    this.msgComp.updateMessage(this.state.messages);
     this.setState({
       showMenu: false,
     });
