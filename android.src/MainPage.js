@@ -111,6 +111,7 @@ class MainPage extends Component {
     }.bind(this));
     Actions[this.getChatRoom()]({
       socket: this.roomInfo[room._id].socket,
+      room: room,
       name: room.name,
       roomId: room._id,
       messages: this.roomInfo[room._id].messages,
@@ -142,6 +143,7 @@ class MainPage extends Component {
   joinChatRoom(room) {
     Actions[this.getChatRoom()]({
       socket: this.roomInfo[room._id].socket,
+      room: room,
       name: room.name,
       roomId: room._id,
       messages: this.roomInfo[room._id].messages,
