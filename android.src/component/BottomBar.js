@@ -75,7 +75,7 @@ export default class BottomBar extends Component {
                 size={40}
                 color='#4f8ef7'
           />
-        </TouchableOpacity >
+        </TouchableOpacity>
         <TextInput
           multiline={true}
           style={{flex: 10}}

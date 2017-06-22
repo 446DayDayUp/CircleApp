@@ -60,7 +60,7 @@ const listItemStyle = StyleSheet.create({
     flex: 1,
     width: Dimensions.get('window').width,
     flexDirection: 'row',
-    padding: 15,
+    padding: 5,
   },
   iconView: {
     width: 40,
