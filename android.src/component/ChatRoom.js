@@ -26,11 +26,11 @@ class ChatRoomList extends Component {
     this.socketListener = this.socketListener.bind(this);
     this.props.socket.on('chat', this.socketListener);
     this.props.socket.on('enterRoom', this.socketListener);
-    this.scroll = this.scroll.bind(this);
     this.showMenus = this.showMenus.bind(this);
     this.onTouchOutside = this.onTouchOutside.bind(this);
     this.renderMenuItem = this.renderMenuItem.bind(this);
     this.clearHistory = this.clearHistory.bind(this);
+    this.scrollToBottom = this.scrollToBottom.bind(this);
   }
 
   componentWillMount() {
@@ -45,7 +45,7 @@ class ChatRoomList extends Component {
 
   socketListener() {
     this.msgComp.updateMessage(this.state.messages);
-    setTimeout(() => this.msgComp.scrollToBottom(), 50);
+    setTimeout(() => this.msgComp.scrollToBottom(), 500);
   };
 
   onBackHandler() {
@@ -53,11 +53,6 @@ class ChatRoomList extends Component {
     return true;
   };
 
-
-  scroll(t) {
-    this.setState({text: t});
-    this.msgComp.scrollToBottom();
-  }
 
   showMenus() {
     this.setState({
@@ -82,6 +77,9 @@ class ChatRoomList extends Component {
     this.setState({
       showMenu: false,
     });
+  }
+  scrollToBottom() {
+    setTimeout(() => this.msgComp.scrollToBottom(), 500);
   }
 
   renderMenuItem() {
@@ -151,6 +149,7 @@ class ChatRoomList extends Component {
 
         <View style={styles.bottomBar}>
           <BottomBar
+            scrollToBottom={this.scrollToBottom}
             updateView={this.updateView}
             socket={this.props.socket}
             roomId = {this.props.roomId}

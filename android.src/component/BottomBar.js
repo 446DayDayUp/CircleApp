@@ -45,7 +45,7 @@ export default class BottomBar extends Component {
       this.setState({
         text: '',
       });
-      //setTimeout(() => this.msgComp.scrollToBottom(), 500);
+      this.props.scrollToBottom();
     }
   }
 

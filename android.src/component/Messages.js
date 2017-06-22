@@ -14,7 +14,7 @@ export default class Messages extends Component {
   }
 
   scrollToBottom() {
-    this.flatList.scrollToEnd({animated: true});
+    this.flatList.scrollToEnd({animated: false});
   }
 
   updateMessage = (msgs) => {
@@ -36,6 +36,7 @@ export default class Messages extends Component {
         extraData={this.state}
         renderItem={this.renderMessage}
         keyExtractor={(msg, i) => i}
+        removeClippedSubviews={false}
       />);
   }
 }
