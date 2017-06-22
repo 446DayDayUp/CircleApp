@@ -102,6 +102,23 @@ export default class LoginPage extends Component {
     return true;
   }
 
+  nameCheck(text) {
+    //let m, r = /^[a-zA-Z0-9 ]+$/;
+    let m, r = /^[\u0020-\u00FF]+$/;
+    if (m == r.exec(text) && text !== '') {
+      Alert.alert(
+          'Nickname contains invalid characters',
+          'Please enter your Nickname again!',
+          [
+            {text: 'OK'},
+          ]
+      );
+    }
+    else {
+      this.setState({userName: text});
+    }
+  }
+
   render() {
     return (
       <Image source={require('../img/background7.jpg')} style={styles.background}>
@@ -132,7 +149,8 @@ export default class LoginPage extends Component {
                 style={styles.inputStyle}
                 value={this.props.userName ? this.props.userName : this.state.userName}
                 placeholder= 'Nickname'
-                onChangeText={(userName) => this.setState({userName})}
+                onChangeText={(userName) => this.nameCheck(userName)}
+                maxLength={15}
               />
               <View style={{flex: 1}}></View>
             </View>
