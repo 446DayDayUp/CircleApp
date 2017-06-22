@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import dismissKeyboard from 'dismissKeyboard';
 import {
   Text,
   View,
@@ -49,7 +50,7 @@ class ChatRoomList extends Component {
     this.setState({
       numUsers: this.props.room.numUsers,
     });
-    setTimeout(function() {this.msgComp.scrollToBottom()}.bind(this), 500);
+    setTimeout(function() {this.msgComp.scrollToBottom()}.bind(this), 200);
   };
 
   onBackHandler() {
@@ -84,7 +85,7 @@ class ChatRoomList extends Component {
     });
   }
   scrollToBottom() {
-    setTimeout(() => this.msgComp.scrollToBottom(), 500);
+    setTimeout(() => this.msgComp.scrollToBottom(), 200);
   }
 
   renderMenuItem() {
@@ -126,7 +127,10 @@ class ChatRoomList extends Component {
         {/*Header contains back button, menu button and chat room name*/}
         <View style={styles.headerView}>
           <TouchableOpacity
-            onPress={Actions.pop}
+            onPress={() => {
+              dismissKeyboard();
+              Actions.pop();
+            }}
             style={styles.backKey}>
             <Icon name='ios-arrow-back'
               size={40}
