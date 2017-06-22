@@ -22,7 +22,6 @@ class ChatRoomList extends Component {
       messages: this.props.messages || [],
       showMenu: false,
       showMoreView: false,
-      numUsers: this.props.room.numUsers,
     };
     this.socketListener = this.socketListener.bind(this);
     this.showMenus = this.showMenus.bind(this);
@@ -46,10 +45,9 @@ class ChatRoomList extends Component {
 
   socketListener() {
     this.msgComp.updateMessage(this.state.messages);
-    this.setState({
-      numUsers: this.props.room.numUsers,
-    });
-    setTimeout(function() {this.msgComp.scrollToBottom()}.bind(this), 500);
+    setTimeout(function() {
+      if (this && this.msgComp) this.msgComp.scrollToBottom();
+    }.bind(this), 200);
   };
 
   onBackHandler() {
@@ -133,7 +131,7 @@ class ChatRoomList extends Component {
               color='white'
             />
           </TouchableOpacity>
-          <Text style={styles.titleText}>{this.props.name}({this.state.numUsers})</Text>
+          <Text style={styles.titleText}>{this.props.name}</Text>
           <TouchableOpacity
             onPress={this.showMenus}
             style={styles.menuKey}>
