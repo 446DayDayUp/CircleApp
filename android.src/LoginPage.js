@@ -101,6 +101,7 @@ export default class LoginPage extends Component {
     ToastAndroid.show('Press back again to exit Circle', ToastAndroid.SHORT);
     return true;
   }
+
   nameCheck(text) {
     //let m, r = /^[a-zA-Z0-9 ]+$/;
     let m, r = /^[\u0020-\u00FF]+$/;

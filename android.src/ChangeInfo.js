@@ -79,13 +79,16 @@ export default class ChangeInfo extends Component {
   componentWillMount(){
     BackHandler.addEventListener('createChat', this.onBackHandler);
   }
+
   componentWillUnmount() {
     BackHandler.removeEventListener('createChat', this.onBackHandler);
   }
+
   onBackHandler = () => {
     Actions.pop();
     return true;
   };
+
   nameCheck(text) {
     //let m, r = /^[a-zA-Z0-9 ]+$/;
     let m, r = /^[\u0020-\u00FF]+$/;
