@@ -86,6 +86,22 @@ export default class ChangeInfo extends Component {
     Actions.pop();
     return true;
   };
+  nameCheck(text) {
+    //let m, r = /^[a-zA-Z0-9 ]+$/;
+    let m, r = /^[\u0020-\u00FF]+$/;
+    if (m == r.exec(text) && text !== '') {
+      Alert.alert(
+          'Nickname contains invalid characters',
+          'Please enter your Nickname again!',
+          [
+            {text: 'OK'},
+          ]
+      );
+    }
+    else {
+      this.setState({userName: text});
+    }
+  }
 
   render() {
     return (
@@ -113,7 +129,8 @@ export default class ChangeInfo extends Component {
             style={styles.inputStyle}
             value={this.state.userName}
             placeholder= 'Nickname'
-            onChangeText={(userName) => this.setState({userName})}
+            onChangeText={(userName) => this.nameCheck(userName)}
+            maxLength={15}
           />
           <View style={{flex: 1}}></View>
         </View>
