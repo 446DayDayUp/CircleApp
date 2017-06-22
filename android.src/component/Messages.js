@@ -14,7 +14,7 @@ export default class Messages extends Component {
   }
 
   scrollToBottom() {
-    this.flatList.scrollToEnd({animated: false});
+    this.flatList.scrollToEnd({animated: true});
   }
 
   updateMessage = (msgs) => {
