@@ -118,6 +118,7 @@ class MainPage extends Component {
       iconName: this.props.iconName,
     });
     this.updateRoom(allRooms, joinedRooms);
+    setTimeout(this.refreshRoomList, 500); // Refresh chat room and user number.
   }
 
   // Quit a chat room.
