@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import dismissKeyboard from 'dismissKeyboard';
 import {
   Text,
   View,
@@ -24,17 +25,17 @@ class ChatRoomList extends Component {
       showMoreView: false,
     };
     this.socketListener = this.socketListener.bind(this);
-    this.props.socket.on('chat', this.socketListener);
-    this.props.socket.on('enterRoom', this.socketListener);
-    this.scroll = this.scroll.bind(this);
     this.showMenus = this.showMenus.bind(this);
     this.onTouchOutside = this.onTouchOutside.bind(this);
     this.renderMenuItem = this.renderMenuItem.bind(this);
     this.clearHistory = this.clearHistory.bind(this);
+    this.scrollToBottom = this.scrollToBottom.bind(this);
   }
 
   componentWillMount() {
     BackHandler.addEventListener('chatRoom', this.onBackHandler);
+    this.props.socket.on('chat', this.socketListener);
+    this.props.socket.on('enterRoom', this.socketListener);
   }
 
   componentWillUnmount() {
@@ -45,7 +46,9 @@ class ChatRoomList extends Component {
 
   socketListener() {
     this.msgComp.updateMessage(this.state.messages);
-    setTimeout(() => this.msgComp.scrollToBottom(), 50);
+    setTimeout(function() {
+      if (this && this.msgComp) this.msgComp.scrollToBottom();
+    }.bind(this), 200);
   };
 
   onBackHandler() {
@@ -54,14 +57,9 @@ class ChatRoomList extends Component {
   };
 
 
-  scroll(t) {
-    this.setState({text: t});
-    this.msgComp.scrollToBottom();
-  }
-
   showMenus() {
     this.setState({
-      showMenu: true,
+      showMenu: !this.state.showMenu,
     });
   }
 
@@ -79,9 +77,13 @@ class ChatRoomList extends Component {
 
   clearHistory() {
     this.state.messages.length = 0;
+    this.msgComp.updateMessage(this.state.messages);
     this.setState({
       showMenu: false,
     });
+  }
+  scrollToBottom() {
+    setTimeout(() => this.msgComp.scrollToBottom(), 200);
   }
 
   renderMenuItem() {
@@ -123,7 +125,10 @@ class ChatRoomList extends Component {
         {/*Header contains back button, menu button and chat room name*/}
         <View style={styles.headerView}>
           <TouchableOpacity
-            onPress={Actions.pop}
+            onPress={() => {
+              dismissKeyboard();
+              Actions.pop();
+            }}
             style={styles.backKey}>
             <Icon name='ios-arrow-back'
               size={40}
@@ -151,6 +156,7 @@ class ChatRoomList extends Component {
 
         <View style={styles.bottomBar}>
           <BottomBar
+            scrollToBottom={this.scrollToBottom}
             updateView={this.updateView}
             socket={this.props.socket}
             roomId = {this.props.roomId}
