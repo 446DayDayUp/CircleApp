@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import dismissKeyboard from 'dismissKeyboard';
 import {
   StyleSheet,
   Text,
@@ -151,7 +152,10 @@ export default class CreateChat extends Component {
                            placeholder = {this.getSelectedTags()}
                            editable = {false}
                 />
-                <TouchableOpacity onPress = {() => this.showOrHide()}>
+                <TouchableOpacity onPress = {() => {
+                  dismissKeyboard();
+                  this.showOrHide();
+                }}>
                   {!this.state.show ? <Icon
                                         name = 'ios-arrow-down'
                                         size = {40}
