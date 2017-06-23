@@ -3,7 +3,7 @@ import {
   Dimensions,
 } from 'react-native';
 
-const MyColor = '#66CCFF';
+const MyColor = '#4f8ef7';
 
 export const styles = StyleSheet.create({
   tab: {
@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
     paddingTop: 0,
     borderWidth: 0,
     borderTopWidth: 5,
-    borderColor: '#4f8ef7',
+    borderColor: MyColor,
     borderLeftWidth: 0,
     borderRightWidth: 0,
     borderBottomColor: 'rgba(0,0,0,0.01)',
@@ -26,14 +26,14 @@ export const styles = StyleSheet.create({
   tabView: {
     flex: 1,
     // padding: 10,
-    backgroundColor: '#4f8ef7',
+    backgroundColor: MyColor,
   },
   card: {
     flex: 1,
     // borderWidth: 1,
-    backgroundColor: '#4f8ef7',
+    backgroundColor: MyColor,
     borderColor: 'rgba(0,0,0,0.1)',
-    margin: 0,
+    marginTop: 0,
     height: Dimensions.get('window').height - 75,
     padding: 5,
     shadowColor: '#ccc',
@@ -44,7 +44,7 @@ export const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#4f8ef7',
+    backgroundColor: MyColor,
   },
   addButton: {
     backgroundColor: '#dc143c',
