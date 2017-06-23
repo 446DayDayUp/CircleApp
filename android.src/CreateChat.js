@@ -103,7 +103,12 @@ export default class CreateChat extends Component {
           range: this.state.range,
           lat: location.lat,
           lng: location.lng,
-        }).then(function() {
+        }).then(function(response) {
+          return response.json();
+        }).then(function(room) {
+          setTimeout(function() {
+            this.props.callback(room)
+          }.bind(this), 200);
           Actions.pop();
         }.bind(this)).catch(function(error) {
           console.warn('error', error);

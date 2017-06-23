@@ -46,6 +46,7 @@ class MainPage extends Component {
     this.joinChatRoom = this.joinChatRoom.bind(this);
     this.onBackHandler = this.onBackHandler.bind(this);
     this.getChatRoom = this.getChatRoom.bind(this);
+    this.createChatCallback = this.createChatCallback.bind(this);
     this.roomInfo = {};
     this.chatRoomSwitch = true;
     this.showSearchCondition = this.showSearchCondition.bind(this);
@@ -264,6 +265,10 @@ class MainPage extends Component {
     this.updateRoom(this.state.allRooms, this.state.joinedRooms);
   }
 
+  createChatCallback(room) {
+    this.joinRoom(room);
+  }
+
   render() {
     let tabBar = <CustomTabBar
       leftBtnLabel='md-person'
@@ -273,7 +278,8 @@ class MainPage extends Component {
       iconName={this.props.iconName}/>;
 
     let floatBtn = <TouchableHighlight style={styles.addButton}
-      underlayColor='#ff7043' onPress={Actions.createChat}>
+      underlayColor='#ff7043'
+      onPress={Actions.createChat.bind(this, {callback: this.createChatCallback})}>
       <Text style={{fontSize: 30, color: 'white'}}>+</Text>
     </TouchableHighlight>;
     return(
