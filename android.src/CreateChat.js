@@ -58,7 +58,7 @@ export default class CreateChat extends Component {
   // Show tags from Tags component
   showTags() {
     return <Tags passTagsFromTagsComp = {this.getTags.bind(this)}
-                  passTagsToTagsComp = {this.state.tags} />;
+                 passTagsToTagsComp = {this.state.tags} />;
   }
 
   // Return selected tags as string
