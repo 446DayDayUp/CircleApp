@@ -12,11 +12,8 @@ import {
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Tags from './Tags.js';
-// import * as http from './lib/http.js';
-// import { getGpsCord } from './lib/gps.js';
 
 const Item = Picker.Item;
-const SERVER_URL = 'https://circle-chat.herokuapp.com';
 
 export default class Search extends Component {
   // Constructor
