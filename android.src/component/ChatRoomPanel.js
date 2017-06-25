@@ -10,6 +10,11 @@ import {
 import MarqueeLabel from 'react-native-lahk-marquee-label';
 
 export default class ChatRoomPanel extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {dimensions: undefined};
+  }
+
   render() {
     let room = this.props.room;
     return(
@@ -20,9 +25,7 @@ export default class ChatRoomPanel extends Component {
               {this._chooseTag()}
             </View>
             <View style={styles.center}>
-              <Text style={{fontSize: 20, color: '#546979', flex: 2, marginTop: 10}}>
-                {room.name} ({room.numUsers})
-              </Text>
+              {this._rednerRoomName()}
               {this._showTag()}
             </View>
             <View style={styles.right}>
@@ -36,6 +39,60 @@ export default class ChatRoomPanel extends Component {
         </TouchableOpacity>
       </View>
     );
+  }
+
+  _rednerRoomName() {
+    let room = this.props.room;
+    if (this.state.dimensions) {
+      let { dimensions } = this.state
+      let { width, height } = dimensions
+
+      let lengthOfRoom = (room.name).length
+      let lengthOfShow = Math.floor(this.state.dimensions.width/lengthOfRoom)
+      if(lengthOfShow > lengthOfRoom){
+        return (
+          <Text
+            style={{fontSize: 20, color: '#546979', flex: 2, marginTop: 10}}>
+            {room.name} ({room.numUsers})
+          </Text>
+        )
+      }
+      else {
+        let width = this.state.dimensions.width + this.state.dimensions.width/2;
+        console.warn(width);
+        return (
+          <View style={{flex: 3, flexDirection: 'row'}}>
+            <MarqueeLabel
+              textContainerWidth={width}
+              duration={8000}
+              children={room.name}
+              bgViewStyle = {{flex: 5}}
+              textStyle={{fontSize: 20, color: '#546979', flex: 1, marginTop: 10}}
+            />
+            <Text style={{
+              fontSize: 20, color: '#546979', flex: 1, marginTop: 10
+            }}>
+              ({room.numUsers})
+            </Text>
+          </View>
+        )
+      }
+    }
+    return (
+      <View style={{flex: 1, alignSelf: 'stretch'}} onLayout={this._onLayout}>
+        {this.state.dimensions
+           ? <Svg width={width} height={height}>
+              ...
+             </Svg>
+           : undefined}
+      </View>
+    )
+  }
+
+  _onLayout = event => {
+    if (this.state.dimensions) return // layout was already called
+    let {width, height} = event.nativeEvent.layout
+    this.setState({dimensions: {width, height}})
   }
 
   _showTag() {
