@@ -53,15 +53,19 @@ export default class ChatRoomPanel extends Component {
         return (
           <Text
             style={{fontSize: 20, color: '#546979', flex: 2, marginTop: 10}}>
-            {room.name} ({room.numUsers})
+            ({room.numUsers}) {room.name}
           </Text>
         )
       }
       else {
         let width = this.state.dimensions.width + this.state.dimensions.width/2;
-        console.warn(width);
         return (
           <View style={{flex: 3, flexDirection: 'row'}}>
+            <Text style={{
+              fontSize: 20, color: '#546979', flex: 1, marginTop: 10
+            }}>
+              ({room.numUsers})
+            </Text>
             <MarqueeLabel
               textContainerWidth={width}
               duration={8000}
@@ -69,11 +73,6 @@ export default class ChatRoomPanel extends Component {
               bgViewStyle = {{flex: 5}}
               textStyle={{fontSize: 20, color: '#546979', flex: 1, marginTop: 10}}
             />
-            <Text style={{
-              fontSize: 20, color: '#546979', flex: 1, marginTop: 10
-            }}>
-              ({room.numUsers})
-            </Text>
           </View>
         )
       }
