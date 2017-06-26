@@ -16,9 +16,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Tags from './component/Tags.js';
 import * as http from './lib/http.js';
 import { getGpsCord } from './lib/gps.js';
+import { SERVER_URL, UID } from './data/globals.js'
 
 const Item = Picker.Item;
-const SERVER_URL = 'https://circle-chat.herokuapp.com';
 
 export default class CreateChat extends Component {
   // Constructor

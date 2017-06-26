@@ -22,6 +22,7 @@ import {
 } from 'react-native';
 
 let { width, height } = Dimensions.get('window');
+import { UID } from '../data/globals.js';
 
 const BAR_STATE_SHOW_KEYBOARD = 1;
 const BAR_STATE_SHOW_RECORDER = 2;
@@ -40,8 +41,8 @@ export default class BottomBar extends Component {
 
   sendMsg() {
     if (this.state.text !== ''){
-      this.props.socket.emit('chat', this.props.roomId, this.props.userName,
-        this.props.iconName, this.state.text);
+      this.props.socket.emit('chat', this.props.roomId, UID,
+          this.props.userName, this.props.iconName, this.state.text);
       this.setState({
         text: '',
       });
