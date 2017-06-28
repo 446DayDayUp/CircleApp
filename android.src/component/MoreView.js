@@ -10,7 +10,7 @@ import {
   Image,
   Dimensions,
   PixelRatio,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 
 let {width} = Dimensions.get('window');
@@ -36,18 +36,14 @@ export default class MoreView extends Component {
 class Cell extends Component {
   _handlePress(type) {
     if (type === 'photo' || type === 'video') {
-      var ImagePicker = require('react-native-image-picker');
-      var options = {
+      let ImagePicker = require('react-native-image-picker');
+      let typeS = (type === 'video') ? 'video' : 'photo';
+      let takeT = (type === 'video') ? 'Take video' : 'Take photo';
+      let options = {
         title: 'Select Avatar',
-        customButtons: [
-          {
-            name: 'fb',
-            title: 'Choose Photo from Facebook'
-          }
-        ],
+        takePhotoButtonTitle: takeT,
+        mediaType: typeS,
         storageOptions: {
-          skipBackup: true,
-          path: 'images'
         }
       };
 
@@ -65,6 +61,11 @@ class Cell extends Component {
             uri: response.uri
           };
           this.setState({avatarSource: source});
+          console.warn(JSON.stringify(this.state.avatarSource));
+
+          let img = new Image();
+          img.src = this.state.avatarSource;
+          console.warn(JSON.stringify(img));
         }
       });
     }
