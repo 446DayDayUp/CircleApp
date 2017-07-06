@@ -12,6 +12,7 @@ import {
   PixelRatio,
   TouchableOpacity,
 } from 'react-native';
+import { UID } from '../data/globals.js';
 
 let {width} = Dimensions.get('window');
 
@@ -23,7 +24,21 @@ export default class MoreView extends Component {
   render() {
     let parts = [];
     for (let i = 0; i < 4; i++) {
-      parts.push(<Cell key={i} icon={icons[i]} text={iconTexts[i]}/>);
+      if(iconTexts[i] === 'video' || iconTexts[i] === 'photo'){
+        parts.push(
+          <Cell
+          key={i}
+          icon={icons[i]}
+          text={iconTexts[i]}
+          socket={this.props.socket}
+          roomId = {this.props.roomId}
+          userName = {this.props.userName}
+          iconName = {this.props.iconName}
+        />);
+      }
+      else {
+        parts.push(<Cell key={i} icon={icons[i]} text={iconTexts[i]}/>);
+      }
     }
     return (
       <View style={styles.moreViewContainer}>
@@ -34,13 +49,24 @@ export default class MoreView extends Component {
 }
 
 class Cell extends Component {
+  constructor(props) {
+    super(props);
+    this.sendMsg = this.sendMsg.bind(this);
+
+  };
+
+  sendMsg() {
+    this.props.socket.emit('chat', this.props.roomId, UID,
+        this.props.userName, this.props.iconName, this.state.img);
+  }
+
   _handlePress(type) {
     if (type === 'photo' || type === 'video') {
       let ImagePicker = require('react-native-image-picker');
       let typeS = (type === 'video') ? 'video' : 'photo';
-      let takeT = (type === 'video') ? 'Take video' : 'Take photo';
+      let takeT = (type === 'video') ? 'Take video...' : 'Take photo...';
       let options = {
-        title: 'Select Avatar',
+        title: '',
         takePhotoButtonTitle: takeT,
         mediaType: typeS,
         storageOptions: {
@@ -60,12 +86,13 @@ class Cell extends Component {
           let source = {
             uri: response.uri
           };
+          //avatarSource is the uri of the video or Image
           this.setState({avatarSource: source});
-          console.warn(JSON.stringify(this.state.avatarSource));
-
           let img = new Image();
           img.src = this.state.avatarSource;
+          this.setState({img: img});
           console.warn(JSON.stringify(img));
+          //this.sendMsg();
         }
       });
     }
