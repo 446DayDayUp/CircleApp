@@ -13,6 +13,7 @@ export default class ChatRoomPanel extends Component {
   constructor(props) {
     super(props);
     this.state = {dimensions: undefined};
+    this.tagFactory = new this.TagIconFactory();
   }
 
   render() {
@@ -22,7 +23,7 @@ export default class ChatRoomPanel extends Component {
         <TouchableOpacity activeOpacity={0.8} onPress={this.props.roomOnClick}>
           <View style={styles.container}>
             <View style={styles.left}>
-              {this._chooseTag()}
+              {this._renderTagIcon()}
             </View>
             <View style={styles.center}>
               {this._rednerRoomName()}
@@ -125,18 +126,31 @@ export default class ChatRoomPanel extends Component {
     }
   }
 
-  _chooseTag() {
-    if (this.props.room.tags[0] == 'Food') {
-      return ( <Image style={styles.icon} source={require('../../img/food.png')}/>);
-    }else if (this.props.room.tags[0] == 'Study') {
-      return (<Image style={styles.icon} source={require('../../img/study.png')}/>);
-    }else if (this.props.room.tags[0] == 'Game') {
-      return (<Image style={styles.icon} source={require('../../img/game.png')}/>);
-    }else if (this.props.room.tags[0] == 'Sports') {
-      return (<Image style={styles.icon} source={require('../../img/sports.png')}/>);
-    }else{
-      return (<Image style={styles.icon} source={require('../../img/default.png')}/>);
-    }
+  TagIconFactory() {
+    this.getTagIcon = function(type) {
+      let src;
+      switch(type) {
+        case 'Food':
+          src = require('../../img/food.png');
+          break;
+        case 'Study':
+          src = require('../../img/study.png');
+          break;
+        case 'Game':
+          src = require('../../img/game.png');
+          break;
+        case 'Sports':
+          src = require('../../img/sports.png');
+          break;
+        default:
+          src = require('../../img/default.png');
+      }
+      return <Image style={styles.icon} source={src}/>
+    };
+  }
+
+  _renderTagIcon() {
+    return this.tagFactory.getTagIcon(this.props.room.tags[0]);
   }
 };
 
