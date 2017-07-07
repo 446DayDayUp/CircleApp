@@ -154,12 +154,12 @@ export default class BottomBar extends Component {
     setTimeout(() => this.props.isRecording(this.state.isRecording), 100);
     try {
       const filePath = await AudioRecorder.stopRecording();
-      http.upload(SERVER_URL, 'upload-file', Math.floor(Date.now())+UID, 'file://' + filePath, 'audio/aac')
+      http.upload(SERVER_URL, 'upload-file', Math.floor(Date.now())+UID+'.aac', 'file://' + filePath, 'audio/aac')
           .then((res, err) => {
             return res.json();
           }).then((json) => {
             console.warn(JSON.stringify(json));
-            this.props.socket.emit('chat', 'audio', this.props.roomId, UID,
+            this.props.socket.emit('chat', this.props.roomId, 'audio', UID,
               this.props.userName, this.props.iconName, json.url);
           });
     } catch (error) {
