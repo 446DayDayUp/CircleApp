@@ -37,7 +37,7 @@ export default class Messages extends Component {
         extraData={this.state}
         renderItem={this.renderMessage}
         keyExtractor={(msg, i) => i}
-        removeClippedSubviews={false}
+        removeClippedSubviews={true}
       />);
   }
 }
