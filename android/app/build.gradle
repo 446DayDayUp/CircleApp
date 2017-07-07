@@ -134,6 +134,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-audio')
     compile project(':react-native-device-info')
     compile project(':react-native-splash-screen')
     compile project(':react-native-vector-icons')

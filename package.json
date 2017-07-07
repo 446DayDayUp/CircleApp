@@ -10,6 +10,7 @@
   "dependencies": {
     "react": "16.0.0-alpha.12",
     "react-native": "^0.45.1",
+    "react-native-audio": "^3.2.2",
     "react-native-check-box": "^1.0.4",
     "react-native-checkboxlist": "0.0.8",
     "react-native-device-info": "^0.10.2",

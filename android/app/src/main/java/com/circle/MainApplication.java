@@ -3,6 +3,7 @@ package com.circle;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.rnim.rn.audio.ReactNativeAudioPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.cboy.rn.splashscreen.SplashScreenReactPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -27,6 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReactNativeAudioPackage(),
             new RNDeviceInfo(),
           new SplashScreenReactPackage(),
           new VectorIconsPackage(),
