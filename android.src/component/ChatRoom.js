@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import dismissKeyboard from 'dismissKeyboard';
 import {
+  Modal,
   Text,
   View,
   TouchableOpacity,
@@ -14,6 +15,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Messages from './Messages.js';
 import BottomBar from './BottomBar';
 import MoreView from './MoreView.js';
+import FadeInView from './FadeInView.js';
 
 var { width, height } = Dimensions.get('window');
 class ChatRoomList extends Component {
@@ -23,6 +25,7 @@ class ChatRoomList extends Component {
       messages: this.props.messages || [],
       showMenu: false,
       showMoreView: false,
+      isRecording: false,
     };
     this.socketListener = this.socketListener.bind(this);
     this.showMenus = this.showMenus.bind(this);
@@ -106,6 +109,13 @@ class ChatRoomList extends Component {
     return null;
   }
 
+  // Callback func to get if it's recording from BottomBar
+  getIsRecording(ir) {
+    this.setState({
+      isRecording: ir,
+    });
+  }
+
   render() {
     let moreView = [];
     if (this.state.showMoreView) {
@@ -152,6 +162,22 @@ class ChatRoomList extends Component {
         </View>
 
         <View style={styles.content}>
+          <Modal
+            animationType={'fade'}
+            transparent={true}
+            visible={this.state.isRecording}
+            onRequestClose={() => {null}}>
+            <View style={styles.modalBackgroundStyle}>
+              <View style={styles.innerContainerTransparentStyle}>
+                <FadeInView >
+                  <Icon name= 'md-microphone' size={100} color='#4f8ef7'/>
+                </FadeInView>
+              </View>
+              <View style={styles.discardMsgContainer}>
+                <Text style={styles.discardMsg}>Move Up To Discard</Text>
+              </View>
+            </View>
+          </Modal>
           <Messages messages={this.state.messages}
             socket={this.props.socket}
             ref={(r)=>this.msgComp = r}
@@ -167,6 +193,7 @@ class ChatRoomList extends Component {
             roomId = {this.props.roomId}
             userName = {this.props.userName}
             iconName = {this.props.iconName}
+            isRecording = {this.getIsRecording.bind(this)}
           />
         </View>
         {moreView}
@@ -233,6 +260,29 @@ export const styles = StyleSheet.create({
   bottomBar: {
     height: 50,
   },
+  modalBackgroundStyle: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  innerContainerTransparentStyle: {
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  discardMsgContainer: {
+    paddingTop: 100,
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  discardMsg: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#4f8ef7',
+  }
 });
 
 export default ChatRoomList;
