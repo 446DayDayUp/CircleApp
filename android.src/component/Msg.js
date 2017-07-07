@@ -35,8 +35,8 @@ export default class Msg extends Component {
       } else {
         return (
           <View style={listItemStyle.containerSend}>
-            <View>
-              <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end'}}>
+            <View style={{flex: 1}}>
+              <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
                 <Text> {msg.userName} </Text>
               </View>
 
@@ -45,8 +45,12 @@ export default class Msg extends Component {
                 <Text style={listItemStyle.msgText}>{msg.text}</Text>
               </View>
               :
-              <View style={listItemStyle.msgContainerSend}>
-                <Text style={listItemStyle.msgText}>{msg.text}</Text>
+              <View>
+                <Image
+                  style={{height: 100}}
+                  resizeMode='cover'
+                  source={{uri: msg.text}}
+                />
               </View>
               }
 
@@ -94,6 +98,16 @@ const listItemStyle = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 5,
+  },
+  imageContainerSend: {
+    backgroundColor: '#9FE658',
+    borderRadius: 3,
+    // paddingLeft: 8,
+    // paddingRight: 8,
+    // paddingBottom: 3,
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    // marginRight: 5,
   },
   msgText: {
     maxWidth: Dimensions.get('window').width - 150,
