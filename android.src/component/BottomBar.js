@@ -51,7 +51,6 @@ export default class BottomBar extends Component {
     this.startRecord = this.startRecord.bind(this);
     this.sendRecord = this.sendRecord.bind(this);
     this.discardRecord = this.discardRecord.bind(this);
-    this.checkPermission = this.checkPermission.bind(this);
     this.measureView = this.measureView.bind(this);
     this.prepareRecordPath = this.prepareRecordPath.bind(this);
   }
@@ -115,18 +114,6 @@ export default class BottomBar extends Component {
     });
   }
 
-  checkPermission() {
-    const rationale = {
-      'title': 'Microphone Permission',
-      'message': 'AudioExample needs access to your microphone so you can record audio.'
-    };
-
-    return PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, rationale)
-      .then((result) => {
-        return (result === true || result === PermissionsAndroid.RESULTS.GRANTED);
-    });
-  }
-
   sendMsg() {
     if (this.state.text !== ''){
       this.props.socket.emit('chat', this.props.roomId, 'chat', UID,
@@ -152,6 +139,7 @@ export default class BottomBar extends Component {
     setTimeout(() => this.props.isRecording(this.state.isRecording), 100);
 
     try {
+      this.prepareRecordPath();
       const filePath = await AudioRecorder.startRecording();
     } catch (error) {
       console.warn('startError ' + error);
@@ -166,7 +154,6 @@ export default class BottomBar extends Component {
     try {
       const filePath = await AudioRecorder.stopRecording();
       // filePath ready for the server
-      this.prepareRecordPath();
     } catch (error) {
       console.warn('stopError ' + error);
     }
