@@ -84,9 +84,13 @@ class Cell extends Component {
         } else if (response.customButton) {
           console.log('User tapped custom button: ', response.customButton);
         } else {
-          http.uploadImage(SERVER_URL, 'upload-image', Math.floor(Date.now())+UID,
-              response.uri).then((res, err) => {
-                console.warn(JSON.stringify(res));
+          http.uploadImage(SERVER_URL, 'upload-image', Math.floor(Date.now())+UID, response.uri)
+              .then((res, err) => {
+                return res.json();
+              }).then((json) => {
+                console.warn(JSON.stringify(json));
+                this.props.socket.emit('chat', 'image', this.props.roomId, UID,
+                  userName, this.props.iconName, json.url);
               });
         }
       });

@@ -17,10 +17,10 @@ exports.post = (host, path, params) => {
   });
 };
 
-exports.uploadImage = (host, path, imageName, imageUri) => {;
+exports.uploadImage = (host, path, fileName, uri) => {;
   let form = new FormData();
-  form.append('imageName', imageName);
-  form.append('imageFile', {uri: imageUri, type: "image/jpg" , name: 'imageFile'});
+  form.append('fileName', fileName);
+  form.append('imageFile', {uri: uri, type: "image/jpg" , name: fileName});
   return fetch(host + '/' + path, {
     headers: {
       'Accept': 'application/json',
