@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import dismissKeyboard from 'dismissKeyboard';
 import {
   StyleSheet,
   Text,
@@ -15,9 +16,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Tags from './component/Tags.js';
 import * as http from './lib/http.js';
 import { getGpsCord } from './lib/gps.js';
+import { SERVER_URL, UID } from './data/globals.js'
 
 const Item = Picker.Item;
-const SERVER_URL = 'https://circle-chat.herokuapp.com';
 
 export default class CreateChat extends Component {
   // Constructor
@@ -57,7 +58,7 @@ export default class CreateChat extends Component {
   // Show tags from Tags component
   showTags() {
     return <Tags passTagsFromTagsComp = {this.getTags.bind(this)}
-                  passTagsToTagsComp = {this.state.tags} />;
+                 passTagsToTagsComp = {this.state.tags} />;
   }
 
   // Return selected tags as string
@@ -151,7 +152,10 @@ export default class CreateChat extends Component {
                            placeholder = {this.getSelectedTags()}
                            editable = {false}
                 />
-                <TouchableOpacity onPress = {() => this.showOrHide()}>
+                <TouchableOpacity onPress = {() => {
+                  dismissKeyboard();
+                  this.showOrHide();
+                }}>
                   {!this.state.show ? <Icon
                                         name = 'ios-arrow-down'
                                         size = {40}

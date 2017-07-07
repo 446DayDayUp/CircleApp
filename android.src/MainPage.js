@@ -18,13 +18,12 @@ import ChatRoomList from './component/ChatRoomList';
 import * as http from './lib/http.js';
 import { getGpsCord } from './lib/gps.js';
 import { mBetweenCoords } from './lib/location.js'
-import {styles} from './css/MainPageCSS.js';
+import { styles } from './css/MainPageCSS.js';
 import Search from './component/Search.js';
+import { SERVER_URL, UID } from './data/globals.js';
 
 window.navigator.userAgent = 'ReactNative';
 const io = require('socket.io-client');
-
-const SERVER_URL = 'https://circle-chat.herokuapp.com';
 
 class MainPage extends Component {
   constructor(props) {
@@ -36,7 +35,6 @@ class MainPage extends Component {
       showSearch: false,
       searchCondition: '',
     };
-    this.refreshRoomList();
     this.joinRoom = this.joinRoom.bind(this);
     this.quitRoom = this.quitRoom.bind(this);
     this.updateRoom = this.updateRoom.bind(this);
@@ -47,13 +45,31 @@ class MainPage extends Component {
     this.onBackHandler = this.onBackHandler.bind(this);
     this.getChatRoom = this.getChatRoom.bind(this);
     this.createChatCallback = this.createChatCallback.bind(this);
-    this.roomInfo = {};
-    this.chatRoomSwitch = true;
     this.showSearchCondition = this.showSearchCondition.bind(this);
   }
 
   //add double back to exit app
   componentWillMount(){
+    this.roomInfo = {};
+    this.chatRoomSwitch = true;
+    this.socket = io(SERVER_URL);
+    this.socket.on('chat', function(roomId, type, uid, userName, iconName, msg) {
+      this.roomInfo[roomId].messages.push({
+        uid,
+        userName,
+        iconName,
+        text: msg,
+        type: type,
+      });
+    }.bind(this));
+    this.socket.on('enterRoom', function(numUsers, roomId, uid, userName) {
+      this.roomInfo[roomId].messages.push({
+        uid,
+        text: userName + ' has entered the room.',
+        type: 'notice',
+      });
+    }.bind(this));
+    this.refreshRoomList();
     BackHandler.addEventListener('MainPage', this.onBackHandler);
   }
 
@@ -85,33 +101,12 @@ class MainPage extends Component {
       room,
     ];
     // Join the chat room;
-    let socket = io(SERVER_URL);
-    socket.emit('room', room._id, this.props.userName); // Join room by roomId.
+    this.socket.emit('room', room._id, this.props.userName, UID);
     if (!this.roomInfo[room._id]) this.roomInfo[room._id] = {
       messages: [],
-      socket,
     };
-    socket.on('chat', function(sid, userName, iconName, msg) {
-      this.roomInfo[room._id].messages.push({
-        sid,
-        userName,
-        iconName,
-        text: msg,
-        type: 'chat',
-      });
-    }.bind(this));
-    socket.on('enterRoom', function(numUsers, sid, userName) {
-      this.roomInfo[room._id].messages.push({
-        sid,
-        text: userName + ' has entered the room.',
-        type: 'notice',
-      });
-    }.bind(this));
-    socket.on('leaveRoom', function(numUsers, sid, userName) {
-      // leave room
-    }.bind(this));
     Actions[this.getChatRoom()]({
-      socket: this.roomInfo[room._id].socket,
+      socket: this.socket,
       room: room,
       name: room.name,
       roomId: room._id,
@@ -133,7 +128,7 @@ class MainPage extends Component {
       ...this.state.allRooms,
       room,
     ];
-    this.roomInfo[room._id].socket.close();
+    this.socket.emit('quit', room._id);
     delete this.roomInfo[room._id];
     this.setState({
       allRooms,
@@ -145,7 +140,7 @@ class MainPage extends Component {
   // Jump a chat room scene which is already joined.
   joinChatRoom(room) {
     Actions[this.getChatRoom()]({
-      socket: this.roomInfo[room._id].socket,
+      socket: this.socket,
       room: room,
       name: room.name,
       roomId: room._id,

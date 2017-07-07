@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import dismissKeyboard from 'dismissKeyboard';
 import {
   StyleSheet,
   Text,
@@ -12,11 +13,8 @@ import {
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Tags from './Tags.js';
-// import * as http from './lib/http.js';
-// import { getGpsCord } from './lib/gps.js';
 
 const Item = Picker.Item;
-const SERVER_URL = 'https://circle-chat.herokuapp.com';
 
 export default class Search extends Component {
   // Constructor
@@ -114,7 +112,10 @@ export default class Search extends Component {
                            placeholder = {this.getSelectedTags()}
                            editable = {false}
                 />
-                <TouchableOpacity onPress = {() => this.showOrHide()}>
+                <TouchableOpacity onPress = {() => {
+                  dismissKeyboard();
+                  this.showOrHide();
+                }}>
                   {!this.state.show ? <Icon
                                         name = 'ios-arrow-down'
                                         size = {40}

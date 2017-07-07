@@ -16,3 +16,17 @@ exports.post = (host, path, params) => {
     body: JSON.stringify(params),
   });
 };
+
+exports.upload = (host, path, name, uri, type) => {;
+  let form = new FormData();
+  form.append('fileName', name);
+  form.append('file', {uri, type , name});
+  return fetch(host + '/' + path, {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'multipart/form-data',
+    },
+    method: 'POST',
+    body: form,
+  });
+}

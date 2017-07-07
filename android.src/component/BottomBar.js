@@ -4,6 +4,7 @@
 import React, { Component } from 'react';
 import dismissKeyboard from 'dismissKeyboard';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {AudioRecorder, AudioUtils} from 'react-native-audio';
 
 import {
   AppRegistry,
@@ -19,9 +20,13 @@ import {
   KeyboardAvoidingView,
   TextInput,
   TouchableOpacity,
+  PermissionsAndroid,
+  PanResponder,
 } from 'react-native';
+import * as http from '../lib/http.js';
 
 let { width, height } = Dimensions.get('window');
+import { UID, SERVER_URL } from '../data/globals.js';
 
 const BAR_STATE_SHOW_KEYBOARD = 1;
 const BAR_STATE_SHOW_RECORDER = 2;
@@ -34,14 +39,86 @@ export default class BottomBar extends Component {
       barState: BAR_STATE_SHOW_KEYBOARD,
       showMoreView: false,
       text: '',
+      isRecording: false,
+      audioPath: AudioUtils.DocumentDirectoryPath + '/voiceMsg.aac',
+      recorderX: 0,
+      recorderY: 0,
+      recorderWidth: 0,
+      recorderHeight: 0,
+      isDiscarded: false,
     };
+    this.myPanResponder={}
     this.sendMsg = this.sendMsg.bind(this);
+    this.startRecord = this.startRecord.bind(this);
+    this.sendRecord = this.sendRecord.bind(this);
+    this.discardRecord = this.discardRecord.bind(this);
+    this.measureView = this.measureView.bind(this);
+    this.prepareRecordPath = this.prepareRecordPath.bind(this);
+  }
+
+  componentWillMount() {
+    this.myPanResponder = PanResponder.create({
+      onStartShouldSetPanResponder: (evt, gestureState) => true,
+      onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
+      onMoveShouldSetPanResponder: (evt, gestureState) => true,
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+      onPanResponderTerminationRequest: (evt, gestureState) => true,
+
+      onPanResponderGrant: (evt, gestureState) => {
+        this.startRecord();
+      },
+      onPanResponderMove: (evt, gestureState) => {
+        let curX = parseInt(gestureState.moveX);
+        let curY = parseInt(gestureState.moveY);
+        if (curX - this.state.recorderX > this.state.width || curY < this.state.recorderY) {
+          this.setState({
+            isDiscarded: true,
+          });
+        } else {
+          this.setState({
+            isDiscarded: false,
+          });
+        }
+      },
+      onPanResponderRelease: (evt, gestureState) => {
+        if (this.state.isDiscarded) {
+          this.discardRecord();
+        } else {
+          this.sendRecord();
+        }
+      },
+      onPanResponderTerminate: (evt, gestureState) => {
+        console.warn('onPanResponderTerminate');
+      },
+    });
+    this.prepareRecordPath();
+  }
+
+  measureView() {
+    this.refs.recorder.measure((fx, fy, width, height, px, py) => {
+      this.setState({
+        recorderX: parseInt(px),
+        recorderY: parseInt(py),
+        recorderWidth: parseInt(width),
+        recorderHeight: parseInt(height),
+      });
+    });
+  }
+
+  prepareRecordPath() {
+    AudioRecorder.prepareRecordingAtPath(this.state.audioPath, {
+      SampleRate: 22050,
+      Channels: 1,
+      AudioQuality: 'Low',
+      AudioEncoding: 'aac',
+      AudioEncodingBitRate: 32000
+    });
   }
 
   sendMsg() {
     if (this.state.text !== ''){
-      this.props.socket.emit('chat', this.props.roomId, this.props.userName,
-        this.props.iconName, this.state.text);
+      this.props.socket.emit('chat', this.props.roomId, 'chat', UID,
+          this.props.userName, this.props.iconName, this.state.text);
       this.setState({
         text: '',
       });
@@ -54,6 +131,54 @@ export default class BottomBar extends Component {
       showMoreView: false,
     })
     this.props.updateView(false);
+  }
+
+  async startRecord() {
+    this.setState({
+      isRecording: true,
+    });
+    setTimeout(() => this.props.isRecording(this.state.isRecording), 100);
+
+    try {
+      this.prepareRecordPath();
+      const filePath = await AudioRecorder.startRecording();
+    } catch (error) {
+      console.warn('startError ' + error);
+    }
+  }
+
+  async sendRecord() {
+    this.setState({
+      isRecording: false,
+    });
+    setTimeout(() => this.props.isRecording(this.state.isRecording), 100);
+    try {
+      const filePath = await AudioRecorder.stopRecording();
+      http.upload(SERVER_URL, 'upload-file', Math.floor(Date.now())+UID, 'file://' + filePath, 'audio/aac')
+          .then((res, err) => {
+            return res.json();
+          }).then((json) => {
+            console.warn(JSON.stringify(json));
+            this.props.socket.emit('chat', 'audio', this.props.roomId, UID,
+              this.props.userName, this.props.iconName, json.url);
+          });
+    } catch (error) {
+      console.warn('stopError ' + error);
+    }
+  }
+
+  async discardRecord() {
+    this.setState({
+      isRecording: false,
+    });
+    setTimeout(() => this.props.isRecording(this.state.isRecording), 100);
+    try {
+      const filePath = await AudioRecorder.stopRecording();
+      // discard the record, don't send it to server
+      this.prepareRecordPath();
+    } catch (error) {
+      console.warn('discardError ' + error);
+    }
   }
 
   render() {
@@ -108,9 +233,11 @@ export default class BottomBar extends Component {
                 color='#4f8ef7'
           />
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.5} style={{flex: 1}}>
-          <View style={styles.recorder}><Text>Press to speak</Text></View>
-        </TouchableOpacity>
+        <View style={{flex: 1}} {...this.myPanResponder.panHandlers}>
+          <TouchableOpacity activeOpacity={0.5} style={{flex: 1}} onLayout={this.measureView} ref='recorder'>
+            <View style={styles.recorder}><Text>{this.state.isRecording ? 'Recording...' : 'Press to speak'}</Text></View>
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity style = {{padding: 5}} activeOpacity={0.5} onPress={this.sendMsg}>
           <Icon name= 'ios-send'
                 size={40}

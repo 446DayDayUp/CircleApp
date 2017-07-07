@@ -10,6 +10,12 @@ import {
 import MarqueeLabel from 'react-native-lahk-marquee-label';
 
 export default class ChatRoomPanel extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {dimensions: undefined};
+    this.tagFactory = new this.TagIconFactory();
+  }
+
   render() {
     let room = this.props.room;
     return(
@@ -17,12 +23,10 @@ export default class ChatRoomPanel extends Component {
         <TouchableOpacity activeOpacity={0.8} onPress={this.props.roomOnClick}>
           <View style={styles.container}>
             <View style={styles.left}>
-              {this._chooseTag()}
+              {this._renderTagIcon()}
             </View>
             <View style={styles.center}>
-              <Text style={{fontSize: 20, color: '#546979', flex: 2, marginTop: 10}}>
-                {room.name} ({room.numUsers})
-              </Text>
+              {this._rednerRoomName()}
               {this._showTag()}
             </View>
             <View style={styles.right}>
@@ -36,6 +40,59 @@ export default class ChatRoomPanel extends Component {
         </TouchableOpacity>
       </View>
     );
+  }
+
+  _rednerRoomName() {
+    let room = this.props.room;
+    if (this.state.dimensions) {
+      let { dimensions } = this.state
+      let { width, height } = dimensions
+
+      let lengthOfRoom = (room.name).length
+      let lengthOfShow = Math.floor(this.state.dimensions.width/lengthOfRoom)
+      if(lengthOfShow > lengthOfRoom){
+        return (
+          <Text
+            style={{fontSize: 20, color: '#546979', flex: 2, marginTop: 10}}>
+            ({room.numUsers}) {room.name}
+          </Text>
+        )
+      }
+      else {
+        let width = this.state.dimensions.width + this.state.dimensions.width/2;
+        return (
+          <View style={{flex: 3, flexDirection: 'row'}}>
+            <Text style={{
+              fontSize: 20, color: '#546979', flex: 1, marginTop: 10
+            }}>
+              ({room.numUsers})
+            </Text>
+            <MarqueeLabel
+              textContainerWidth={width}
+              duration={8000}
+              children={room.name}
+              bgViewStyle = {{flex: 5}}
+              textStyle={{fontSize: 20, color: '#546979', flex: 1, marginTop: 10}}
+            />
+          </View>
+        )
+      }
+    }
+    return (
+      <View style={{flex: 1, alignSelf: 'stretch'}} onLayout={this._onLayout}>
+        {this.state.dimensions
+           ? <Svg width={width} height={height}>
+              ...
+             </Svg>
+           : undefined}
+      </View>
+    )
+  }
+
+  _onLayout = event => {
+    if (this.state.dimensions) return // layout was already called
+    let {width, height} = event.nativeEvent.layout
+    this.setState({dimensions: {width, height}})
   }
 
   _showTag() {
@@ -69,18 +126,31 @@ export default class ChatRoomPanel extends Component {
     }
   }
 
-  _chooseTag() {
-    if (this.props.room.tags[0] == 'Food') {
-      return ( <Image style={styles.icon} source={require('../../img/food.png')}/>);
-    }else if (this.props.room.tags[0] == 'Study') {
-      return (<Image style={styles.icon} source={require('../../img/study.png')}/>);
-    }else if (this.props.room.tags[0] == 'Game') {
-      return (<Image style={styles.icon} source={require('../../img/game.png')}/>);
-    }else if (this.props.room.tags[0] == 'Sports') {
-      return (<Image style={styles.icon} source={require('../../img/sports.png')}/>);
-    }else{
-      return (<Image style={styles.icon} source={require('../../img/default.png')}/>);
-    }
+  TagIconFactory() {
+    this.getTagIcon = function(type) {
+      let src;
+      switch(type) {
+        case 'Food':
+          src = require('../../img/food.png');
+          break;
+        case 'Study':
+          src = require('../../img/study.png');
+          break;
+        case 'Game':
+          src = require('../../img/game.png');
+          break;
+        case 'Sports':
+          src = require('../../img/sports.png');
+          break;
+        default:
+          src = require('../../img/default.png');
+      }
+      return <Image style={styles.icon} source={src}/>
+    };
+  }
+
+  _renderTagIcon() {
+    return this.tagFactory.getTagIcon(this.props.room.tags[0]);
   }
 };
 
