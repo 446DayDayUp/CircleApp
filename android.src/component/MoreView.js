@@ -67,6 +67,7 @@ class Cell extends Component {
       let typeS = (type === 'video') ? 'video' : 'photo';
       let takeT = (type === 'video') ? 'Take video...' : 'Take photo...';
       let options = {
+        quality: 0.2,
         title: '',
         takePhotoButtonTitle: takeT,
         mediaType: typeS,
@@ -88,8 +89,7 @@ class Cell extends Component {
               .then((res, err) => {
                 return res.json();
               }).then((json) => {
-                console.warn(JSON.stringify(json));
-                this.props.socket.emit('chat', 'image', this.props.roomId, UID,
+                this.props.socket.emit('chat', this.props.roomId, 'image' , UID,
                   this.props.userName, this.props.iconName, json.url);
               });
         }
