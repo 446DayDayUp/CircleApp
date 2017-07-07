@@ -19,7 +19,7 @@ export default class Msg extends Component {
 
   render() {
     let msg = this.props.msg;
-    if (msg.type === 'chat') {
+    if (msg.type === 'chat' || msg.type === 'image') {
       if (!this.props.isSend) {
         return (
           <View style={listItemStyle.container}>
@@ -39,9 +39,18 @@ export default class Msg extends Component {
               <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end'}}>
                 <Text> {msg.userName} </Text>
               </View>
+
+              {msg.type === 'chat' ?
               <View style={listItemStyle.msgContainerSend}>
                 <Text style={listItemStyle.msgText}>{msg.text}</Text>
               </View>
+              :
+              <View style={listItemStyle.msgContainerSend}>
+                <Text style={listItemStyle.msgText}>{msg.text}</Text>
+              </View>
+              }
+
+
             </View>
             <Image style={listItemStyle.iconView} source={profilePicture[msg.iconName]} />
           </View>
