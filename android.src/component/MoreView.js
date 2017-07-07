@@ -12,7 +12,8 @@ import {
   PixelRatio,
   TouchableOpacity,
 } from 'react-native';
-import { UID } from '../data/globals.js';
+import { UID, SERVER_URL } from '../data/globals.js';
+import * as http from '../lib/http.js';
 
 let {width} = Dimensions.get('window');
 
@@ -83,16 +84,10 @@ class Cell extends Component {
         } else if (response.customButton) {
           console.log('User tapped custom button: ', response.customButton);
         } else {
-          let source = {
-            uri: response.uri
-          };
-          //avatarSource is the uri of the video or Image
-          this.setState({avatarSource: source});
-          let img = new Image();
-          img.src = this.state.avatarSource;
-          this.setState({img: img});
-          console.warn(JSON.stringify(img));
-          //this.sendMsg();
+          http.uploadImage(SERVER_URL, 'upload-image', Math.floor(Date.now())+UID,
+              response.uri).then((res, err) => {
+                console.warn(JSON.stringify(res));
+              });
         }
       });
     }
