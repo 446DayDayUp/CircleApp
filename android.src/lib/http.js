@@ -20,7 +20,7 @@ exports.post = (host, path, params) => {
 exports.uploadImage = (host, path, fileName, uri) => {;
   let form = new FormData();
   form.append('fileName', fileName);
-  form.append('imageFile', {uri: uri, type: "image/jpg" , name: fileName});
+  form.append('imageFile', {uri: uri, type: "image" , name: fileName});
   return fetch(host + '/' + path, {
     headers: {
       'Accept': 'application/json',
