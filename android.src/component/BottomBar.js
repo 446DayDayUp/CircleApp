@@ -41,7 +41,7 @@ export default class BottomBar extends Component {
 
   sendMsg() {
     if (this.state.text !== ''){
-      this.props.socket.emit('chat', 'chat', this.props.roomId, UID,
+      this.props.socket.emit('chat', this.props.roomId, 'chat', UID,
           this.props.userName, this.props.iconName, this.state.text);
       this.setState({
         text: '',
