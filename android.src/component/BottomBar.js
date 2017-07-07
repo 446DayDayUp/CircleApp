@@ -23,9 +23,10 @@ import {
   PermissionsAndroid,
   PanResponder,
 } from 'react-native';
+import * as http from '../lib/http.js';
 
 let { width, height } = Dimensions.get('window');
-import { UID } from '../data/globals.js';
+import { UID, SERVER_URL } from '../data/globals.js';
 
 const BAR_STATE_SHOW_KEYBOARD = 1;
 const BAR_STATE_SHOW_RECORDER = 2;
@@ -153,7 +154,14 @@ export default class BottomBar extends Component {
     setTimeout(() => this.props.isRecording(this.state.isRecording), 100);
     try {
       const filePath = await AudioRecorder.stopRecording();
-      // filePath ready for the server
+      http.upload(SERVER_URL, 'upload-file', Math.floor(Date.now())+UID, 'file://' + filePath, 'audio/aac')
+          .then((res, err) => {
+            return res.json();
+          }).then((json) => {
+            console.warn(JSON.stringify(json));
+            this.props.socket.emit('chat', 'audio', this.props.roomId, UID,
+              this.props.userName, this.props.iconName, json.url);
+          });
     } catch (error) {
       console.warn('stopError ' + error);
     }

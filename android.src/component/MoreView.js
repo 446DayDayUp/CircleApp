@@ -84,7 +84,7 @@ class Cell extends Component {
         } else if (response.customButton) {
           console.log('User tapped custom button: ', response.customButton);
         } else {
-          http.uploadImage(SERVER_URL, 'upload-image', Math.floor(Date.now())+UID, response.uri)
+          http.upload(SERVER_URL, 'upload-file', Math.floor(Date.now())+UID, response.uri, 'image/jpg')
               .then((res, err) => {
                 return res.json();
               }).then((json) => {
