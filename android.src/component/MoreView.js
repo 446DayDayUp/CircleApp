@@ -1,7 +1,7 @@
 /**
  * Created by zachary on 2017-06-19.
  */
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
 import {
   StyleSheet,
@@ -10,33 +10,37 @@ import {
   Image,
   Dimensions,
   PixelRatio,
+  TouchableOpacity,
 } from 'react-native';
+import { UID, SERVER_URL } from '../data/globals.js';
+import * as http from '../lib/http.js';
 
-let { width } = Dimensions.get('window');
+let {width} = Dimensions.get('window');
 
-const icons = [
-  require('../../img/ic_more_gallery.png'),
-  require('../../img/ic_more_movie.png'),
-  require('../../img/ic_more_position.png'),
-  require('../../img/small_game.png'),
-];
+const icons = [require('../../img/ic_more_gallery.png'), require('../../img/ic_more_movie.png'), require('../../img/ic_more_position.png'), require('../../img/small_game.png')];
 
-const iconTexts = [
-  'photo', 'video', 'location', 'game',
-];
+const iconTexts = ['photo', 'video', 'location', 'game'];
 
 export default class MoreView extends Component {
   render() {
     let parts = [];
     for (let i = 0; i < 4; i++) {
+      if(iconTexts[i] === 'video' || iconTexts[i] === 'photo'){
         parts.push(
           <Cell
-            key={i}
-            icon={icons[i]}
-            text={iconTexts[i]}
-          />
-        );
+          key={i}
+          icon={icons[i]}
+          text={iconTexts[i]}
+          socket={this.props.socket}
+          roomId = {this.props.roomId}
+          userName = {this.props.userName}
+          iconName = {this.props.iconName}
+        />);
       }
+      else {
+        parts.push(<Cell key={i} icon={icons[i]} text={iconTexts[i]}/>);
+      }
+    }
     return (
       <View style={styles.moreViewContainer}>
         {parts}
@@ -46,14 +50,60 @@ export default class MoreView extends Component {
 }
 
 class Cell extends Component {
+  constructor(props) {
+    super(props);
+    this.sendMsg = this.sendMsg.bind(this);
+
+  };
+
+  sendMsg() {
+    this.props.socket.emit('chat', this.props.roomId, UID,
+        this.props.userName, this.props.iconName, this.state.img);
+  }
+
+  _handlePress(type) {
+    if (type === 'photo' || type === 'video') {
+      let ImagePicker = require('react-native-image-picker');
+      let typeS = (type === 'video') ? 'video' : 'photo';
+      let takeT = (type === 'video') ? 'Take video...' : 'Take photo...';
+      let options = {
+        title: '',
+        takePhotoButtonTitle: takeT,
+        mediaType: typeS,
+        storageOptions: {
+        }
+      };
+
+      ImagePicker.showImagePicker(options, (response) => {
+        console.log('Response = ', response);
+
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else if (response.customButton) {
+          console.log('User tapped custom button: ', response.customButton);
+        } else {
+          http.uploadImage(SERVER_URL, 'upload-image', Math.floor(Date.now())+UID, response.uri)
+              .then((res, err) => {
+                return res.json();
+              }).then((json) => {
+                console.warn(JSON.stringify(json));
+                this.props.socket.emit('chat', 'image', this.props.roomId, UID,
+                  userName, this.props.iconName, json.url);
+              });
+        }
+      });
+    }
+  }
   render() {
     return (
-      <View style={styles.cellContainer}>
+      <TouchableOpacity style={styles.cellContainer} onPress={() => this._handlePress(this.props.text)}>
         <View style={styles.cellImgContainer}>
-          <Image style={styles.cellImage} source={this.props.icon} />
+          <Image style={styles.cellImage} source={this.props.icon}/>
         </View>
         <Text style={styles.cellText}>{this.props.text}</Text>
-      </View>
+      </TouchableOpacity>
     );
   }
 }
@@ -73,7 +123,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 10,
-    marginRight: 10,
+    marginRight: 10
   },
   cellImgContainer: {
     width: 55,
@@ -83,13 +133,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#FBFBFB',
     borderWidth: 1 / PixelRatio.get(),
     borderColor: '#DFDFDF',
-    borderRadius: 10,
+    borderRadius: 10
   },
   cellImage: {
     width: 35,
-    height: 35,
+    height: 35
   },
   cellText: {
-    fontSize: 13,
+    fontSize: 13
   }
 });

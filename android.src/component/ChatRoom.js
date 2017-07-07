@@ -123,7 +123,12 @@ class ChatRoomList extends Component {
         <View key={'more-view-key'}>
           <View style={{width: width, height: 1 / PixelRatio.get(), backgroundColor: global.dividerColor}} />
           <View style={{height: 100}}>
-            <MoreView />
+            <MoreView
+              socket={this.props.socket}
+              roomId = {this.props.roomId}
+              userName = {this.props.userName}
+              iconName = {this.props.iconName}
+            />
           </View>
         </View>
       );
