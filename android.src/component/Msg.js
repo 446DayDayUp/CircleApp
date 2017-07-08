@@ -55,6 +55,10 @@ export default class Msg extends Component {
 
   render() {
     let msg = this.props.msg;
+    let scale;
+    if(msg.type === 'image'){
+      scale = parseInt(msg.opt.width)/(Dimensions.get('window').width - 100);
+    }
     if (msg.type === 'chat' || msg.type === 'image') {
       if (!this.props.isSend) {
         return (
@@ -75,7 +79,7 @@ export default class Msg extends Component {
                 <View style={{width: Dimensions.get('window').width - 100}}>
                   <Text> {msg.userName} </Text>
                   <Image
-                    style={{height: 250}}
+                    style={{height: parseInt(msg.opt.height)/scale}}
                     resizeMode='contain'
                     source={{uri: msg.text}}
                   />
@@ -103,7 +107,7 @@ export default class Msg extends Component {
               </View>
               <View>
                 <Image
-                  style={{height: 250}}
+                  style={{height: parseInt(msg.opt.height)/scale}}
                   resizeMode='contain'
                   source={{uri: msg.text}}
                 />
