@@ -56,30 +56,60 @@ export default class Msg extends Component {
 
   render() {
     let msg = this.props.msg;
-    if (msg.type === 'chat') {
+    if (msg.type === 'chat' || msg.type === 'image') {
       if (!this.props.isSend) {
         return (
-          <View style={listItemStyle.container}>
-            <Image style={listItemStyle.iconView} source={profilePicture[msg.iconName]} />
-            <View>
-              <Text> {msg.userName} </Text>
-              <View style={listItemStyle.msgContainerRecv}>
-                <Text style={listItemStyle.msgText}>{msg.text}</Text>
+          <View>
+            {msg.type === 'chat' ?
+              <View style={listItemStyle.container}>
+                <Image style={listItemStyle.iconView} source={profilePicture[msg.iconName]} />
+                <View>
+                  <Text> {msg.userName} </Text>
+                  <View style={listItemStyle.msgContainerRecv}>
+                    <Text style={listItemStyle.msgText}>{msg.text}</Text>
+                  </View>
+                </View>
               </View>
-            </View>
+              :
+              <View style={listItemStyle.container}>
+                <Image style={listItemStyle.iconView} source={profilePicture[msg.iconName]} />
+                <View style={{width: Dimensions.get('window').width - 100}}>
+                  <Text> {msg.userName} </Text>
+                  <Image
+                    style={{height: 250}}
+                    resizeMode='contain'
+                    source={{uri: msg.text}}
+                  />
+                </View>
+              </View>
+            }
           </View>
         );
       } else {
         return (
           <View style={listItemStyle.containerSend}>
+            {msg.type === 'chat' ?
             <View>
-              <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end'}}>
+              <View style={{alignItems: 'flex-end'}}>
                 <Text> {msg.userName} </Text>
               </View>
               <View style={listItemStyle.msgContainerSend}>
                 <Text style={listItemStyle.msgText}>{msg.text}</Text>
               </View>
             </View>
+            :
+            <View style={{width: Dimensions.get('window').width - 100}}>
+              <View style={{alignItems: 'flex-end'}}>
+                <Text> {msg.userName} </Text>
+              </View>
+              <View>
+                <Image
+                  style={{height: 250}}
+                  resizeMode='contain'
+                  source={{uri: msg.text}}
+                />
+              </View>
+            </View>}
             <Image style={listItemStyle.iconView} source={profilePicture[msg.iconName]} />
           </View>
         );
@@ -159,7 +189,6 @@ let audioContainer = function(isSend, duration) {
 
 const listItemStyle = StyleSheet.create({
   container: {
-    flex: 1,
     width: Dimensions.get('window').width,
     flexDirection: 'row',
     padding: 5,
@@ -175,7 +204,7 @@ const listItemStyle = StyleSheet.create({
     paddingRight: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingBottom: 3,
+    paddingBottom: 5,
     marginLeft: 5,
   },
   msgContainerSend: {
@@ -183,9 +212,9 @@ const listItemStyle = StyleSheet.create({
     borderRadius: 3,
     paddingLeft: 8,
     paddingRight: 8,
-    paddingBottom: 3,
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingBottom: 5,
+    //justifyContent: 'center',
+    alignItems: 'flex-end',
     marginRight: 5,
   },
   msgText: {
@@ -196,7 +225,6 @@ const listItemStyle = StyleSheet.create({
     lineHeight: 24,
   },
   containerSend: {
-    flex: 1,
     width: Dimensions.get('window').width,
     flexDirection: 'row',
     padding: 5,
