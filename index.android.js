@@ -15,7 +15,6 @@ import ChatRoom from './android.src/component/ChatRoom.js';
 import Game2048 from './android.src/component/games/game2048/main';
 import Basketball from './android.src/component/games/basketballgame/Basketball';
 import Soccer from './android.src/component/games/soccergame/Soccer';
-import Main from './android.src/component/games/Tetrisgame/src/main';
 import HomeScreen from './android.src/component/games/Gamespage';
 import {
   AppRegistry,
@@ -41,7 +40,6 @@ export default class circle extends Component {
           <Scene key="game2048" component={Game2048} hideNavBar={false} title='2048 game'/>
           <Scene key="Basketball" component={Basketball} hideNavBar={false}title='Basketball game'/>
           <Scene key="Soccer" component={Soccer} hideNavBar={false}title='Soccer game'/>
-          <Scene key="Tetris" component={Main} hideNavBar={false}title='Tettis game'/>
         </Scene>
       </Router>
     );

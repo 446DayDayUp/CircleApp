@@ -43,11 +43,6 @@ class HomeScreen extends React.Component {
         <TouchableOpacity style={styles.btn} onPress={() => Actions.Soccer()}>
           <Text style={styles.btnText}> Soccer </Text>
         </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btn} onPress={() => Actions.Tetris()}>
-          <Text style={styles.btnText}> Tetris </Text>
-        </TouchableOpacity>
-
         {/* <TouchableOpacity style={styles.btn} onPress={() => navigate('Bird')}>*/}
           {/* <Text style={styles.btnText}> Flappy bird </Text>*/}
         {/* </TouchableOpacity>*/}
