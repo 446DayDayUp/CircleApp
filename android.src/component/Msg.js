@@ -49,7 +49,6 @@ export default class Msg extends Component {
 
   getAudioDuration(url) {
     let cb = (d) => {
-      console.warn('dddd ', d);
       return d;
     }
   }
@@ -115,7 +114,7 @@ export default class Msg extends Component {
         );
       }
     } else if (msg.type === 'audio') {
-      let duration = parseInt(msg.opt);
+      let duration = parseInt(msg.opt.length);
       if (!this.props.isSend) {
         return (
           <View style={listItemStyle.container}>

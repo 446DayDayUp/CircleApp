@@ -166,7 +166,6 @@ export default class BottomBar extends Component {
           .then((res, err) => {
             return res.json();
           }).then((json) => {
-            //console.warn(JSON.stringify(json));
             this.props.socket.emit('chat', this.props.roomId, 'audio', UID,
               this.props.userName, this.props.iconName, json.url, {'length': this.state.recordTime});
           });
