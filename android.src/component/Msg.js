@@ -10,13 +10,6 @@ import {
 import { profilePicture } from '../lib/profilePicture.js';
 
 export default class Msg extends Component {
-  shouldComponentUpdate(nextProps, nextState) {
-    return (this.props.msg.text !== nextProps.msg.text ||
-      this.props.msg.userName !== nextProps.msg.userName ||
-      this.props.msg.iconName !== nextProps.msg.iconName ||
-      this.props.isSend !== nextProps.isSend);
-  }
-
   render() {
     let msg = this.props.msg;
     if (msg.type === 'chat' || msg.type === 'image') {
