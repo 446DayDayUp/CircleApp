@@ -2,7 +2,7 @@
  * Created by zachary on 2017-06-19.
  */
 import React, {Component} from 'react';
-
+import { Actions } from 'react-native-router-flux';
 import {
   StyleSheet,
   Text,
@@ -90,6 +90,9 @@ class Cell extends Component {
               });
         }
       });
+    }
+    if(type == 'game') {
+      Actions.gameMainpage();
     }
   }
   render() {

@@ -49,7 +49,9 @@ export default class LoginPage extends Component {
 
   _goToIconPage() {
     dismissKeyboard();
-    Actions.pickicon();
+    //heiheihei
+    //Actions.pickicon();
+    Actions.gameMainpage();
   }
 
   componentDidMount() {
