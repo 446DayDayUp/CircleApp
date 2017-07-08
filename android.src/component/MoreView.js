@@ -28,6 +28,7 @@ export default class MoreView extends Component {
       if(iconTexts[i] === 'video' || iconTexts[i] === 'photo'){
         parts.push(
           <Cell
+          updateView={this.props.updateView}
           key={i}
           icon={icons[i]}
           text={iconTexts[i]}
@@ -94,6 +95,7 @@ class Cell extends Component {
               });
         }
       });
+      this.props.updateView(false);
     }
     if(type == 'game') {
       Actions.gameMainpage();
