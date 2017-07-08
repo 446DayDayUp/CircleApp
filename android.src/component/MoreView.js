@@ -91,7 +91,8 @@ class Cell extends Component {
                 return res.json();
               }).then((json) => {
                 this.props.socket.emit('chat', this.props.roomId, 'image' , UID,
-                  this.props.userName, this.props.iconName, json.url);
+                  this.props.userName, this.props.iconName, json.url,
+                  {'height': response.height, 'width': response.width});
               });
         }
       });
