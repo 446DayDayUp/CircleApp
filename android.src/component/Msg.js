@@ -85,31 +85,36 @@ export default class Msg extends Component {
         );
       }
     } else if (msg.type === 'audio') {
-      let duration = this.getAudioDuration(msg.text);
+      let duration = parseInt(msg.opt);
       if (!this.props.isSend) {
         return (
           <View style={listItemStyle.container}>
             <Image style={listItemStyle.iconView} source={profilePicture[msg.iconName]} />
             <View>
               <Text> {msg.userName} </Text>
-              <TouchableOpacity style={audioContainer(false, duration)} onPress={this.playAudioMsg.bind(this, msg.text)}>
-                <Icon name='ios-wifi' size={20} color='grey' style={listItemStyle.audioMsgRecvIcon}/>
-              </TouchableOpacity>
+              <View style={{flexDirection: 'row'}}>
+                <TouchableOpacity style={audioContainer(false, duration)} onPress={this.playAudioMsg.bind(this, msg.text)}>
+                  <Icon name='ios-wifi' size={15} color='grey' style={listItemStyle.audioMsgRecvIcon}/>
+                </TouchableOpacity>
+                <Text>{duration}"</Text>
+              </View>
             </View>
           </View>
         );
       } else {
-        let duration = this.getAudioDuration(msg.text);
-        console.warn('d ', duration);
+        let duration = parseInt(msg.opt.length);
         return (
           <View style={listItemStyle.containerSend}>
             <View>
               <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end'}}>
                 <Text> {msg.userName} </Text>
               </View>
-              <TouchableOpacity style={audioContainer(true, duration)} onPress={this.playAudioMsg.bind(this, msg.text)}>
-                <Icon name='ios-wifi' size={20} color='grey' style={listItemStyle.audioMsgSendIcon}/>
-              </TouchableOpacity>
+              <View style={{flexDirection: 'row'}}>
+                <Text>{duration}"</Text>
+                <TouchableOpacity style={audioContainer(true, duration)} onPress={this.playAudioMsg.bind(this, msg.text)}>
+                  <Icon name='ios-wifi' size={15} color='grey' style={listItemStyle.audioMsgSendIcon}/>
+                </TouchableOpacity>
+              </View>
             </View>
             <Image style={listItemStyle.iconView} source={profilePicture[msg.iconName]} />
           </View>
@@ -137,7 +142,7 @@ let audioContainer = function(isSend, duration) {
   if (duration > 60) {
     width = Dimensions.get('window').width - 180;
   } else {
-    width = 40 + duration;
+    width = 40 + 2 * duration;
   }
   return {
     backgroundColor: color,

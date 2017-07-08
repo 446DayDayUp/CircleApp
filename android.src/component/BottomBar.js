@@ -46,6 +46,7 @@ export default class BottomBar extends Component {
       recorderWidth: 0,
       recorderHeight: 0,
       isDiscarded: false,
+      recordTime: 0,
     };
     this.myPanResponder={}
     this.sendMsg = this.sendMsg.bind(this);
@@ -93,6 +94,13 @@ export default class BottomBar extends Component {
     });
     this.prepareRecordPath();
   }
+
+  componentDidMount() {
+    AudioRecorder.onProgress = (data) => {
+      this.setState({recordTime: Math.floor(data.currentTime)});
+    };
+  }
+
 
   measureView() {
     this.refs.recorder.measure((fx, fy, width, height, px, py) => {
@@ -158,9 +166,9 @@ export default class BottomBar extends Component {
           .then((res, err) => {
             return res.json();
           }).then((json) => {
-            console.warn(JSON.stringify(json));
+            //console.warn(JSON.stringify(json));
             this.props.socket.emit('chat', this.props.roomId, 'audio', UID,
-              this.props.userName, this.props.iconName, json.url);
+              this.props.userName, this.props.iconName, json.url, {'length': this.state.recordTime});
           });
     } catch (error) {
       console.warn('stopError ' + error);
