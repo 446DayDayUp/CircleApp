@@ -46,6 +46,7 @@ export default class BottomBar extends Component {
       recorderWidth: 0,
       recorderHeight: 0,
       isDiscarded: false,
+      recordTime: 0,
     };
     this.myPanResponder={}
     this.sendMsg = this.sendMsg.bind(this);
@@ -93,6 +94,13 @@ export default class BottomBar extends Component {
     });
     this.prepareRecordPath();
   }
+
+  componentDidMount() {
+    AudioRecorder.onProgress = (data) => {
+      this.setState({recordTime: Math.floor(data.currentTime)});
+    };
+  }
+
 
   measureView() {
     this.refs.recorder.measure((fx, fy, width, height, px, py) => {
@@ -154,13 +162,13 @@ export default class BottomBar extends Component {
     setTimeout(() => this.props.isRecording(this.state.isRecording), 100);
     try {
       const filePath = await AudioRecorder.stopRecording();
-      http.upload(SERVER_URL, 'upload-file', Math.floor(Date.now())+UID, 'file://' + filePath, 'audio/aac')
+      http.upload(SERVER_URL, 'upload-file', Math.floor(Date.now())+UID+'.aac', 'file://' + filePath, 'audio/aac')
           .then((res, err) => {
             return res.json();
           }).then((json) => {
-            console.warn(JSON.stringify(json));
-            this.props.socket.emit('chat', 'audio', this.props.roomId, UID,
-              this.props.userName, this.props.iconName, json.url);
+            //console.warn(JSON.stringify(json));
+            this.props.socket.emit('chat', this.props.roomId, 'audio', UID,
+              this.props.userName, this.props.iconName, json.url, {'length': this.state.recordTime});
           });
     } catch (error) {
       console.warn('stopError ' + error);
