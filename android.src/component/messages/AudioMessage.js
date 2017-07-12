@@ -95,5 +95,6 @@ let audioContainer = function(isSend, duration) {
     alignItems: alignItem,
     marginRight: 5,
     width: width,
+    height: 35,
   }
 }

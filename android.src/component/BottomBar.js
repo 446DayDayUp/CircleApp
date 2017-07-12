@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import dismissKeyboard from 'dismissKeyboard';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {AudioRecorder, AudioUtils} from 'react-native-audio';
+import { SingletonPlayer } from '../lib/audioPlayer.js';
 
 import {
   AppRegistry,
@@ -89,7 +90,11 @@ export default class BottomBar extends Component {
         }
       },
       onPanResponderTerminate: (evt, gestureState) => {
-        console.warn('onPanResponderTerminate');
+        if (this.state.isDiscarded) {
+          this.discardRecord();
+        } else {
+          this.sendRecord();
+        }
       },
     });
     this.prepareRecordPath();
@@ -142,6 +147,7 @@ export default class BottomBar extends Component {
   }
 
   async startRecord() {
+    SingletonPlayer.getInstance().stop();
     this.setState({
       isRecording: true,
     });
