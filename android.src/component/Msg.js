@@ -7,6 +7,8 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
+  Modal,
+  ScrollView,
 } from 'react-native';
 import { profilePicture } from '../lib/profilePicture.js';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -34,13 +36,10 @@ export default class Msg extends Component {
     super(props);
     this.playAudioMsg = this.playAudioMsg.bind(this);
     this.getAudioDuration = this.getAudioDuration.bind(this);
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    return (this.props.msg.text !== nextProps.msg.text ||
-      this.props.msg.userName !== nextProps.msg.userName ||
-      this.props.msg.iconName !== nextProps.msg.iconName ||
-      this.props.isSend !== nextProps.isSend);
+    this.changeImage = this.changeImage.bind(this);
+    this.state = {
+      showPicture: false,
+    }
   }
 
   playAudioMsg(url) {
@@ -52,17 +51,47 @@ export default class Msg extends Component {
       return d;
     }
   }
+  changeImage(bool) {
+    this.setState({
+      showPicture: bool,
+    })
+  }
 
   render() {
+    let smallWidth = 200;
     let msg = this.props.msg;
     let scale;
+    let optheight;
+    let optwidth;
     if(msg.type === 'image'){
-      scale = parseInt(msg.opt.width)/(Dimensions.get('window').width - 100);
+      scale = parseInt(msg.opt.width)/smallWidth;
+      optheight = parseInt(msg.opt.height);
+      optwidth = parseInt(msg.opt.width);
     }
     if (msg.type === 'chat' || msg.type === 'image') {
       if (!this.props.isSend) {
         return (
           <View>
+            <Modal
+              animationType={'fade'}
+              transparent={false}
+              visible={this.state.showPicture}
+              onRequestClose={() => this.changeImage(false)}>
+              <ScrollView
+                contentContainerStyle=
+              {
+                (optheight/
+                  (optwidth/Dimensions.get('window').width) < Dimensions.get('window').height)?
+                listItemStyle.smallpicture : {backgroundColor: 'black',}
+              }>
+                <Image
+                  style={{height: optheight/
+                    (optwidth/Dimensions.get('window').width)}}
+                  //resizeMode='contain'
+                  source={{uri: msg.text}}
+                />
+              </ScrollView>
+            </Modal>
             {msg.type === 'chat' ?
               <View style={listItemStyle.container}>
                 <Image style={listItemStyle.iconView} source={profilePicture[msg.iconName]} />
@@ -76,13 +105,15 @@ export default class Msg extends Component {
               :
               <View style={listItemStyle.container}>
                 <Image style={listItemStyle.iconView} source={profilePicture[msg.iconName]} />
-                <View style={{width: Dimensions.get('window').width - 100}}>
+                <View style={{width: smallWidth}}>
                   <Text> {msg.userName} </Text>
-                  <Image
-                    style={{height: parseInt(msg.opt.height)/scale}}
-                    resizeMode='contain'
-                    source={{uri: msg.text}}
-                  />
+                  <TouchableOpacity onPress={() => this.changeImage(true)}>
+                    <Image
+                      style={{height: parseInt(msg.opt.height)/scale}}
+                      resizeMode='contain'
+                      source={{uri: msg.text}}
+                    />
+                  </TouchableOpacity>
                 </View>
               </View>
             }
@@ -91,6 +122,26 @@ export default class Msg extends Component {
       } else {
         return (
           <View style={listItemStyle.containerSend}>
+            <Modal
+              animationType={'fade'}
+              transparent={false}
+              visible={this.state.showPicture}
+              onRequestClose={() => this.changeImage(false)}>
+              <ScrollView
+                contentContainerStyle=
+                {
+                  (optheight/
+                    (optwidth/Dimensions.get('window').width) < Dimensions.get('window').height)?
+                  listItemStyle.smallpicture : {backgroundColor: 'black',}
+                }>
+                <Image style = {{height: optheight/
+                  (optwidth/Dimensions.get('window').width)}}
+                  //resizeMode='contain'
+                  source={{uri: msg.text}}
+                />
+              </ScrollView>
+            </Modal>
+
             {msg.type === 'chat' ?
             <View>
               <View style={{alignItems: 'flex-end'}}>
@@ -101,16 +152,18 @@ export default class Msg extends Component {
               </View>
             </View>
             :
-            <View style={{width: Dimensions.get('window').width - 100}}>
+            <View style={{width: smallWidth}}>
               <View style={{alignItems: 'flex-end'}}>
                 <Text> {msg.userName} </Text>
               </View>
               <View>
-                <Image
-                  style={{height: parseInt(msg.opt.height)/scale}}
-                  resizeMode='contain'
-                  source={{uri: msg.text}}
-                />
+                <TouchableOpacity onPress={() => this.changeImage(true)}>
+                  <Image
+                    style={{height: parseInt(msg.opt.height)/scale}}
+                    resizeMode='contain'
+                    source={{uri: msg.text}}
+                  />
+                </TouchableOpacity>
               </View>
             </View>}
             <Image style={listItemStyle.iconView} source={profilePicture[msg.iconName]} />
@@ -266,5 +319,11 @@ const listItemStyle = StyleSheet.create({
   },
   audioMsgSendIcon: {
     transform: [{ rotate: '270deg' }],
+  },
+  smallpicture: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    backgroundColor: 'black',
   },
 });
