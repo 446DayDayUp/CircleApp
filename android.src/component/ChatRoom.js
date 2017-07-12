@@ -188,9 +188,9 @@ class ChatRoomList extends Component {
 
         <View style={styles.bottomBar}>
           <BottomBar
-            scrollToBottom={this.scrollToBottom}
-            updateView={this.updateView}
-            socket={this.props.socket}
+            scrollToBottom = {this.scrollToBottom}
+            updateView = {this.updateView}
+            socket = {this.props.socket}
             roomId = {this.props.roomId}
             userName = {this.props.userName}
             iconName = {this.props.iconName}
