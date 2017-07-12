@@ -1,6 +1,7 @@
 import Sound from 'react-native-sound';
+var player = null;
 
-exports.audioPlayer = function() {
+let audioPlayer = function() {
   let currSound = null;
   this.play = (url) => {
     if (currSound) {
@@ -20,3 +21,20 @@ exports.audioPlayer = function() {
     });
   }
 }
+
+exports.SingletonPlayer = (function() {
+  let player;
+
+  function createInstance() {
+    return new audioPlayer();
+  }
+
+  return {
+    getInstance: function(url) {
+      if (!player) {
+        player = createInstance();
+      }
+      return player;
+    }
+  }
+})();
