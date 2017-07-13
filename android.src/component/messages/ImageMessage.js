@@ -51,11 +51,13 @@ export default class ImageMessage extends Component {
                 (optwidth/Dimensions.get('window').width) < Dimensions.get('window').height)?
               listItemStyle.smallpicture : {backgroundColor: 'black',}
             }>
+            <TouchableOpacity onPress = {this.changeImage.bind(this, false)}>
               <Image
                 style={{height: optheight/
                   (optwidth/Dimensions.get('window').width)}}
                 source={{uri: msg.text}}
               />
+            </TouchableOpacity>
             </ScrollView>
           </Modal>
           <View style={listItemStyle.container}>
@@ -88,11 +90,12 @@ export default class ImageMessage extends Component {
                   (optwidth/Dimensions.get('window').width) < Dimensions.get('window').height)?
                 listItemStyle.smallpicture : {backgroundColor: 'black',}
               }>
-              <Image style = {{height: optheight/
-                (optwidth/Dimensions.get('window').width)}}
-                //resizeMode='contain'
-                source={{uri: msg.text}}
-              />
+              <TouchableOpacity onPress = {this.changeImage.bind(this, false)}>
+                <Image style = {{height: optheight/
+                  (optwidth/Dimensions.get('window').width)}}
+                  source={{uri: msg.text}}
+                />
+              </TouchableOpacity>
             </ScrollView>
           </Modal>
           <View style={{width: smallWidth}}>
