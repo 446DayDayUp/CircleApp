@@ -3,7 +3,7 @@ import {
   FlatList,
 } from 'react-native';
 import { profilePicture } from '../lib/profilePicture.js';
-import Msg from './Msg.js';
+import { createMessage } from './messages/Message.js';
 import { UID } from '../data/globals.js';
 
 export default class Messages extends Component {
@@ -26,7 +26,7 @@ export default class Messages extends Component {
 
   renderMessage = (item) => {
     let isSend = item.item.uid == UID ? true : false;
-    return <Msg isSend={isSend} msg={item.item} />
+    return createMessage(item.item, isSend)
   }
 
   render() {

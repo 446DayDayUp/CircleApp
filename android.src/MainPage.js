@@ -53,13 +53,14 @@ class MainPage extends Component {
     this.roomInfo = {};
     this.chatRoomSwitch = true;
     this.socket = io(SERVER_URL);
-    this.socket.on('chat', function(roomId, type, uid, userName, iconName, msg) {
+    this.socket.on('chat', function(roomId, type, uid, userName, iconName, msg, opt) {
       this.roomInfo[roomId].messages.push({
         uid,
         userName,
         iconName,
         text: msg,
         type: type,
+        opt,
       });
     }.bind(this));
     this.socket.on('enterRoom', function(numUsers, roomId, uid, userName) {

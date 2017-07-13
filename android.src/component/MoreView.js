@@ -2,7 +2,7 @@
  * Created by zachary on 2017-06-19.
  */
 import React, {Component} from 'react';
-
+import { Actions } from 'react-native-router-flux';
 import {
   StyleSheet,
   Text,
@@ -28,6 +28,7 @@ export default class MoreView extends Component {
       if(iconTexts[i] === 'video' || iconTexts[i] === 'photo'){
         parts.push(
           <Cell
+          updateView={this.props.updateView}
           key={i}
           icon={icons[i]}
           text={iconTexts[i]}
@@ -90,10 +91,15 @@ class Cell extends Component {
                 return res.json();
               }).then((json) => {
                 this.props.socket.emit('chat', this.props.roomId, 'image' , UID,
-                  this.props.userName, this.props.iconName, json.url);
+                  this.props.userName, this.props.iconName, json.url,
+                  {'height': response.height, 'width': response.width});
               });
         }
       });
+      this.props.updateView(false);
+    }
+    if(type == 'game') {
+      Actions.gameMainpage();
     }
   }
   render() {

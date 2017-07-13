@@ -72,7 +72,7 @@ class ChatRoomList extends Component {
     });
   }
 
-  updateView = ( more) => {
+  updateView = (more) => {
     this.setState({
       showMoreView: more,
     })
@@ -124,6 +124,7 @@ class ChatRoomList extends Component {
           <View style={{width: width, height: 1 / PixelRatio.get(), backgroundColor: global.dividerColor}} />
           <View style={{height: 100}}>
             <MoreView
+              updateView={this.updateView}
               socket={this.props.socket}
               roomId = {this.props.roomId}
               userName = {this.props.userName}
@@ -187,9 +188,9 @@ class ChatRoomList extends Component {
 
         <View style={styles.bottomBar}>
           <BottomBar
-            scrollToBottom={this.scrollToBottom}
-            updateView={this.updateView}
-            socket={this.props.socket}
+            scrollToBottom = {this.scrollToBottom}
+            updateView = {this.updateView}
+            socket = {this.props.socket}
             roomId = {this.props.roomId}
             userName = {this.props.userName}
             iconName = {this.props.iconName}
