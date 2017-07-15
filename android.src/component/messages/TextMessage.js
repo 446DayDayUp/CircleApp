@@ -22,23 +22,25 @@ export default class TextMessage extends Component {
     let msg = this.props.msg;
     if (!this.props.isSend) {
       return (
-        <View>
+        <View style={listItemStyle.container}>
           <ProfileView showProfile={this.state.showProfile}
             hideProfile={() => this.setState({showProfile: false})}
             msg={msg}/>
-          <View style={listItemStyle.container}>
-            <TouchableOpacity
-              style={listItemStyle.iconView}
-              onPress={() => {this.setState({showProfile: true})}}>
-              <Image
-                style={listItemStyle.iconImageView}
-                source={profilePicture[msg.iconName]} />
-            </TouchableOpacity>
+          <TouchableOpacity
+            style={listItemStyle.iconView}
+            onPress={() => {this.setState({showProfile: true})}}>
+            <Image
+              style={listItemStyle.iconImageView}
+              source={profilePicture[msg.iconName]} />
+          </TouchableOpacity>
+          <View>
             <View>
-              <Text> {msg.userName} </Text>
-              <View style={listItemStyle.msgContainerRecv}>
-                <Text style={listItemStyle.msgText}>{msg.text}</Text>
-              </View>
+              <Text>
+                {msg.userName}
+              </Text>
+            </View>
+            <View style={{alignItems: 'flex-start'}}>
+              <Text style={listItemStyle.msgTextRev}>{msg.text}</Text>
             </View>
           </View>
         </View>
@@ -47,20 +49,20 @@ export default class TextMessage extends Component {
       return (
         <View style={listItemStyle.containerSend}>
           <View>
-            <View style={{alignItems: 'flex-end'}}>
-              <Text> {msg.userName} </Text>
+            <View style={{
+              alignItems: 'flex-end'
+            }}>
+              <Text>
+                {msg.userName}
+              </Text>
             </View>
-            <View style={listItemStyle.msgContainerSend}>
-              <Text style={listItemStyle.msgText}>{msg.text}</Text>
+            <View>
+              <View style={{alignItems: 'flex-end'}}>
+                <Text style={listItemStyle.msgTextSend}>{msg.text}</Text>
+              </View>
             </View>
           </View>
-          <TouchableOpacity
-            style={listItemStyle.iconView}
-              onPress={() => {}}>
-            <Image
-              style={listItemStyle.iconImageView}
-              source={profilePicture[msg.iconName]} />
-          </TouchableOpacity>
+          <Image style={listItemStyle.iconView} source={profilePicture[msg.iconName]}/>
         </View>
       );
     }

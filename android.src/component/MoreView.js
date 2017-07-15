@@ -13,19 +13,20 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { UID, SERVER_URL } from '../data/globals.js';
+import { getGpsCord } from '../lib/gps.js';
 import * as http from '../lib/http.js';
 
 let {width} = Dimensions.get('window');
 
 const icons = [require('../../img/ic_more_gallery.png'), require('../../img/ic_more_movie.png'), require('../../img/ic_more_position.png'), require('../../img/small_game.png')];
 
-const iconTexts = ['photo', 'video', 'location', 'game'];
+const iconTexts = ['Photo', 'Video', 'Location', 'Game'];
 
 export default class MoreView extends Component {
   render() {
     let parts = [];
     for (let i = 0; i < 4; i++) {
-      if(iconTexts[i] === 'video' || iconTexts[i] === 'photo'){
+      if(iconTexts[i] === 'Video' || iconTexts[i] === 'Photo' || iconTexts[i] === 'Location'){
         parts.push(
           <Cell
           updateView={this.props.updateView}
@@ -54,6 +55,7 @@ class Cell extends Component {
   constructor(props) {
     super(props);
     this.sendMsg = this.sendMsg.bind(this);
+    this.sendLoc = this.sendLoc.bind(this);
 
   };
 
@@ -62,19 +64,33 @@ class Cell extends Component {
         this.props.userName, this.props.iconName, this.state.img);
   }
 
+  sendLoc(lat, lng) {
+    this.props.socket.emit('chat', this.props.roomId, 'location', UID,
+      this.props.userName, this.props.iconName, '',
+        {'lat': lat, 'lng': lng});
+  }
+
   _handlePress(type) {
-    if (type === 'photo' || type === 'video') {
+    if (type === 'Photo' || type === 'Video') {
       let ImagePicker = require('react-native-image-picker');
-      let typeS = (type === 'video') ? 'video' : 'photo';
-      let takeT = (type === 'video') ? 'Take video...' : 'Take photo...';
-      let options = {
-        quality: 0.2,
-        title: '',
-        takePhotoButtonTitle: takeT,
-        mediaType: typeS,
-        storageOptions: {
-        }
+      let options;
+      if(type === 'Photo'){
+        options = {
+          quality: 0.2,
+          title: '',
+          takePhotoButtonTitle: 'Take photo...',
+          mediaType: 'photo',
+        };
+      } else{
+        options = {
+          chooseFromLibraryButtonTitle: null,
+          videoQuality: 'low',
+          durationLimit: 5,
+          title: '',
+          takePhotoButtonTitle: 'Take video...',
+          mediaType: 'video',
       };
+    }
 
       ImagePicker.showImagePicker(options, (response) => {
         console.log('Response = ', response);
@@ -98,8 +114,16 @@ class Cell extends Component {
       });
       this.props.updateView(false);
     }
-    if(type == 'game') {
+    if(type == 'Game') {
       Actions.gameMainpage();
+    }
+    if (type == 'Location') {
+      getGpsCord().then(function(location) {
+        this.sendLoc(location.lat, location.lng);
+      }.bind(this)).catch(function(error) {
+        console.warn('error', error);
+      });
+      this.props.updateView(false);
     }
   }
   render() {

@@ -134,6 +134,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-maps')
     compile project(':react-native-sound')
     compile project(':react-native-audio')
     compile project(':react-native-image-picker')

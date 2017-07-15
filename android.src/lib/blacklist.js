@@ -9,9 +9,9 @@ exports.blacklist = (function() {
         if (!blacklist[roomId]) {
           blacklist[roomId] = [];
         }
-        return blacklist[roomId].indexOf(uid) !== -1;
+        return blacklist[roomId].hasOwnProperty(uid);
       } else {
-        return blacklist['all'].indexOf(uid) !== -1;
+        return blacklist['all'].hasOwnProperty(uid);
       }
     },
     modifyBlacklist: function(uid, obj, roomId) {
@@ -27,11 +27,10 @@ exports.blacklist = (function() {
       } else {
         room = 'all';
       }
-      let index = blacklist[room].indexOf(uid);
-      if (index === -1) {
-        blacklist[room][uid] = obj;
-      } else {
+      if (blacklist[room][uid]) {
         delete blacklist[room][uid];
+      } else {
+        blacklist[room][uid] = obj;
       }
     },
   }
