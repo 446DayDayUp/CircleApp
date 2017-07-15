@@ -3,6 +3,7 @@ import AudioMessage from './AudioMessage.js';
 import ImageMessage from './ImageMessage.js';
 import NoticeMessage from './NoticeMessage.js';
 import TextMessage from './TextMessage.js';
+import LocationMessage from './LocationMessage.js';
 import VideoMessage from './VideoMessage.js';
 
 exports.createMessage = function(message, isSend) {
@@ -17,6 +18,8 @@ exports.createMessage = function(message, isSend) {
       return <VideoMessage msg={message} isSend={isSend}/>;
     case 'notice':
       return <NoticeMessage msg={message} isSend={isSend}/>;
+    case 'location':
+      return <LocationMessage msg={message} isSend={isSend}/>;
     default:
       return null;
   }
