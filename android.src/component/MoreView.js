@@ -26,7 +26,7 @@ export default class MoreView extends Component {
   render() {
     let parts = [];
     for (let i = 0; i < 4; i++) {
-      if(iconTexts[i] === 'video' || iconTexts[i] === 'photo' || iconTexts[i] === 'location'){
+      if(iconTexts[i] === 'Video' || iconTexts[i] === 'Photo' || iconTexts[i] === 'Location'){
         parts.push(
           <Cell
           updateView={this.props.updateView}
@@ -117,7 +117,7 @@ class Cell extends Component {
     if(type == 'Game') {
       Actions.gameMainpage();
     }
-    if (type == 'location') {
+    if (type == 'Location') {
       getGpsCord().then(function(location) {
         this.sendLoc(location.lat, location.lng);
       }.bind(this)).catch(function(error) {
