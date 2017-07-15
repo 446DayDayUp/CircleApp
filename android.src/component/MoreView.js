@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { UID, SERVER_URL } from '../data/globals.js';
+import { getGpsCord } from '../lib/gps.js';
 import * as http from '../lib/http.js';
 
 let {width} = Dimensions.get('window');
@@ -25,7 +26,7 @@ export default class MoreView extends Component {
   render() {
     let parts = [];
     for (let i = 0; i < 4; i++) {
-      if(iconTexts[i] === 'video' || iconTexts[i] === 'photo'){
+      if(iconTexts[i] === 'video' || iconTexts[i] === 'photo' || iconTexts[i] === 'location'){
         parts.push(
           <Cell
           updateView={this.props.updateView}
@@ -54,12 +55,19 @@ class Cell extends Component {
   constructor(props) {
     super(props);
     this.sendMsg = this.sendMsg.bind(this);
+    this.sendLoc = this.sendLoc.bind(this);
 
   };
 
   sendMsg() {
     this.props.socket.emit('chat', this.props.roomId, UID,
         this.props.userName, this.props.iconName, this.state.img);
+  }
+
+  sendLoc(lat, lng) {
+    this.props.socket.emit('chat', this.props.roomId, 'location', UID,
+      this.props.userName, this.props.iconName, '',
+        {'lat': lat, 'lng': lng});
   }
 
   _handlePress(type) {
@@ -100,6 +108,13 @@ class Cell extends Component {
     }
     if(type == 'game') {
       Actions.gameMainpage();
+    }
+    if (type == 'location') {
+      getGpsCord().then(function(location) {
+        this.sendLoc(location.lat, location.lng);
+      }.bind(this)).catch(function(error) {
+        console.warn('error', error);
+      });
     }
   }
   render() {

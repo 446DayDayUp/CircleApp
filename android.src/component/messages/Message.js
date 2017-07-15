@@ -3,6 +3,7 @@ import AudioMessage from './AudioMessage.js';
 import ImageMessage from './ImageMessage.js';
 import NoticeMessage from './NoticeMessage.js';
 import TextMessage from './TextMessage.js';
+import LocationMessage from './LocationMessage.js';
 
 exports.createMessage = function(message, isSend) {
   switch(message.type) {
@@ -14,6 +15,8 @@ exports.createMessage = function(message, isSend) {
       return <ImageMessage msg={message} isSend={isSend}/>;
     case 'notice':
       return <NoticeMessage msg={message} isSend={isSend}/>;
+    case 'location':
+      return <LocationMessage msg={message} isSend={isSend}/>;
     default:
       return null;
   }
