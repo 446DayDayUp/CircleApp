@@ -12,7 +12,7 @@ import { profilePicture } from '../../lib/profilePicture.js';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { listItemStyle } from '../../css/MessageCSS.js';
 
-export default class ImageMessage extends Component {
+export default class VideoMessage extends Component {
   constructor(props) {
     super(props);
     this.changeImage = this.changeImage.bind(this);
