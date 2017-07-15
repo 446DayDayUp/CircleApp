@@ -19,13 +19,13 @@ let {width} = Dimensions.get('window');
 
 const icons = [require('../../img/ic_more_gallery.png'), require('../../img/ic_more_movie.png'), require('../../img/ic_more_position.png'), require('../../img/small_game.png')];
 
-const iconTexts = ['photo', 'video', 'location', 'game'];
+const iconTexts = ['Photo', 'Video', 'Location', 'Game'];
 
 export default class MoreView extends Component {
   render() {
     let parts = [];
     for (let i = 0; i < 4; i++) {
-      if(iconTexts[i] === 'video' || iconTexts[i] === 'photo'){
+      if(iconTexts[i] === 'Video' || iconTexts[i] === 'Photo'){
         parts.push(
           <Cell
           updateView={this.props.updateView}
@@ -63,18 +63,26 @@ class Cell extends Component {
   }
 
   _handlePress(type) {
-    if (type === 'photo' || type === 'video') {
+    if (type === 'Photo' || type === 'Video') {
       let ImagePicker = require('react-native-image-picker');
-      let typeS = (type === 'video') ? 'video' : 'photo';
-      let takeT = (type === 'video') ? 'Take video...' : 'Take photo...';
-      let options = {
-        quality: 0.2,
-        title: '',
-        takePhotoButtonTitle: takeT,
-        mediaType: typeS,
-        storageOptions: {
-        }
+      let options;
+      if(type === 'Photo'){
+        options = {
+          quality: 0.2,
+          title: '',
+          takePhotoButtonTitle: 'Take photo...',
+          mediaType: 'photo',
+        };
+      } else{
+        options = {
+          chooseFromLibraryButtonTitle: null,
+          videoQuality: 'low',
+          durationLimit: 5,
+          title: '',
+          takePhotoButtonTitle: 'Take video...',
+          mediaType: 'video',
       };
+    }
 
       ImagePicker.showImagePicker(options, (response) => {
         console.log('Response = ', response);
@@ -98,7 +106,7 @@ class Cell extends Component {
       });
       this.props.updateView(false);
     }
-    if(type == 'game') {
+    if(type == 'Game') {
       Actions.gameMainpage();
     }
   }
