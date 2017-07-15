@@ -13,6 +13,11 @@ exports.listItemStyle = StyleSheet.create({
     width: 40,
     height: 40,
   },
+  iconImageView: {
+    width: 40,
+    height: 40,
+    resizeMode: 'contain',
+  },
   msgContainerRecv: {
     backgroundColor: '#FFFFFF',
     borderRadius: 3,

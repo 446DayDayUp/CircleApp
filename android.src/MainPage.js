@@ -21,6 +21,7 @@ import { mBetweenCoords } from './lib/location.js'
 import { styles } from './css/MainPageCSS.js';
 import Search from './component/Search.js';
 import { SERVER_URL, UID } from './data/globals.js';
+import { blacklist } from './lib/blacklist.js';
 
 window.navigator.userAgent = 'ReactNative';
 const io = require('socket.io-client');
@@ -54,10 +55,13 @@ class MainPage extends Component {
     this.chatRoomSwitch = true;
     this.socket = io(SERVER_URL);
     this.socket.on('chat', function(roomId, type, uid, userName, iconName, msg, opt) {
+      if (blacklist.checkBlacklist(uid)) return;
+      if (blacklist.checkBlacklist(uid, roomId)) return;
       this.roomInfo[roomId].messages.push({
         uid,
         userName,
         iconName,
+        roomId,
         text: msg,
         type: type,
         opt,
