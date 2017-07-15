@@ -135,9 +135,10 @@ class ChatRoomList extends Component {
       );
     }
     return (
-      <TouchableOpacity style={styles.ChatRoomView}
-        onPress={this.onTouchOutside}
-        activeOpacity={1}>
+      <View style={styles.ChatRoomView}
+       // onPress={this.onTouchOutside}
+       // activeOpacity={1}>
+       >
         {/*Header contains back button, menu button and chat room name*/}
         <View style={styles.headerView}>
           <TouchableOpacity
@@ -198,7 +199,7 @@ class ChatRoomList extends Component {
           />
         </View>
         {moreView}
-      </TouchableOpacity>
+      </View>
     );
   }
 }
