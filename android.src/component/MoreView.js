@@ -123,6 +123,7 @@ class Cell extends Component {
       }.bind(this)).catch(function(error) {
         console.warn('error', error);
       });
+      this.props.updateView(false);
     }
   }
   render() {
