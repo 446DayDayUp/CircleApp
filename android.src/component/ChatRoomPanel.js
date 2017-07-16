@@ -50,11 +50,12 @@ export default class ChatRoomPanel extends Component {
 
       let lengthOfRoom = (room.name).length
       let lengthOfShow = Math.floor(this.state.dimensions.width/lengthOfRoom)
+      let numUsers = (room.private === true) ? null : '('+room.numUsers+')'
       if(lengthOfShow > lengthOfRoom){
         return (
           <Text
             style={{fontSize: 20, color: '#546979', flex: 2, marginTop: 10}}>
-            ({room.numUsers}) {room.name}
+            {numUsers} {room.name}
           </Text>
         )
       }
@@ -65,7 +66,7 @@ export default class ChatRoomPanel extends Component {
             <Text style={{
               fontSize: 20, color: '#546979', flex: 1, marginTop: 10
             }}>
-              ({room.numUsers})
+              {numUsers}
             </Text>
             <MarqueeLabel
               textContainerWidth={width}
