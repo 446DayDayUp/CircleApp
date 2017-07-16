@@ -143,6 +143,9 @@ export default class ChatRoomPanel extends Component {
         case 'Sports':
           src = require('../../img/sports.png');
           break;
+        case 'private':
+          src = require('../../img/private.png');
+          break;
         default:
           src = require('../../img/default.png');
       }
