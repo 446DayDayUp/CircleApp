@@ -10,13 +10,16 @@ import { profilePicture } from '../../lib/profilePicture.js';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { SingletonPlayer } from '../../lib/audioPlayer.js';
 import { listItemStyle } from '../../css/MessageCSS.js';
-
+import ProfileView from '../ProfileView.js';
 
 export default class Msg extends Component {
   constructor(props) {
     super(props);
     this.playAudioMsg = this.playAudioMsg.bind(this);
     this.getAudioDuration = this.getAudioDuration.bind(this);
+    this.state = {
+      showProfile: false,
+    };
   }
 
   playAudioMsg(url) {
@@ -35,7 +38,16 @@ export default class Msg extends Component {
     if (!this.props.isSend) {
       return (
         <View style={listItemStyle.container}>
-          <Image style={listItemStyle.iconView} source={profilePicture[msg.iconName]} />
+          <ProfileView showProfile={this.state.showProfile}
+            hideProfile={() => this.setState({showProfile: false})}
+            msg={msg}/>
+          <TouchableOpacity
+            style={listItemStyle.iconView}
+            onPress={() => {this.setState({showProfile: true})}}>
+            <Image
+              style={listItemStyle.iconImageView}
+              source={profilePicture[msg.iconName]} />
+          </TouchableOpacity>
           <View>
             <Text> {msg.userName} </Text>
             <View style={{flexDirection: 'row'}}>
