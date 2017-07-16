@@ -6,6 +6,7 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
+  AsyncStorage,
   Modal,
   ScrollView,
 } from 'react-native';
@@ -13,6 +14,7 @@ import MapView from 'react-native-maps';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { profilePicture } from '../../lib/profilePicture.js';
 import { listItemStyle } from '../../css/MessageCSS.js';
+import { getGpsCord } from '../../lib/gps.js';
 import ProfileView from '../ProfileView.js';
 
 export default class LocationMessage extends Component {
@@ -20,19 +22,42 @@ export default class LocationMessage extends Component {
     super(props);
     this.zoom = this.zoom.bind(this);
     this.state = {
-      showPicture: false,
+      showProfile: false,
       showMap: false,
+      selfLat: 0,
+      selfLng: 0,
+      selfUsername: '',
+      selfIcon: '',
     }
   }
 
   zoom(bool) {
-    this.setState({
-      showMap: bool,
-    })
+    let promises = [];
+    promises.push(AsyncStorage.getItem('userName'));
+    promises.push(AsyncStorage.getItem('iconName'));
+    Promise.all(promises).then(function(result) {
+      let userName = result[0];
+      let iconName = result[1];
+      this.setState({
+        selfUsername: userName,
+        selfIcon: iconName,
+      });
+    }.bind(this));
+    getGpsCord().then(function(location) {
+      this.setState({
+        selfLat: location.lat,
+        selfLng: location.lng,
+        showMap: bool,
+      });
+    }.bind(this)).catch(function(error) {
+      console.warn('error', error);
+    });
   }
 
   render() {
     let msg = this.props.msg;
+    let selfLat = 0;
+    let selfLng = 0;
     if (!this.props.isSend) {
       return (
         <View>
@@ -45,44 +70,54 @@ export default class LocationMessage extends Component {
             visible={this.state.showMap}
             onRequestClose={() => this.zoom(false)}>
             <View style={styles.zoomInContainer}>
-            	<MapView style={styles.zoomInMap}
-         	  		initialRegion={{
-       	    			latitude: msg.opt.lat,
-             			longitude: msg.opt.lng,
-             			latitudeDelta: 0.0035,
-             			longitudeDelta: 0.0035,
-             		}}>
-             		<MapView.Marker
-      						coordinate={{'latitude': msg.opt.lat, 'longitude': msg.opt.lng}}
-      						title={msg.userName}
-    						/>
-    					</MapView>
+              <MapView style={styles.zoomInMap}
+                  initialRegion={{
+                    latitude: msg.opt.lat,
+                    longitude: msg.opt.lng,
+                    latitudeDelta: 0.0035,
+                    longitudeDelta: 0.0035,
+                  }}>
+                <MapView.Marker
+                  coordinate={{'latitude': msg.opt.lat, 'longitude': msg.opt.lng}}
+                  title={msg.userName}
+                  image={profilePicture[msg.iconName]}
+                />
+                <MapView.Marker
+                  coordinate={{'latitude': this.state.selfLat, 'longitude': this.state.selfLng}}
+                  title={this.state.selfUsername}
+                  image={profilePicture[this.state.selfIcon]}
+                />
+              </MapView>
             </View>
           </Modal>
           <View style={listItemStyle.container}>
-            <TouchableOpacity
+             <TouchableOpacity
               style={listItemStyle.iconView}
               onPress={() => {this.setState({showProfile: true})}}>
               <Image
                 style={listItemStyle.iconImageView}
                 source={profilePicture[msg.iconName]} />
             </TouchableOpacity>
-            <View style={{width: 200, height: 200}}>
-              <Text> {msg.userName} </Text>
-              <TouchableOpacity onPress={() => this.zoom(true)} style ={styles.container}>
-                <MapView style={styles.map} zoomEnabled={false} rotateEnabled={false} scrollEnabled={false} pitchEnabled={false} toolbarEnabled={false} cacheEnabled={true}
-              		initialRegion={{
-              			latitude: msg.opt.lat,
-              			longitude: msg.opt.lng,
-              			latitudeDelta: 0.035,
-              			longitudeDelta: 0.035,
-              		}}>
-              			<MapView.Marker
-      								coordinate={{'latitude': msg.opt.lat, 'longitude': msg.opt.lng}}
-      								title={msg.userName}
-    								/>
-    						</MapView>
-              </TouchableOpacity>
+            <View style={{width: 200}}>
+              <View style={{alignItems: 'flex-start'}}>
+                <Text> {msg.userName} </Text>
+              </View>
+              <View style={{width: 200, height: 200}}>
+                <TouchableOpacity onPress={() => this.zoom(true)} style ={styles.container}>
+                  <MapView style={styles.map} zoomEnabled={false} rotateEnabled={false} scrollEnabled={false} pitchEnabled={false} toolbarEnabled={false} cacheEnabled={true}
+                    initialRegion={{
+                      latitude: msg.opt.lat,
+                      longitude: msg.opt.lng,
+                      latitudeDelta: 0.035,
+                      longitudeDelta: 0.035,
+                    }}>
+                      <MapView.Marker
+                        coordinate={{'latitude': msg.opt.lat, 'longitude': msg.opt.lng}}
+                        title={msg.userName}
+                      />
+                  </MapView>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
@@ -96,17 +131,18 @@ export default class LocationMessage extends Component {
             visible={this.state.showMap}
             onRequestClose={() => this.zoom(false)}>
             <View style={styles.zoomInContainer}>
-            	<MapView style={styles.zoomInMap}
-         	  		initialRegion={{
-       	    			latitude: msg.opt.lat,
-             			longitude: msg.opt.lng,
-             			latitudeDelta: 0.0035,
-             			longitudeDelta: 0.0035,
-             		}}>
-             		<MapView.Marker
-      						coordinate={{'latitude': msg.opt.lat, 'longitude': msg.opt.lng}}
-      						title={msg.userName}
-    						/>
+              <MapView style={styles.zoomInMap}
+                initialRegion={{
+                  latitude: msg.opt.lat,
+                  longitude: msg.opt.lng,
+                  latitudeDelta: 0.0035,
+                  longitudeDelta: 0.0035,
+                }}>
+                <MapView.Marker
+                  coordinate={{'latitude': msg.opt.lat, 'longitude': msg.opt.lng}}
+                  title={msg.userName}
+                  image={profilePicture[msg.iconName]}
+                />
     					</MapView>
             </View>
           </Modal>
