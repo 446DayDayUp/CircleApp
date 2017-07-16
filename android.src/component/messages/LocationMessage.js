@@ -13,12 +13,14 @@ import MapView from 'react-native-maps';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { profilePicture } from '../../lib/profilePicture.js';
 import { listItemStyle } from '../../css/MessageCSS.js';
+import ProfileView from '../ProfileView.js';
 
 export default class LocationMessage extends Component {
   constructor(props) {
     super(props);
     this.zoom = this.zoom.bind(this);
     this.state = {
+      showPicture: false,
       showMap: false,
     }
   }
@@ -34,6 +36,9 @@ export default class LocationMessage extends Component {
     if (!this.props.isSend) {
       return (
         <View>
+          <ProfileView showProfile={this.state.showProfile}
+            hideProfile={() => this.setState({showProfile: false})}
+            msg={msg}/>
           <Modal
             animationType={'fade'}
             transparent={false}
@@ -55,7 +60,13 @@ export default class LocationMessage extends Component {
             </View>
           </Modal>
           <View style={listItemStyle.container}>
-            <Image style={listItemStyle.iconView} source={profilePicture[msg.iconName]} />
+            <TouchableOpacity
+              style={listItemStyle.iconView}
+              onPress={() => {this.setState({showProfile: true})}}>
+              <Image
+                style={listItemStyle.iconImageView}
+                source={profilePicture[msg.iconName]} />
+            </TouchableOpacity>
             <View style={{width: 200, height: 200}}>
               <Text> {msg.userName} </Text>
               <TouchableOpacity onPress={() => this.zoom(true)} style ={styles.container}>
