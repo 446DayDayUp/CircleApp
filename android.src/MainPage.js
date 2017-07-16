@@ -178,6 +178,7 @@ class MainPage extends Component {
   quitRoom(room) {
     let joinedRooms = this.state.joinedRooms.filter((r) =>
         r._id !== room._id);
+    let allRooms = this.state.allRooms;
     if (!room.private) {
       let allRooms = [
         ...this.state.allRooms,
