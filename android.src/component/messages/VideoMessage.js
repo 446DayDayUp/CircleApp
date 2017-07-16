@@ -49,12 +49,23 @@ export default class VideoMessage extends Component {
             }}>
             <TouchableOpacity onPress={this.controlVideo.bind(this, !this.state.pauseVideo)}>
               {this.state.pauseVideo ?
-                <Image
-                  source={require('../../../img/play.png')}
-                  style={{zIndex: 1, position: 'absolute', width: videoSize, height: videoSize}}/> : null
+                <View style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: videoSize,
+                  height: videoSize,
+                  position: 'absolute',
+                  opacity: 0.5,
+                  backgroundColor: '#f0ffff',
+                  zIndex: 1}}>
+                  <Image
+                    source={require('../../../img/play.png')}
+                    style={{zIndex: 2}}/>
+                </View>
+                 : null
               }
               <Video
-                style={{width: videoSize, height: videoSize}}
+                style={{width: videoSize, height: videoSize, zIndex: 0}}
                 source={{
                 uri: msg.text
               }} ref={(ref) => {
@@ -96,9 +107,20 @@ export default class VideoMessage extends Component {
 
               <TouchableOpacity onPress={this.controlVideo.bind(this, !this.state.pauseVideo)}>
                 {this.state.pauseVideo ?
-                  <Image
-                    source={require('../../../img/play.png')}
-                    style={{zIndex: 1, position: 'absolute', width: videoSize, height: videoSize}}/> : null
+                  <View style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: videoSize,
+                    height: videoSize,
+                    position: 'absolute',
+                    opacity: 0.5,
+                    backgroundColor: '#f0ffff',
+                    zIndex: 1}}>
+                    <Image
+                      source={require('../../../img/play.png')}
+                      style={{zIndex: 2}}/>
+                  </View>
+                   : null
                 }
                 <Video
                   style={{width: videoSize, height: videoSize, zIndex: 0}}
