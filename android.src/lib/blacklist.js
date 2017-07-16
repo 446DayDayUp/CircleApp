@@ -1,13 +1,10 @@
 exports.blacklist = (function() {
-  let blacklist = null;
+  let blacklist = {'all': {}};
   return {
     checkBlacklist: function(uid, roomId) {
-      if (!blacklist) {
-        blacklist = {'all': []};
-      }
       if (roomId) {
         if (!blacklist[roomId]) {
-          blacklist[roomId] = [];
+          blacklist[roomId] = {};
         }
         return blacklist[roomId].hasOwnProperty(uid);
       } else {
@@ -15,9 +12,6 @@ exports.blacklist = (function() {
       }
     },
     modifyBlacklist: function(uid, obj, roomId) {
-      if (!blacklist) {
-        blacklist = {'all': {}};
-      }
       let room = null;
       if (roomId) {
         if (!blacklist[roomId]) {
@@ -32,6 +26,18 @@ exports.blacklist = (function() {
       } else {
         blacklist[room][uid] = obj;
       }
+    },
+    getBlacklist: function(roomId) {
+      if (!roomId) {
+        return Object.keys(blacklist['all']).map(
+          (uid) => Object.assign({uid}, blacklist['all'][uid]));
+      }
+      if (!blacklist[roomId]) return [];
+      return Object.keys(blacklist[roomId]).map(
+          (uid) => {
+            let a = Object.assign({uid}, blacklist[roomId][uid])
+            return a;
+          })
     },
   }
 })();
