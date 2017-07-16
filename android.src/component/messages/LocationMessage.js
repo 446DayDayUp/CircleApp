@@ -20,7 +20,7 @@ export default class LocationMessage extends Component {
     super(props);
     this.zoom = this.zoom.bind(this);
     this.state = {
-      showPicture: false,
+      showProfile: false,
       showMap: false,
     }
   }

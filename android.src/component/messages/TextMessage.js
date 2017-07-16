@@ -48,6 +48,10 @@ export default class TextMessage extends Component {
     } else {
       return (
         <View style={listItemStyle.containerSend}>
+          {/* TODO: for text only */}
+          <ProfileView showProfile={this.state.showProfile}
+            hideProfile={() => this.setState({showProfile: false})}
+            msg={msg}/>
           <View>
             <View style={{
               alignItems: 'flex-end'
@@ -62,7 +66,14 @@ export default class TextMessage extends Component {
               </View>
             </View>
           </View>
-          <Image style={listItemStyle.iconView} source={profilePicture[msg.iconName]}/>
+          {/* TODO: for text only */}
+          <TouchableOpacity
+            style={listItemStyle.iconView}
+            onPress={() => {this.setState({showProfile: true})}}>
+            <Image
+              style={listItemStyle.iconImageView}
+              source={profilePicture[msg.iconName]} />
+          </TouchableOpacity>
         </View>
       );
     }

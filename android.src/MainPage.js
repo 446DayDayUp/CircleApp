@@ -22,6 +22,8 @@ import { styles } from './css/MainPageCSS.js';
 import Search from './component/Search.js';
 import { SERVER_URL, UID } from './data/globals.js';
 import { blacklist } from './lib/blacklist.js';
+import { registerFunc } from './lib/functionRegister.js';
+
 
 window.navigator.userAgent = 'ReactNative';
 const io = require('socket.io-client');
@@ -47,6 +49,8 @@ class MainPage extends Component {
     this.getChatRoom = this.getChatRoom.bind(this);
     this.createChatCallback = this.createChatCallback.bind(this);
     this.showSearchCondition = this.showSearchCondition.bind(this);
+    this.joinPrivateChat = this.joinPrivateChat.bind(this);
+    registerFunc('joinPrivateChat', this.joinPrivateChat);
   }
 
   //add double back to exit app
@@ -57,6 +61,11 @@ class MainPage extends Component {
     this.socket.on('chat', function(roomId, type, uid, userName, iconName, msg, opt) {
       if (blacklist.checkBlacklist(uid)) return;
       if (blacklist.checkBlacklist(uid, roomId)) return;
+      if (roomId === UID) { // This is a private message;
+        // Treat the sender's uid as the roomId.
+        this.joinPrivateChat(uid, userName, false);
+        roomId = uid;
+      }
       this.roomInfo[roomId].messages.push({
         uid,
         userName,
@@ -80,6 +89,46 @@ class MainPage extends Component {
 
   componentWillUnmount() {
     BackHandler.removeEventListener('MainPage', this.onBackHandler);
+  }
+
+  joinPrivateChat(uid, name, enterRoom) {
+    let room = {
+      _id: uid,
+      name: name,
+      tags: ['private'],
+      distance: '0',
+      private: true,
+    };
+    let alreadyStarted = false;
+    for (let i = 0; i < this.state.joinedRooms.length; i += 1) {
+      if (this.state.joinedRooms[i]._id === room._id) alreadyStarted = true;
+    }
+    if (!alreadyStarted) {
+      this.setState({
+        joinedRooms: [
+          ...this.state.joinedRooms,
+          room
+        ],
+      });
+    }
+    if (!this.roomInfo[room._id]) {
+      ToastAndroid.show(name + ' started a private message with you!',
+          ToastAndroid.SHORT);
+      this.roomInfo[room._id] = {
+        messages: [],
+      };
+    }
+    if (enterRoom) {
+      Actions[this.getChatRoom()]({
+        socket: this.socket,
+        room: room,
+        name: room.name,
+        roomId: room._id,
+        messages: this.roomInfo[room._id].messages,
+        userName: this.props.userName,
+        iconName: this.props.iconName,
+      });
+    }
   }
 
   getChatRoom() {
@@ -129,10 +178,12 @@ class MainPage extends Component {
   quitRoom(room) {
     let joinedRooms = this.state.joinedRooms.filter((r) =>
         r._id !== room._id);
-    let allRooms = [
-      ...this.state.allRooms,
-      room,
-    ];
+    if (!room.private) {
+      let allRooms = [
+        ...this.state.allRooms,
+        room,
+      ];
+    }
     this.socket.emit('quit', room._id);
     delete this.roomInfo[room._id];
     this.setState({
@@ -168,8 +219,13 @@ class MainPage extends Component {
         // TODO: disconnect socket.
         let joinedRooms = chatRooms.filter((r) =>
           this.state.joinedRooms
-            .filter((room) => room._id === r._id).length > 0
+            .filter((room) => (room._id === r._id)).length > 0
         );
+        for (let i = 0; i < this.state.joinedRooms.length; i += 1) {
+          if (this.state.joinedRooms[i].private) {
+            joinedRooms.push(this.state.joinedRooms[i]);
+          }
+        }
         let allRooms = chatRooms.filter((r) =>
           joinedRooms.filter((room) => room._id === r._id).length === 0
         );

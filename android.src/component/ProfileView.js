@@ -6,16 +6,33 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  Button,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CheckBox from 'react-native-check-box';
 import { profilePicture } from '../lib/profilePicture.js';
 import { blacklist } from '../lib/blacklist.js';
+import { Actions } from 'react-native-router-flux';
+import { executeFunc } from '../lib/functionRegister.js';
 
 export default class ProfileView extends Component {
   constructor(props) {
     super(props);
+    this.startOneToOneChat = this.startOneToOneChat.bind(this);
   }
+
+  startOneToOneChat() {
+    setTimeout(function() {
+      let msg = this.props.msg;
+      executeFunc('joinPrivateChat', [
+        msg.uid,
+        msg.userName,
+        true,
+      ]);
+    }.bind(this), 200);
+    Actions.pop();
+  }
+
   render() {
     let msg = this.props.msg;
     return (
@@ -38,6 +55,11 @@ export default class ProfileView extends Component {
         <View>
           <Image source={profilePicture[msg.iconName]}/>
           <Text style={styles.largeText}>{msg.userName}</Text>
+          <Button
+            onPress={this.startOneToOneChat}
+            title='Start one-to-one chat'
+            color='#4f8ef7'
+          />
           <CheckBox
             style={{ padding: 10}}
             onClick={() => blacklist.modifyBlacklist(msg.uid, {
