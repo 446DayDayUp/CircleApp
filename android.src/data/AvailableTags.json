@@ -10,5 +10,11 @@
   "Study": [
     "CS",
     "MATH"
+  ],
+  "Food": [
+    "Breakfast",
+    "Brunch",
+    "Lunch",
+    "Diner"
   ]
 }
