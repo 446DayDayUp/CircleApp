@@ -55,7 +55,7 @@ export default class Msg extends Component {
             <View style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end'}}>
               <Text> {msg.userName} </Text>
             </View>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
               <Text>{duration}"</Text>
               <TouchableOpacity style={audioContainer(true, duration)} onPress={this.playAudioMsg.bind(this, msg.text)}>
                 <Icon name='ios-wifi' size={15} color='grey' style={listItemStyle.audioMsgSendIcon}/>

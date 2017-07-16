@@ -85,7 +85,7 @@ class Cell extends Component {
         options = {
           chooseFromLibraryButtonTitle: null,
           videoQuality: 'low',
-          durationLimit: 5,
+          durationLimit: 10,
           title: '',
           takePhotoButtonTitle: 'Take video...',
           mediaType: 'video',
@@ -102,14 +102,25 @@ class Cell extends Component {
         } else if (response.customButton) {
           console.log('User tapped custom button: ', response.customButton);
         } else {
-          http.upload(SERVER_URL, 'upload-file', Math.floor(Date.now())+UID, response.uri, 'image/jpg')
-              .then((res, err) => {
-                return res.json();
-              }).then((json) => {
-                this.props.socket.emit('chat', this.props.roomId, 'image' , UID,
-                  this.props.userName, this.props.iconName, json.url,
-                  {'height': response.height, 'width': response.width});
-              });
+          if(type === 'Photo'){
+            http.upload(SERVER_URL, 'upload-file', Math.floor(Date.now())+UID, response.uri, 'image/jpg')
+                .then((res, err) => {
+                  return res.json();
+                }).then((json) => {
+                  this.props.socket.emit('chat', this.props.roomId, 'image' , UID,
+                    this.props.userName, this.props.iconName, json.url,
+                    {'height': response.height, 'width': response.width});
+                });
+          }
+          else{
+            http.upload(SERVER_URL, 'upload-file', Math.floor(Date.now())+UID, response.uri, 'video/mp4')
+                .then((res, err) => {
+                  return res.json();
+                }).then((json) => {
+                  this.props.socket.emit('chat', this.props.roomId, 'video' , UID,
+                    this.props.userName, this.props.iconName, json.url);
+                });
+          }
         }
       });
       this.props.updateView(false);
