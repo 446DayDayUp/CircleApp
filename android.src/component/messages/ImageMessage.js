@@ -19,6 +19,7 @@ export default class ImageMessage extends Component {
     this.changeImage = this.changeImage.bind(this);
     this.state = {
       showPicture: false,
+      showProfile: false,
     };
   }
 
