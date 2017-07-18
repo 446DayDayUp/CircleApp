@@ -46,7 +46,7 @@ export default class TextMessage extends Component {
           style = {{width: 50, height: 50}}
           source={require('../../../img/soccer.png')}
         />
-        <Text style={{paddingTop: 5, fontSize: 20, flexDirection: 'column'}}>    {this.props.msg.userName} got {this.props.msg.opt.score}!!! </Text>
+        <Text style={{paddingTop: 5, fontSize: 20, flexDirection: 'column'}}>    {this.props.msg.userName} scored {this.props.msg.opt.score} points!!! </Text>
       </TouchableOpacity>
       )
     }else{
@@ -63,7 +63,7 @@ export default class TextMessage extends Component {
             style = {{width: 50, height: 50}}
             source={require('../../../img/bball.png')}
           />
-          <Text style={{paddingTop: 5, fontSize: 20, flexDirection: 'column'}}>    {this.props.msg.userName} got {this.props.msg.opt.score}!!! </Text>
+          <Text style={{paddingTop: 5, fontSize: 20, flexDirection: 'column'}}>    {this.props.msg.userName} scored {this.props.msg.opt.score} points!!! </Text>
         </TouchableOpacity>
       )
     }
