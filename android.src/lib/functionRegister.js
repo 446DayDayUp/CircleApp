@@ -5,5 +5,6 @@ exports.registerFunc = function(name, func) {
 }
 
 exports.executeFunc = function(name, args) {
-  functions[name](...args);
+  if (!args) args = [];
+  return functions[name](...args);
 }

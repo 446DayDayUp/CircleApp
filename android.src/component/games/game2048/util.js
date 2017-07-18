@@ -9,40 +9,40 @@ class util {
 		let _fontSize = 0.6 * config.itemWidth;
 		switch (_num) {
 			case 2:
-				_baColor = '#eee4da';
+				_baColor = '#a3e4c8';
 				break;
 			case 4:
-				_baColor = '#ede0c8';
+				_baColor = '#8fdfbc';
 				break;
 			case 8:
-				_baColor = '#f2b179';
+				_baColor = '#7cd9b0';
 				break;
 			case 16:
-				_baColor = '#f59563';
+				_baColor = '#68d3a4';
 				break;
 			case 32:
-				_baColor = '#f67c5f';
+				_baColor = '#41c78c';
 				break;
 			case 64:
-				_baColor = '#f65e3b';
+				_baColor = '#36b97f';
 				break;
 			case 128:
-				_baColor = '#edcf72';
+				_baColor = '#30a571';
 				break;
 			case 256:
-				_baColor = '#edcc61';
+				_baColor = '#2a9264';
 				break;
 			case 512:
-				_baColor = '#9c0';
+				_baColor = '#257e56';
 				break;
 			case 1024:
-				_baColor = '#33b5e5';
+				_baColor = '#1f6a49';
 				break;
 			case 2048:
-				_baColor = '#09c';
+				_baColor = '#19573b';
 				break;
 			case 4096:
-				_baColor = '#a6c';
+				_baColor = '#14432e';
 				break;
 			case 8192:
 				_baColor = '#93c';
