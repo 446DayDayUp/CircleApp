@@ -14,6 +14,7 @@ export default class ChatRoomPanel extends Component {
     super(props);
     this.state = {dimensions: undefined};
     this.tagFactory = new this.TagIconFactory();
+    this._renderNumofuserIcon = this._renderNumofuserIcon.bind(this);
   }
 
   render() {
@@ -36,10 +37,17 @@ export default class ChatRoomPanel extends Component {
                 title={this.props.btnText}
                 onPress={this.props.btnHandler}/>
             </View>
+            <View style={{alignItems: 'center', justifyContent: 'center',}}>
+              {this._renderNumofuserIcon}
+            </View>
           </View>
         </TouchableOpacity>
       </View>
     );
+  }
+
+  _renderNumofuserIcon() {
+    let room = this.props.room;
   }
 
   _rednerRoomName() {
@@ -51,29 +59,29 @@ export default class ChatRoomPanel extends Component {
       let lengthOfRoom = (room.name).length
       let lengthOfShow = Math.floor(this.state.dimensions.width/lengthOfRoom)
       let numUsers = (room.private === true) ? null : '('+room.numUsers+')'
-      if(lengthOfShow > lengthOfRoom){
+      if(lengthOfRoom <= 17){
         return (
           <Text
-            style={{fontSize: 20, color: '#546979', flex: 2, marginTop: 10}}>
-            {numUsers} {room.name}
+            style={{fontSize: 16, color: '#546979', flex: 2, marginTop: 10}}>
+            {room.name}
           </Text>
         )
       }
       else {
-        let width = this.state.dimensions.width + this.state.dimensions.width/2;
+        let width = this.state.dimensions.width + this.state.dimensions.width/lengthOfRoom;
         return (
           <View style={{flex: 3, flexDirection: 'row'}}>
-            <Text style={{
-              fontSize: 20, color: '#546979', flex: 1, marginTop: 10
+            {/* <Text style={{
+              fontSize: 16, color: '#546979', flex: 1, marginTop: 10
             }}>
               {numUsers}
-            </Text>
+            </Text> */}
             <MarqueeLabel
               textContainerWidth={width}
               duration={8000}
               children={room.name}
               bgViewStyle = {{flex: 5}}
-              textStyle={{fontSize: 20, color: '#546979', flex: 1, marginTop: 10}}
+              textStyle={{fontSize: 16, color: '#546979', flex: 1, marginTop: 10}}
             />
           </View>
         )
