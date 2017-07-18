@@ -16,6 +16,7 @@ import Messages from './Messages.js';
 import BottomBar from './BottomBar';
 import MoreView from './MoreView.js';
 import FadeInView from './FadeInView.js';
+import BlackListView from './BlackListView.js';
 
 var { width, height } = Dimensions.get('window');
 class ChatRoomList extends Component {
@@ -26,6 +27,7 @@ class ChatRoomList extends Component {
       showMenu: false,
       showMoreView: false,
       isRecording: false,
+      showBlacklist: false,
     };
     this.socketListener = this.socketListener.bind(this);
     this.showMenus = this.showMenus.bind(this);
@@ -33,6 +35,8 @@ class ChatRoomList extends Component {
     this.renderMenuItem = this.renderMenuItem.bind(this);
     this.clearHistory = this.clearHistory.bind(this);
     this.scrollToBottom = this.scrollToBottom.bind(this);
+    this.showBlacklist = this.showBlacklist.bind(this);
+    this.hideBlacklist = this.hideBlacklist.bind(this);
   }
 
   componentWillMount() {
@@ -93,7 +97,7 @@ class ChatRoomList extends Component {
      if (this.state.showMenu) {
       return (
       <View style={styles.menu}>
-        <TouchableOpacity onPress={this.clearHistory}>
+        <TouchableOpacity key='clear' onPress={this.clearHistory}>
           <View style={styles.menuItem}>
             <Icon name='md-trash'
               size={20}
@@ -101,6 +105,11 @@ class ChatRoomList extends Component {
               style={styles.menuIcon}
             />
             <Text style={styles.menuText}>clear</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity key='blacklist' onPress={this.showBlacklist}>
+          <View style={styles.menuItem}>
+            <Text style={styles.menuText}>blacklist</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -114,6 +123,18 @@ class ChatRoomList extends Component {
     this.setState({
       isRecording: ir,
     });
+  }
+
+  showBlacklist() {
+    this.setState({
+      showBlacklist: true,
+    })
+  }
+
+  hideBlacklist() {
+    this.setState({
+      showBlacklist: false,
+    })
   }
 
   render() {
@@ -135,9 +156,10 @@ class ChatRoomList extends Component {
       );
     }
     return (
-      <TouchableOpacity style={styles.ChatRoomView}
-        onPress={this.onTouchOutside}
-        activeOpacity={1}>
+      <View style={styles.ChatRoomView}
+       // onPress={this.onTouchOutside}
+       // activeOpacity={1}>
+       >
         {/*Header contains back button, menu button and chat room name*/}
         <View style={styles.headerView}>
           <TouchableOpacity
@@ -161,7 +183,9 @@ class ChatRoomList extends Component {
             />
           </TouchableOpacity>
         </View>
-
+        <BlackListView showBlacklist={this.state.showBlacklist}
+          hideBlacklist={this.hideBlacklist}
+          roomId={this.props.roomId}/>
         <View style={styles.content}>
           <Modal
             animationType={'fade'}
@@ -198,7 +222,7 @@ class ChatRoomList extends Component {
           />
         </View>
         {moreView}
-      </TouchableOpacity>
+      </View>
     );
   }
 }

@@ -11,6 +11,7 @@ import {
 import { profilePicture } from '../../lib/profilePicture.js';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { listItemStyle } from '../../css/MessageCSS.js';
+import ProfileView from '../ProfileView.js';
 
 export default class ImageMessage extends Component {
   constructor(props) {
@@ -18,7 +19,8 @@ export default class ImageMessage extends Component {
     this.changeImage = this.changeImage.bind(this);
     this.state = {
       showPicture: false,
-    }
+      showProfile: false,
+    };
   }
 
   changeImage(bool) {
@@ -39,6 +41,9 @@ export default class ImageMessage extends Component {
     if (!this.props.isSend) {
       return (
         <View>
+          <ProfileView showProfile={this.state.showProfile}
+            hideProfile={() => this.setState({showProfile: false})}
+            msg={msg}/>
           <Modal
             animationType={'fade'}
             transparent={false}
@@ -61,7 +66,13 @@ export default class ImageMessage extends Component {
             </ScrollView>
           </Modal>
           <View style={listItemStyle.container}>
-            <Image style={listItemStyle.iconView} source={profilePicture[msg.iconName]} />
+            <TouchableOpacity
+              style={listItemStyle.iconView}
+              onPress={() => {this.setState({showProfile: true})}}>
+              <Image
+                style={listItemStyle.iconImageView}
+                source={profilePicture[msg.iconName]} />
+            </TouchableOpacity>
             <View style={{width: smallWidth}}>
               <Text> {msg.userName} </Text>
               <TouchableOpacity onPress={() => this.changeImage(true)}>
