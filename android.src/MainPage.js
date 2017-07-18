@@ -58,6 +58,9 @@ class MainPage extends Component {
     this.roomInfo = {};
     this.chatRoomSwitch = true;
     this.socket = io(SERVER_URL);
+    registerFunc('getSocket', function() {
+        return this.socket;
+    }.bind(this));
     this.socket.on('chat', function(roomId, type, uid, userName, iconName, msg, opt) {
       if (blacklist.checkBlacklist(uid)) return;
       if (blacklist.checkBlacklist(uid, roomId)) return;

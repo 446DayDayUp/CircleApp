@@ -31,10 +31,10 @@ class header extends Component {
   }
   onPress = (callback) => {
     this.setState({
-      score: 100,
-      addNum: 30
+      score: 0,
+      addNum: 0
     });
-
+    Actions.game2048();
     callback();
   }
   addScore = (num) => {
