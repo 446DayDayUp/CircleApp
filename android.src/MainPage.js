@@ -76,6 +76,13 @@ class MainPage extends Component {
         opt,
       });
     }.bind(this));
+    this.socket.on('reconnect', function() {
+      // Upon reconnection, enter room to joined charts.
+      this.socket.emit('room', UID, this.props.userName, UID);
+      for (let i = 0; i < this.state.joinedRooms.length; i += 1) {
+        this.socket.emit('room', this.state.joinedRooms[i]._id, this.props.userName, UID);
+      }
+    }.bind(this));
     this.socket.on('enterRoom', function(numUsers, roomId, uid, userName) {
       this.roomInfo[roomId].messages.push({
         uid,
