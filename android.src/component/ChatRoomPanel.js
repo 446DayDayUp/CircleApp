@@ -31,14 +31,14 @@ export default class ChatRoomPanel extends Component {
               {this._showTag()}
             </View>
             <View style={styles.right}>
-              <Text style={{fontSize: 17, color: '#B07267'}}>{room.distance}m</Text>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={{fontSize: 17, color: '#B07267'}}>{room.distance}m</Text>
+                {this._renderNumofuserIcon()}
+              </View>
               <Button style={{flex: 1}}
                 color='#4f8ef7'
                 title={this.props.btnText}
                 onPress={this.props.btnHandler}/>
-            </View>
-            <View style={{alignItems: 'center', justifyContent: 'center',}}>
-              {this._renderNumofuserIcon}
             </View>
           </View>
         </TouchableOpacity>
@@ -48,6 +48,19 @@ export default class ChatRoomPanel extends Component {
 
   _renderNumofuserIcon() {
     let room = this.props.room;
+    let showedIcon = null;
+    if (room.numUsers < 3){
+      showedIcon = require('../../img/fewPeople.png');
+    } else if (room.numUsers < 10) {
+      showedIcon = require('../../img/couplePeople.png');
+    } else if (room.numUsers < 20) {
+      showedIcon = require('../../img/severalPeople.png');
+    } else {
+      showedIcon = require('../../img/dozonPeople.png');
+    }
+    return(
+      <Image resizeMode='contain' source={showedIcon} style={{width: 30, height: 30}}/>
+    )
   }
 
   _rednerRoomName() {
@@ -58,7 +71,6 @@ export default class ChatRoomPanel extends Component {
 
       let lengthOfRoom = (room.name).length
       let lengthOfShow = Math.floor(this.state.dimensions.width/lengthOfRoom)
-      let numUsers = (room.private === true) ? null : '('+room.numUsers+')'
       if(lengthOfRoom <= 17){
         return (
           <Text
@@ -71,17 +83,11 @@ export default class ChatRoomPanel extends Component {
         let width = this.state.dimensions.width + this.state.dimensions.width/lengthOfRoom;
         return (
           <View style={{flex: 3, flexDirection: 'row'}}>
-            {/* <Text style={{
-              fontSize: 16, color: '#546979', flex: 1, marginTop: 10
-            }}>
-              {numUsers}
-            </Text> */}
             <MarqueeLabel
               textContainerWidth={width}
               duration={8000}
               children={room.name}
-              bgViewStyle = {{flex: 5}}
-              textStyle={{fontSize: 16, color: '#546979', flex: 1, marginTop: 10}}
+              textStyle={{fontSize: 16, color: '#546979', flex: 2, marginTop: 10}}
             />
           </View>
         )
