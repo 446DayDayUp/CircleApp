@@ -10,16 +10,17 @@ import {
   TouchableOpacity,
   Image,
   Navigator,
+  Alert,
   Button
 } from 'react-native';
-
+import { UID } from '../../../data/globals.js';
+import { Actions } from 'react-native-router-flux';
 
 
 import Ball from './components/Ball';
 import Hoop from './components/Hoop';
 import Net from './components/Net';
 import Floor from './components/Floor';
-import Emoji from './components/Emoji';
 import Score from './components/Score';
 
 import Vector from './utils/Vector';
@@ -251,15 +252,12 @@ class Basketball extends Component {
 
   handleRestart(nextState) {
     if (nextState.lifecycle === LC_RESTARTING_FALLING && nextState.y <= FLOOR_Y) {
-      // in front of the Floor
-      // will restart to 'Waiting' lifecycle step
       nextState.y = FLOOR_Y;
       nextState.vx = 0;
       nextState.vy = 0;
       nextState.rotate = 0;
       nextState.scale = 1;
       nextState.lifecycle = LC_WAITING;
-
       nextState.scored = null;
     }
 
@@ -282,6 +280,12 @@ class Basketball extends Component {
       } else {
         // nextState.x = Dimensions.get('window').width / 2 - radius;
         nextState.x = this.randomIntFromInterval(4, Dimensions.get('window').width - (radius * 2) - 4);
+        scc = 'your score is ' + nextState.score;
+        myscore = nextState.score;
+        Alert.alert('You lost~~', scc, [
+          {text: 'Try again', onPress: () => this.resetGame(nextState)},
+          {text: 'Share score', onPress: () => this.sendScore(myscore)},
+        ]);
         nextState.score = 0;
       }
 
@@ -292,6 +296,32 @@ class Basketball extends Component {
       nextState.rotate = 0;
       nextState.lifecycle = LC_RESTARTING;
     }
+  }
+
+  sendScore(myscore) {
+    this.props.socket.emit('chat', this.props.roomId, 'game', UID,
+      this.props.userName, this.props.iconName, null, {
+        game: 'basketball',
+        score: myscore,
+      });
+    if(this.props.backtwice) {
+      Actions.pop();
+      setTimeout(() => {
+        Actions.pop()
+      }, 100);
+    }else{
+      Actions.pop();
+    }
+  }
+
+  resetGame(nextState){
+    nextState.y = FLOOR_Y;
+    nextState.vx = 0;
+    nextState.vy = 0;
+    nextState.rotate = 0;
+    nextState.scale = 1;
+    nextState.lifecycle = LC_WAITING;
+    nextState.scored = null;
   }
 
   update() {
@@ -349,7 +379,6 @@ class Basketball extends Component {
         />
         {this.renderNet(this.state.lifecycle !== LC_STARTING)}
         {this.renderFloor(this.state.vy > 0)}
-        <Emoji y={NET_Y} scored={this.state.scored} />
       </View>
     );
   }
