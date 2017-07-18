@@ -81,13 +81,11 @@ export default class LocationMessage extends Component {
                   coordinate={{'latitude': msg.opt.lat, 'longitude': msg.opt.lng}}
                   title={msg.userName}
                   image={profilePicture[msg.iconName]}
-									style={styles.marker}
                 />
                 <MapView.Marker
                   coordinate={{'latitude': this.state.selfLat, 'longitude': this.state.selfLng}}
                   title={this.state.selfUsername}
                   image={profilePicture[this.state.selfIcon]}
-									style={styles.marker}
                 />
               </MapView>
             </View>
@@ -144,7 +142,6 @@ export default class LocationMessage extends Component {
                   coordinate={{'latitude': msg.opt.lat, 'longitude': msg.opt.lng}}
                   title={msg.userName}
                   image={profilePicture[msg.iconName]}
-									style={styles.marker}
                 />
     					</MapView>
             </View>
@@ -215,8 +212,4 @@ const styles = StyleSheet.create({
     bottom: 0,
     flex: 1,
   },
-	marker: {
-        width: 60,
-        height: 75,
-	},
 });
