@@ -251,12 +251,6 @@ export default class BottomBar extends Component {
             <View style={styles.recorder}><Text>{this.state.isRecording ? 'Recording...' : 'Press to speak'}</Text></View>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style = {{padding: 5}} activeOpacity={0.5} onPress={this.sendMsg}>
-          <Icon name= 'ios-send'
-                size={40}
-                color='#4f8ef7'
-          />
-        </TouchableOpacity>
         <TouchableOpacity style = {{padding: 5}} activeOpacity={0.5} onPress={this.handlePress.bind(this, "moreBtn")}>
           <Icon name= 'ios-add-circle'
                 size={40}
