@@ -32,8 +32,8 @@ export default class ChatRoomPanel extends Component {
             </View>
             <View style={styles.right}>
               <View style={{flexDirection: 'row'}}>
-                <Text style={{fontSize: 17, color: '#B07267'}}>{room.distance}m</Text>
-                {this._renderNumofuserIcon()}
+                {room.private ? null : <Text style={{fontSize: 17, color: '#B07267'}}>{room.distance}m</Text>}
+                {room.private ? null : this._renderNumofuserIcon()}
               </View>
               <Button style={{flex: 1}}
                 color='#4f8ef7'
