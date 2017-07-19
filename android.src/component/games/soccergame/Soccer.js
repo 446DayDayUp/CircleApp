@@ -2,10 +2,13 @@ import React, {Component} from 'react';
 import {View,
         Text,
         StyleSheet,
+        Picker,
+        Alert,
         Dimensions,
         Image} from 'react-native';
 import Score from './components/Score';
-import Emoji from './components/Emoji';
+import { UID } from '../../../data/globals.js';
+import { Actions } from 'react-native-router-flux';
 
 const LC_IDLE = 0;
 const LC_RUNNING = 1;
@@ -39,6 +42,7 @@ class Soccer extends Component {
             lost: false,
             rotate: 0,
         };
+        this.sendScore = this.sendScore.bind(this);
     }
 
     componentDidMount() {
@@ -76,6 +80,7 @@ class Soccer extends Component {
         return false;
     }
 
+
     updatePosition(nextState) {
         nextState.x += nextState.vx;
         nextState.y += nextState.vy;
@@ -100,7 +105,39 @@ class Soccer extends Component {
             nextState.score = 0;
             nextState.lost = true;
             nextState.scored = false;
+            scc = 'your score is ' + this.state.score;
+            Alert.alert('You lost~~', scc , [
+            {text:'Try again',onPress:()=>this.resetGame(nextState)},
+            {text:'Share score',onPress:()=> this.sendScore()},
+            ]);
         }
+    }
+    sendScore() {
+       this.props.socket.emit('chat', this.props.roomId, 'game', UID,
+         this.props.userName, this.props.iconName, null, {
+            game: 'soccer',
+            score: this.state.score,
+         });
+       if(this.props.backtwice) {
+         Actions.pop();
+         setTimeout(() => {
+           Actions.pop()
+         }, 100);
+       }else{
+         Actions.pop();
+       }
+    }
+
+    resetGame(nextState){
+      this.setState({
+        score: 0,
+      });
+      nextState.y = FLOOR_Y;
+      nextState.x = FLOOR_X;
+      nextState.lifeCycle = LC_IDLE;
+      nextState.score = 0;
+      nextState.lost = true;
+      nextState.scored = false;
     }
 
     updateVelocity(nextState) {
@@ -133,7 +170,6 @@ class Soccer extends Component {
         return (
             <View>
                 <Score score={this.state.score} y={SCORE_Y} scored={this.state.scored}/>
-                <Emoji scored={this.state.scored} y={EMOJI_Y} lost={this.state.lost}/>
                 <Image source={require('./images/soccer.png')}
                         style={[styles.ball, position, rotation]}
                         onStartShouldSetResponder={(event) => this.onTap(event.nativeEvent)}
@@ -151,3 +187,4 @@ const styles = StyleSheet.create({
 });
 
 export default Soccer;
+

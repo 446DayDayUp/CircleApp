@@ -10,50 +10,50 @@ let config = {
 	itemWidth: 0.18 * _win_width, 
 	itemPadding: 0.04 * _win_width, 
 	borderRadius: 0.02 * _win_width, 
-	blockBgColor: '#ccc0b3',
-	containerBgColor: '#bbada0',
+	blockBgColor: '#55c8cd',
+	containerBgColor: '#68ced3',
 	
 	returnStyles: function(_num) {
 		let _ = this;
 		let _baColor = 'transparent';
 		let _color = '#fff';
 		let _fontSize = 0.6 * _.itemWidth;
-		switch (_num) {
-			case 2:
-				_baColor = '#eee4da';
-				break;
-			case 4:
-				_baColor = '#ede0c8';
-				break;
-			case 8:
-				_baColor = '#f2b179';
-				break;
-			case 16:
-				_baColor = '#f59563';
-				break;
-			case 32:
-				_baColor = '#f67c5f';
-				break;
-			case 64:
-				_baColor = '#f65e3b';
-				break;
-			case 128:
-				_baColor = '#edcf72';
-				break;
-			case 256:
-				_baColor = '#edcc61';
-				break;
-			case 512:
-				_baColor = '#9c0';
-				break;
-			case 1024:
-				_baColor = '#33b5e5';
-				break;
-			case 2048:
-				_baColor = '#09c';
-				break;
-			case 4096:
-				_baColor = '#a6c';
+    switch (_num) {
+      case 2:
+        _baColor = '#a3e4c8';
+        break;
+      case 4:
+        _baColor = '#8fdfbc';
+        break;
+      case 8:
+        _baColor = '#7cd9b0';
+        break;
+      case 16:
+        _baColor = '#68d3a4';
+        break;
+      case 32:
+        _baColor = '#41c78c';
+        break;
+      case 64:
+        _baColor = '#36b97f';
+        break;
+      case 128:
+        _baColor = '#30a571';
+        break;
+      case 256:
+        _baColor = '#2a9264';
+        break;
+      case 512:
+        _baColor = '#257e56';
+        break;
+      case 1024:
+        _baColor = '#1f6a49';
+        break;
+      case 2048:
+        _baColor = '#19573b';
+        break;
+      case 4096:
+        _baColor = '#14432e';
 				break;
 			case 8192:
 				_baColor = '#93c';

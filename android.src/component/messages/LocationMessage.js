@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-	StyleSheet,
+  StyleSheet,
   Text,
   View,
   Dimensions,
@@ -220,4 +220,3 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-

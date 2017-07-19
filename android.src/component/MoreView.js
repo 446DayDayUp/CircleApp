@@ -26,7 +26,7 @@ export default class MoreView extends Component {
   render() {
     let parts = [];
     for (let i = 0; i < 4; i++) {
-      if(iconTexts[i] === 'Video' || iconTexts[i] === 'Photo' || iconTexts[i] === 'Location'){
+      if(iconTexts[i] === 'Video' || iconTexts[i] === 'Photo' || iconTexts[i] === 'Location' || iconTexts[i] === 'Game'){
         parts.push(
           <Cell
           updateView={this.props.updateView}
@@ -56,6 +56,7 @@ class Cell extends Component {
     super(props);
     this.sendMsg = this.sendMsg.bind(this);
     this.sendLoc = this.sendLoc.bind(this);
+    this._handlePress = this._handlePress.bind(this);
 
   };
 
@@ -125,10 +126,14 @@ class Cell extends Component {
       });
       this.props.updateView(false);
     }
-    if(type == 'Game') {
-      Actions.gameMainpage();
+    if (type === 'Game') {
+      Actions.gameMainpage({
+        socket: this.props.socket,
+        roomId: this.props.roomId,
+        userName: this.props.userName,
+      });
     }
-    if (type == 'Location') {
+    if (type === 'Location') {
       getGpsCord().then(function(location) {
         this.sendLoc(location.lat, location.lng);
       }.bind(this)).catch(function(error) {
@@ -139,7 +144,9 @@ class Cell extends Component {
   }
   render() {
     return (
-      <TouchableOpacity style={styles.cellContainer} onPress={() => this._handlePress(this.props.text)}>
+      <TouchableOpacity style={styles.cellContainer} onPress={function() {
+        this._handlePress(this.props.text);
+      }.bind(this)}>
         <View style={styles.cellImgContainer}>
           <Image style={styles.cellImage} source={this.props.icon}/>
         </View>

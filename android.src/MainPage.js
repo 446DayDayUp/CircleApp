@@ -58,6 +58,9 @@ class MainPage extends Component {
     this.roomInfo = {};
     this.chatRoomSwitch = true;
     this.socket = io(SERVER_URL);
+    registerFunc('getSocket', function() {
+        return this.socket;
+    }.bind(this));
     this.socket.on('chat', function(roomId, type, uid, userName, iconName, msg, opt) {
       if (blacklist.checkBlacklist(uid)) return;
       if (blacklist.checkBlacklist(uid, roomId)) return;
@@ -75,6 +78,13 @@ class MainPage extends Component {
         type: type,
         opt,
       });
+    }.bind(this));
+    this.socket.on('reconnect', function() {
+      // Upon reconnection, enter room to joined charts.
+      this.socket.emit('room', UID, this.props.userName, UID);
+      for (let i = 0; i < this.state.joinedRooms.length; i += 1) {
+        this.socket.emit('room', this.state.joinedRooms[i]._id, this.props.userName, UID);
+      }
     }.bind(this));
     this.socket.on('enterRoom', function(numUsers, roomId, uid, userName) {
       this.roomInfo[roomId].messages.push({
