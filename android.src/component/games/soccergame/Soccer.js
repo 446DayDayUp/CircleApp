@@ -24,7 +24,6 @@ const BALL_HEIGHT = SCREEN_WIDTH * 0.33;
 const FLOOR_Y = SCREEN_HEIGHT - BALL_HEIGHT;
 const FLOOR_X = SCREEN_WIDTH / 2;
 const SCORE_Y = SCREEN_HEIGHT / 6;
-const EMOJI_Y = SCREEN_HEIGHT / 3;
 
 class Soccer extends Component {
 
@@ -105,23 +104,24 @@ class Soccer extends Component {
             nextState.score = 0;
             nextState.lost = true;
             nextState.scored = false;
-            scc = 'your score is ' + this.state.score;
-            Alert.alert('You lost~~', scc , [
+            myscore = this.state.score;
+            scc = 'your score is ' + myscore;
+            Alert.alert('You lost~~', scc, [
             {text:'Try again',onPress:()=>this.resetGame(nextState)},
-            {text:'Share score',onPress:()=> this.sendScore()},
+            {text:'Share score',onPress:()=> this.sendScore(myscore)},
             ]);
         }
     }
-    sendScore() {
+    sendScore(myscore) {
        this.props.socket.emit('chat', this.props.roomId, 'game', UID,
          this.props.userName, this.props.iconName, null, {
             game: 'soccer',
-            score: this.state.score,
+            score: myscore,
          });
        if(this.props.backtwice) {
          Actions.pop();
          setTimeout(() => {
-           Actions.pop()
+           Actions.pop();
          }, 100);
        }else{
          Actions.pop();

@@ -127,6 +127,7 @@ class Cell extends Component {
       this.props.updateView(false);
     }
     if (type === 'Game') {
+      this.props.updateView(false);
       Actions.gameMainpage({
         socket: this.props.socket,
         roomId: this.props.roomId,
