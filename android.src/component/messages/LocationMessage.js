@@ -13,6 +13,7 @@ import {
 import MapView from 'react-native-maps';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { profilePicture } from '../../lib/profilePicture.js';
+import { profilePictureMini } from '../../lib/profilePictureMini.js';
 import { listItemStyle } from '../../css/MessageCSS.js';
 import { getGpsCord } from '../../lib/gps.js';
 import ProfileView from '../ProfileView.js';
@@ -80,12 +81,12 @@ export default class LocationMessage extends Component {
                 <MapView.Marker
                   coordinate={{'latitude': msg.opt.lat, 'longitude': msg.opt.lng}}
                   title={msg.userName}
-                  image={profilePicture[msg.iconName]}
+                  image={profilePictureMini[msg.iconName+'_mini']}
                 />
                 <MapView.Marker
                   coordinate={{'latitude': this.state.selfLat, 'longitude': this.state.selfLng}}
                   title={this.state.selfUsername}
-                  image={profilePicture[this.state.selfIcon]}
+                  image={profilePictureMini[this.state.selfIcon+'_mini']}
                 />
               </MapView>
             </View>
@@ -141,7 +142,7 @@ export default class LocationMessage extends Component {
                 <MapView.Marker
                   coordinate={{'latitude': msg.opt.lat, 'longitude': msg.opt.lng}}
                   title={msg.userName}
-                  image={profilePicture[msg.iconName]}
+                  image={profilePictureMini[msg.iconName+'_mini']}
                 />
     					</MapView>
             </View>
@@ -152,7 +153,14 @@ export default class LocationMessage extends Component {
             </View>
             <View style={{width: 200, height: 200}}>
               <TouchableOpacity onPress={() => this.zoom(true)} style ={styles.container}>
-                <MapView style={styles.map} zoomEnabled={false} rotateEnabled={false} scrollEnabled={false} pitchEnabled={false} toolbarEnabled={false} cacheEnabled={true}
+                <MapView
+                  style={styles.map}
+                  zoomEnabled={false}
+                  rotateEnabled={false}
+                  scrollEnabled={false}
+                  pitchEnabled={false}
+                  toolbarEnabled={false}
+                  cacheEnabled={true}
               		initialRegion={{
               			latitude: msg.opt.lat,
               			longitude: msg.opt.lng,
